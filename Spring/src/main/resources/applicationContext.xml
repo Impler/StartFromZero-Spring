@@ -18,15 +18,15 @@
 	<!-- hello world end -->
 
 	<!-- bean start -->
-	<bean id="beanuser" class="com.study.spring.bean.ioc.User">
+	<bean id="setterUser" class="com.study.spring.bean.ioc.User">
 		<property name="name" value="TOM"/>
 		<property name="age" value="23"/>
 		<property name="married" value="false" />
 		<property name="sex" value="M" />
 	</bean>
 	<!-- dependency injection start -->
-	<bean id="setterBasedDI" class="com.study.spring.bean.ioc.SetterBasedDI">
-		<property name="u" ref="beanuser" />
+	<bean id="DIBean" class="com.study.spring.bean.ioc.DependencyInjection">
+		<property name="setterBasedUser" ref="setterUser" />
 	</bean>
 	<!-- dependency injection end -->
 	<!-- bean end -->
