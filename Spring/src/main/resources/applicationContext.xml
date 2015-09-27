@@ -9,9 +9,25 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation=
-		"http://www.springframework.org/schema/beans <!-- 命名空间全称 -->
-        http://www.springframework.org/schema/beans/spring-beans.xsd <!-- 对应的schema文件 -->
+		"http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-aop-3.1.xsd">
+	<!-- hello world start -->
 	<bean id="userDao" class="com.study.spring.helloworld.dao.impl.UserDaoImpl"></bean>
+	<!-- hello world end -->
+
+	<!-- bean start -->
+	<bean id="beanuser" class="com.study.spring.bean.ioc.User">
+		<property name="name" value="TOM"/>
+		<property name="age" value="23"/>
+		<property name="married" value="false" />
+		<property name="sex" value="M" />
+	</bean>
+	<!-- dependency injection start -->
+	<bean id="setterBasedDI" class="com.study.spring.bean.ioc.SetterBasedDI">
+		<property name="u" ref="beanuser" />
+	</bean>
+	<!-- dependency injection end -->
+	<!-- bean end -->
 </beans>
