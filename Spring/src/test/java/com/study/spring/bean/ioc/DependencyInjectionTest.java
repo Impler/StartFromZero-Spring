@@ -6,6 +6,7 @@ import com.study.spring.test.BaseTestObject;
 
 public class DependencyInjectionTest extends BaseTestObject{
 	@Test
+	//setter injection
 	public void testSetterInjection() {
 		DependencyInjection di = (DependencyInjection) super.getBean("SetterDIBean");
 		System.out.print(di.getSetterBasedUser());
