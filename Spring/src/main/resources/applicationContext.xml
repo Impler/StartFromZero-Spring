@@ -25,12 +25,12 @@
 		<property name="sex" value="M" />
 	</bean>
 	<!-- dependency injection start -->
-	<!-- setter based dependency injection start -->
+	<!-- *****setter based dependency injection start**** -->
 	<bean id="SetterDIBean" class="com.study.spring.bean.ioc.DependencyInjection">
 		<property name="setterBasedUser" ref="setterUser" />
 	</bean>
-	<!-- setter based dependency injection end -->
-	<!-- constructor based dependency start -->
+	<!-- *****setter based dependency injection end***** -->
+	<!-- *****constructor based dependency start***** -->
 	<bean id="ConstDIBean1" class="com.study.spring.bean.ioc.DependencyInjection">
 		<!-- constructor-arg 顺序与构造方法参数顺序无需一致，根据参数类型注入， 适用于参数类型不同-->
 		<constructor-arg type="int" value="20"/>
@@ -59,7 +59,20 @@
 			<constructor-arg index="1" value="F"/>
 		 -->
 	</bean>
-	<!-- constructor based dependency end -->
+	<!-- *****constructor based dependency end***** -->
+	<!-- *****factory dependency injection start***** -->
+	<!-- 非静态工厂 -->
+	<!-- 注册工厂bean -->
+	<bean id="UserFactory" class="com.study.spring.bean.ioc.UserFactory" />
+	<bean id="FactoryDIBean" 
+		class="com.study.spring.bean.ioc.DependencyInjection" 
+		factory-bean="UserFactory"
+		factory-method="createUser"/>
+	<!-- 静态工厂 -->
+	<bean id="StaticFactoryDIBean" 
+		class="com.study.spring.bean.ioc.UserFactory" 
+		factory-method="staticCreateUser"/>
+	<!-- *****factory dependency injection end***** -->
 	<!-- dependency injection end -->
 	<!-- bean end -->
 </beans>

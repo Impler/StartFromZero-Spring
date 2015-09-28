@@ -10,6 +10,18 @@ public class User {
 	private char sex;
 	private boolean isMarried;
 	private String location;
+	public User(){
+		super();
+	}
+
+	public User(String name, int age, char sex, String location) {
+		this();
+		this.name = name;
+		this.age = age;
+		this.sex = sex;
+		this.location = location;
+	}
+
 	public String getName() {
 		return name;
 	}

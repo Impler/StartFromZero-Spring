@@ -36,4 +36,18 @@ public class DependencyInjectionTest extends BaseTestObject{
 		DependencyInjection di = (DependencyInjection) super.getBean("ConstDIBean4");
 		System.out.print(di.getConstBasedUser());
 	}
+	
+	@Test
+	//non static factory method injection
+	public void testNonStaticFactoryInjection(){
+		User u = (User) super.getBean("FactoryDIBean");
+		System.out.print(u);
+	}
+	
+	@Test
+	//static factory method injection
+	public void testStaticFactoryInjection(){
+		User u = (User) super.getBean("StaticFactoryDIBean");
+		System.out.print(u);
+	}
 }
