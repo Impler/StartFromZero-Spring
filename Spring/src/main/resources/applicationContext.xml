@@ -25,9 +25,41 @@
 		<property name="sex" value="M" />
 	</bean>
 	<!-- dependency injection start -->
-	<bean id="DIBean" class="com.study.spring.bean.ioc.DependencyInjection">
+	<!-- setter based dependency injection start -->
+	<bean id="SetterDIBean" class="com.study.spring.bean.ioc.DependencyInjection">
 		<property name="setterBasedUser" ref="setterUser" />
 	</bean>
+	<!-- setter based dependency injection end -->
+	<!-- constructor based dependency start -->
+	<bean id="ConstDIBean1" class="com.study.spring.bean.ioc.DependencyInjection">
+		<!-- constructor-arg 顺序与构造方法参数顺序无需一致，根据参数类型注入， 适用于参数类型不同-->
+		<constructor-arg type="int" value="20"/>
+		<constructor-arg type="java.lang.String" value="TOM"/>
+	</bean>
+	<bean id="ConstDIBean2" class="com.study.spring.bean.ioc.DependencyInjection">
+		<!-- 如果参数类型相同，就可能注入乱套-->
+		<constructor-arg type="java.lang.String" value="KITTY"/>
+		<constructor-arg type="java.lang.String" value="NanJing"/>
+	</bean>
+	<bean id="ConstDIBean3" class="com.study.spring.bean.ioc.DependencyInjection">
+		<!-- 针对参数类型相同的情况，可以通过index指定对应关系-->
+		<constructor-arg index="1" value="KITTY"/>
+		<constructor-arg index="0" value="NanJing"/>
+	</bean>
+	<bean id="ConstDIBean4" class="com.study.spring.bean.ioc.DependencyInjection">
+		<!-- 其他较复杂的情况需要同时使用类型和index-->
+		
+		<constructor-arg index="1" value="KITTY"/>
+		<constructor-arg index="0" value="NanJing"/>
+		<constructor-arg index="2" value="M"/>
+		
+		<!-- 
+			<constructor-arg index="0" value="TOM"/>
+			<constructor-arg index="2" value="BeiJing"/>
+			<constructor-arg index="1" value="F"/>
+		 -->
+	</bean>
+	<!-- constructor based dependency end -->
 	<!-- dependency injection end -->
 	<!-- bean end -->
 </beans>

@@ -9,6 +9,7 @@ public class User {
 	private int age;
 	private char sex;
 	private boolean isMarried;
+	private String location;
 	public String getName() {
 		return name;
 	}
@@ -33,9 +34,15 @@ public class User {
 	public void setMarried(boolean isMarried) {
 		this.isMarried = isMarried;
 	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	@Override
 	public String toString() {
 		return "User [name=" + name + ", age=" + age + ", sex=" + sex
-				+ ", isMarried=" + isMarried + "]";
+				+ ", isMarried=" + isMarried + ", location=" + location + "]";
 	}
 }
