@@ -58,8 +58,23 @@
 	<!-- 静态工厂 -->
 	<bean id="StaticFactoryDIBean" 
 		class="com.study.spring.bean.ioc.UserFactory" 
-		factory-method="staticCreateUser"/>
+		factory-method="staticCreateUser" scope="prototype"/>
 	<!-- *****factory dependency injection end***** -->
 	<!-- dependency injection end -->
+	<!-- 
+		向singleton bean中注入prototype bean，并且每次调用都能获取不同的prototype bean的两种实现方式
+		1. singleton bean实现BeanFactoryAware接口，与Spring框架耦合度高，不建议使用
+		2. lookup方法注入，即通过动态代理的方式注入prototype bean
+	 -->
+	 <bean id="prototypeBean" class="com.study.spring.bean.ioc.User" scope="prototype">
+		<property name="name" value="TOM"/>
+		<property name="age" value="23"/>
+		<property name="married" value="false" />
+		<property name="sex" value="M" />
+	 </bean>
+	 <bean id="SingletonBean1" class="com.study.spring.bean.ioc.InjectPB2SBBaseOnSpring"/>
+	 <bean id="SingletonBean2" class="com.study.spring.bean.ioc.InjectPB2SBBaseOnDynamicProxy">
+	 	<lookup-method bean="prototypeBean" name="getUser"/>
+	 </bean>
 	<!-- bean end -->
 </beans>

@@ -51,4 +51,16 @@ public class DependencyInjectionTest extends BaseTestObject{
 		User u = (User) super.getBean("StaticFactoryDIBean");
 		System.out.print(u);
 	}
+	
+	@Test
+	public void testInjectPB2SBBaseOnSpring(){
+		InjectPB2SBBaseOnSpring bean = (InjectPB2SBBaseOnSpring) super.getBean("SingletonBean1");
+		System.out.print(bean.getPrototypeUser() == bean.getPrototypeUser());
+	}
+	
+	@Test
+	public void testInjectPB2SBBaseOnDynamicProxy(){
+		InjectPB2SBBaseOnDynamicProxy bean = (InjectPB2SBBaseOnDynamicProxy) super.getBean("SingletonBean2");
+		System.out.print(bean.getUser() == bean.getUser());
+	}
 }
