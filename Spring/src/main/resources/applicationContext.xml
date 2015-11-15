@@ -19,4 +19,5 @@
 	
 	<!-- Composing XML-based configuration by import resource -->
 	<import resource="beans.xml" />
+	<import resource="aop.xml" />
 </beans>
