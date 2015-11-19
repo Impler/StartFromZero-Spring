@@ -51,11 +51,14 @@
 	<!-- 非静态工厂 -->
 	<!-- 注册工厂bean -->
 	<bean id="UserFactory" class="com.study.spring.bean.ioc.UserFactory" />
+	<!-- class 可以不写 -->
 	<bean id="FactoryDIBean" 
-		class="com.study.spring.bean.ioc.DependencyInjection" 
 		factory-bean="UserFactory"
 		factory-method="createUser"/>
 	<!-- 静态工厂 -->
+	<!-- *****TODO***** -->
+	<!-- 通过静态工厂实例化的bean需要配置class，而通过普通工厂实例化的bean不需要配置class？？？ -->
+	<!-- *****TODO***** -->
 	<bean id="StaticFactoryDIBean" 
 		class="com.study.spring.bean.ioc.UserFactory" 
 		factory-method="staticCreateUser" scope="prototype"/>
