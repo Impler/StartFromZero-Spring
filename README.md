@@ -20,3 +20,4 @@ to be used in unit tests.
 	
 3. 工厂方法注入  
 	 
+###功能及配置详解
