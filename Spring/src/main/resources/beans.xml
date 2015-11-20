@@ -185,6 +185,8 @@
 	   	 8. Lazy-initialized
 	   	 	Spring在初始化容器时默认实例化singleton bean，如果希望某个bean使用时再实例化，可以指定lazy-init="true"
 	   	 	<bean id="..." class="..."  lazy-init="true"/>
+	   	 	全局的实例化机制也是支持的，在beans节点上添加default-lazy-init="true":
+	   	 	<beans default-lazy-init="true" />
 	    -->
 	    
 	    <!-- 
