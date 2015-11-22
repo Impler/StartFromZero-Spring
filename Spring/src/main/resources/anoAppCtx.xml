@@ -8,5 +8,11 @@
 		http://www.springframework.org/schema/context/spring-context.xsd">
 	
 	<context:annotation-config />
-
+	<!-- <bean id="userService" class="com.study.spring.annotation.UserService"/> -->
+	<bean id="user" class="com.study.spring.base.domain.User">
+		<property name="name" value="TOM"/>
+		<property name="age" value="23"/>
+		<property name="married" value="false" />
+		<property name="sex" value="M" />
+	</bean>
 </beans>

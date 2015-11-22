@@ -27,11 +27,11 @@ public class BaseTestObject {
 		return ctx.getBean(beanName);
 	}
 	
-	public AnnotationConfigApplicationContext getAnotationContext(){
+	public AnnotationConfigApplicationContext getAnnotationContext(){
 		return aCtx;
 	}
 	
-	public Object getAnoBean(String beanName){
+	public Object getAnnoBean(String beanName){
 		return aCtx.getBean(beanName);
 	}
 	
