@@ -1,4 +1,4 @@
-package com.study.spring.bean.ioc;
+package com.study.spring.base.domain;
 /**
  * a user POJO
  * @author Impler

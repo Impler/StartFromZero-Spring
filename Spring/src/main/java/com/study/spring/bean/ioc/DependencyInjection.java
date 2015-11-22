@@ -1,4 +1,7 @@
 package com.study.spring.bean.ioc;
+
+import com.study.spring.base.domain.User;
+
 /**
  * Dependency injection
  * @author Impler

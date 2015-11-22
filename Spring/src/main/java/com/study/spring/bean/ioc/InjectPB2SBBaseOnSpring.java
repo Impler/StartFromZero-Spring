@@ -4,6 +4,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
+import com.study.spring.base.domain.User;
+
 public class InjectPB2SBBaseOnSpring implements BeanFactoryAware {
 	
 	private BeanFactory factory;
