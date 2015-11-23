@@ -1,15 +1,30 @@
 package com.study.spring.annotation;
 
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
+import com.study.spring.annotation.autowired.DBManager;
+import com.study.spring.annotation.required.OperationLog;
 import com.study.spring.base.domain.User;
 import com.study.spring.test.BaseTestObject;
 
 @ComponentScan("com.study.spring.annotation")
 public class TestAnnotation extends BaseTestObject{
+	//只用于纯注解配置的测试案例
+	private AnnotationConfigApplicationContext annoCtx;
+	@Before
+	public void init(){
+		annoCtx = new AnnotationConfigApplicationContext(this.getClass());
+	}
+	
+	@After
+	public void end(){
+		annoCtx.close();
+	}
 
 	@Test
 	public void testAnnotationWithXMLContext() {
@@ -20,10 +35,21 @@ public class TestAnnotation extends BaseTestObject{
 	
 	@Test
 	public void testAnnotationWithAnnoContext(){
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(this.getClass());
-		UserManager manager = (UserManager) ctx.getBean("userManager");
+		UserManager manager = (UserManager) this.annoCtx.getBean("userManager");
 		User u = new User("Tom", 24, 'M', "BeiJing");
 		manager.register(u);
-		ctx.close();
+	}
+	
+	@Test
+	public void testRequired(){
+		OperationLog log = (OperationLog) super.getAnnoBean("operationLog");
+		System.out.println(log);
+	}
+	
+	@Test
+	public void testAutoWired(){
+		DBManager manager = (DBManager) this.annoCtx.getBean("DBManager");
+		manager.addRecord();
+		manager.showOtherDriverInfo();
 	}
 }

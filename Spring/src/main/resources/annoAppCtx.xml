@@ -8,5 +8,38 @@
 		http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 	
 	<!-- <context:annotation-config /> -->
-	<context:component-scan base-package="com.study.spring.*"/>
+	<context:component-scan base-package="com.study.spring.annotation"/>
+	
+	<!-- 
+		@Component，@Repository，@Service，@Controller
+			标注在类上，生成受spring管理的bean
+			这些注解功能相同，只不过后三者具有一定的意 义
+	 -->
+	<bean id="user" class="com.study.spring.base.domain.User" scope="prototype">
+		<property name="name" value="TOM"/>
+		<property name="age" value="23"/>
+		<property name="married" value="false" />
+		<property name="sex" value="M" />
+	</bean>
+	
+	<!-- 
+		@Required 
+			初始化bean时对bean进行依赖检查，只检查依赖是否设置过，而不论值是什么
+			注解只能标注在setter方法上
+	 -->
+	<bean id="operationLog" class="com.study.spring.annotation.required.OperationLog">
+		<!-- 如果没有设置required依赖，初始化时即会抛错： org.springframework.beans.factory.BeanInitializationException: Property 'operator' is required for bean 'operationLog'-->
+		<property name="operator" ref="user" />
+	</bean>
+	
+	<!-- 
+		@Autowired 根据类型自动装配
+			required属性用于依赖检查，默认为true，@Autowired (required=true)
+			当且仅当有1个依赖匹配时，才能正常运行，否则抛错
+			可被标注在属性，setter方法以及构造方法上
+		@Qualifier
+			配合@AutoWired，精确匹配依赖，避免冲突 @Qualifier("user")
+			可被标注在属性上，setter和构造方法上以及其方法的参数前
+	 -->
+	 
 </beans>
