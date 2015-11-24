@@ -1,9 +1,12 @@
-package com.study.spring.aop.before;
+package com.study.spring.aop;
 
 import org.junit.Test;
 import org.springframework.aop.BeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
 
+import com.study.spring.aop.before.GreetingBeforeAdvice;
+import com.study.spring.aop.before.Waiter;
+import com.study.spring.aop.before.WaiterA;
 import com.study.spring.test.BaseTestObject;
 
 public class TestBeforeAdvice extends BaseTestObject{
