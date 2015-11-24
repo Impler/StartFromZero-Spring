@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import com.study.spring.annotation.autowired.DBManager;
 import com.study.spring.annotation.required.OperationLog;
+import com.study.spring.annotation.resource.Foo;
 import com.study.spring.base.domain.User;
 import com.study.spring.test.BaseTestObject;
 
@@ -51,5 +52,11 @@ public class TestAnnotation extends BaseTestObject{
 		DBManager manager = (DBManager) this.annoCtx.getBean("DBManager");
 		manager.addRecord();
 		manager.showOtherDriverInfo();
+	}
+	
+	@Test
+	public void testResource(){
+		Foo f = (Foo) this.annoCtx.getBean("foo");
+		f.showMsg();
 	}
 }

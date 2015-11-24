@@ -21,4 +21,11 @@ public class UserDao implements IUserDao {
 	public void deleteUser(User user){
 		System.out.println("---delete User: " + user);
 	}
+
+	@Override
+	public String toString() {
+		return "UserDao";
+	}
+	
+	
 }

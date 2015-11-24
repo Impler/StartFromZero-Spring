@@ -34,4 +34,11 @@ public class UserService implements IUserService {
 		userDao.addUser(user);
 		System.out.println("--register user successfully");
 	}
+
+
+	@Override
+	public String toString() {
+		return "UserService";
+	}
+	
 }

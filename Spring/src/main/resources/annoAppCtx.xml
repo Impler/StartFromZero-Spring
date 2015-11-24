@@ -36,10 +36,20 @@
 		@Autowired 根据类型自动装配
 			required属性用于依赖检查，默认为true，@Autowired (required=true)
 			当且仅当有1个依赖匹配时，才能正常运行，否则抛错
-			可被标注在属性，setter方法以及构造方法上
+			可标注在属性，setter方法以及构造方法上
 		@Qualifier
 			配合@AutoWired，精确匹配依赖，避免冲突 @Qualifier("user")
-			可被标注在属性上，setter和构造方法上以及其方法的参数前
+			可标注在属性上，setter和构造方法上以及其方法的参数前
 	 -->
 	 
+	 <!-- 
+	 	JSR-250 @Resource，同@Autowired，用于装配bean
+	 		可标注在类的属性和setter方法上
+	 		属性name用于精确匹配依赖(@Resouce(name="..."))，默认情况下注入与name值对应的依赖，如果没有配置name属性，将使用修饰的属性名或setter方法对应的属性名，再者根据类型匹配
+	  -->
+	  
+	  <!-- 
+	  	JSR-250 @PostConstruct
+	  	JSR-250 @PreDestroy
+	   -->
 </beans>
