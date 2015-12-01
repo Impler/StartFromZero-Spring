@@ -4,12 +4,12 @@ import org.junit.Test;
 import org.springframework.aop.BeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
 
-import com.study.spring.aop.before.GreetingBeforeAdvice;
-import com.study.spring.aop.before.Waiter;
-import com.study.spring.aop.before.WaiterA;
+import com.study.spring.aop.advice.Waiter;
+import com.study.spring.aop.advice.WaiterA;
+import com.study.spring.aop.advice.before.GreetingBeforeAdvice;
 import com.study.spring.test.BaseTestObject;
 
-public class TestBeforeAdvice extends BaseTestObject{
+public class TestAdvice extends BaseTestObject{
 
 	@Test
 	public void testBeforeByHardCode() {
@@ -29,8 +29,14 @@ public class TestBeforeAdvice extends BaseTestObject{
 	
 	@Test
 	public void testBeforeByConfigure(){
-		Waiter waiter = (Waiter) super.getBean("waiter");
+		Waiter waiter = (Waiter) super.getBean("beforeWaiter");
 		waiter.greetTo("Kitty");
 		waiter.serveTo("Kitty");
+	}
+	
+	@Test
+	public void testAfter(){
+		Waiter waiter = (Waiter) super.getBean("afterWaiter");
+		waiter.serveTo("Tom");
 	}
 }

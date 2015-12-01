@@ -1,4 +1,4 @@
-package com.study.spring.aop.before;
+package com.study.spring.aop.advice.before;
 
 import java.lang.reflect.Method;
 

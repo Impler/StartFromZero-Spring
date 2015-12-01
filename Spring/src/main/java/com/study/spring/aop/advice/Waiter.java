@@ -1,4 +1,4 @@
-package com.study.spring.aop.before;
+package com.study.spring.aop.advice;
 
 public interface Waiter {
 	public void greetTo(String name);

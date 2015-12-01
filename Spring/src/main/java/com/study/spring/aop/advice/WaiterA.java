@@ -1,4 +1,4 @@
-package com.study.spring.aop.before;
+package com.study.spring.aop.advice;
 
 public class WaiterA implements Waiter {
 

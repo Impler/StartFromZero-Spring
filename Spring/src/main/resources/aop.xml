@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation=
 		"http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 	<!-- 
 	AOP: Aspect Oriented Programming
 	
+	Spring支持5种类型的增强：
+		前置增强：org.springframework.aop.BeforeAdvice代表前置增强，因为Spring只支持方法级别的曾倩，所以MethodBeforeAdvice是目前可用的前置增强，表示在目标方法执行前实施增强
+		后置增强：org.springframework.aop.AfterReturningAdvice代表后置增强，表示在目标方法执行后实施增强
+		环绕增强：org.aopalliance.intercept.MethodInterceptor代表环绕增强，表示在目标方法执行前后实施增强
+		异常抛出增强：org.springframework.aop.ThrowsAdvice代表抛出异常增强，表示在目标方法抛出异常后实施增强
+		引介增强：org.springframework.aop.IntroductionInterceptor代表引介增强，表示在目标累中添加新的方法和属性
 	 -->
-	<bean id="greetingAdvice" class="com.study.spring.aop.before.GreetingBeforeAdvice" />
-	<bean id="target" class="com.study.spring.aop.before.WaiterA" />
-	<bean id="waiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring.aop.before.Waiter"/>
-		<property name="interceptorNames" value="greetingAdvice"/>
+	<!-- before advice start -->
+	<bean id="greetingBeforeAdvice" class="com.study.spring.aop.advice.before.GreetingBeforeAdvice" />
+	<bean id="target" class="com.study.spring.aop.advice.WaiterA" />
+	<bean id="beforeWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="interceptorNames" value="greetingBeforeAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>
+	<!-- before advice end -->
+	<!-- after advice start -->
+	<bean id="greetingAfterAdvice" class="com.study.spring.aop.advice.after.GreetingAfterAdvice" />
+	<bean id="afterWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="interceptorNames" value="greetingAfterAdvice"/>
+		<property name="target" ref="target"/>
+	</bean>
+	<!-- after advice end -->
 </beans>
