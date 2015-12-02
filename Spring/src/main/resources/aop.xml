@@ -7,7 +7,17 @@
         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 	<!-- 
 	AOP: Aspect Oriented Programming
-	
+	AOP概念简介：
+		连接点(JoinPoint)：程序执行特定的点，如方法执行前、后，异常抛出时等
+		增强(Advice)：在特定的连接点，AOP植入的额外的程序逻辑
+		切点(PointCut)：满足一定条件的连接点的集合
+		引介(Introduction)：为目标对象新增属性和方法
+		切面(Aspect)：
+		目标对象(Target Object)：
+		AOP代理(AOP Proxy)：
+		织入(Weaving)：
+	-->
+	<!-- 
 	Spring支持5种类型的增强：
 		前置增强：org.springframework.aop.BeforeAdvice代表前置增强，因为Spring只支持方法级别的曾倩，所以MethodBeforeAdvice是目前可用的前置增强，表示在目标方法执行前实施增强
 		后置增强：org.springframework.aop.AfterReturningAdvice代表后置增强，表示在目标方法执行后实施增强
@@ -32,4 +42,22 @@
 		<property name="target" ref="target"/>
 	</bean>
 	<!-- after advice end -->
+	<!-- around advice start -->
+	<bean id="greetingAroundAdvice" class="com.study.spring.aop.advice.around.GreetingAroundAdvice" />
+	<bean id="aroundWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="interceptorNames" value="greetingAroundAdvice"/>
+		<property name="target" ref="target"/>
+	</bean>
+	<!-- around advice end -->
+	<!-- throw exception advice start -->
+	<bean id="greetingThrowExpAdvice" class="com.study.spring.aop.advice.throwexp.GreetingExceptionAdvice" />
+	<bean id="expWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="interceptorNames" value="greetingAroundAdvice"/>
+		<property name="target" ref="target"/>
+	</bean>
+	<!-- throw exception advice end -->
+	<!-- introduction advice start -->
+	<!-- introduction advice end -->
 </beans>

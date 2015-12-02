@@ -27,6 +27,9 @@ public class TestAdvice extends BaseTestObject{
 		proxy.serveTo("Tom");
 	}
 	
+	/**
+	 * 前置增强
+	 */
 	@Test
 	public void testBeforeByConfigure(){
 		Waiter waiter = (Waiter) super.getBean("beforeWaiter");
@@ -34,9 +37,34 @@ public class TestAdvice extends BaseTestObject{
 		waiter.serveTo("Kitty");
 	}
 	
+	/**
+	 * 后置增强
+	 */
 	@Test
 	public void testAfter(){
 		Waiter waiter = (Waiter) super.getBean("afterWaiter");
 		waiter.serveTo("Tom");
+	}
+	
+	/**
+	 * 环绕增强
+	 */
+	@Test
+	public void testAround(){
+		Waiter waiter = (Waiter) super.getBean("aroundWaiter");
+		waiter.serveTo("Tom");
+	}
+	
+	/**
+	 * 异常抛出增强
+	 */
+	@Test
+	public void testThrowException(){
+		Waiter waiter = (Waiter) super.getBean("expWaiter");
+		try {
+			waiter.cleanTable();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
