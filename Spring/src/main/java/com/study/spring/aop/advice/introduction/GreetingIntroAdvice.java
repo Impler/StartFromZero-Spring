@@ -7,6 +7,7 @@ public class GreetingIntroAdvice implements IntroductionInterceptor, IDoOthers {
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
+		
 		return null;
 	}
 
@@ -17,6 +18,7 @@ public class GreetingIntroAdvice implements IntroductionInterceptor, IDoOthers {
 
 	@Override
 	public void settleAccounts() {
+		System.out.println("waiter settle account for guests");
 	}
 
 }

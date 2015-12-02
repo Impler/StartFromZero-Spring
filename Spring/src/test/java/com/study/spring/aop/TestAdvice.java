@@ -7,6 +7,7 @@ import org.springframework.aop.framework.ProxyFactory;
 import com.study.spring.aop.advice.Waiter;
 import com.study.spring.aop.advice.WaiterA;
 import com.study.spring.aop.advice.before.GreetingBeforeAdvice;
+import com.study.spring.aop.advice.introduction.IDoOthers;
 import com.study.spring.test.BaseTestObject;
 
 public class TestAdvice extends BaseTestObject{
@@ -66,5 +67,15 @@ public class TestAdvice extends BaseTestObject{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 异常抛出增强
+	 */
+	@Test
+	public void testIntroduction(){
+		Waiter waiter = (Waiter) super.getBean("introWaiter");
+		waiter.serveTo("Tom");
+		((IDoOthers)waiter).settleAccounts();
 	}
 }
