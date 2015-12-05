@@ -70,4 +70,48 @@
 		<property name="proxyTargetClass" value="true" />
 	</bean>
 	<!-- introduction advice end -->
+	
+	<!-- 
+		Spring提供了六种类型切点：
+		静态方法切点：org.springframework.aop.support.StaticMethodMatcherPointcut是静态方法切点的抽象类，两个主要子类StaticMethodMatcherPointcutAdvisor根据字符串匹配方法签名，AbstractRegexpMethodPointcut根据正则表达式陪陪方法签名
+		动态方法切点：org.springframework.aop.support.DynamicMethodMatcherPointcut
+		注解切点：org.springframework.aop.support.annotation.AnnotationMatchingPointcut
+		表达式切点：org.springframework.aop.support.ExpressionPointcut
+		流程切点：org.springframework.aop.support.ControlFlowPointcut
+		复合切点：org.springframework.aop.support.ComposablePointcut
+	 -->
+	 
+	 <!-- 
+	 	Spring切面类型：
+	 	一般切面(Advisor)：仅包含一个Advice，因为Advice包含了横切代码和连接点的信息，所以Advice本身就是一个简单切面，只不过它代表的横切的连接点是所有目标类的所有方法。太宽泛，不会直接使用
+	 	切点切面(PointcutAdvisor)：具有切点的切面，它包含Advice和Pointcut两个类，这样我们就可以通过类、方法名以及方法方位等信息灵活的定义切面的连接点，提供工具适用性的切面
+	 	引介切面(IntroductionAdvisor)：对应引介增强的特殊切面，应用于类层面上
+	  -->
+	  
+	  <!-- 
+	  	PointcutAdvisor主要有6个具体的实现类：
+	  	DefaultPointcutAdvisor：可以通过任意Pointcut和Advice定义一个切面，但不支持引介切面，一般可以通过扩展该类实现自定义的切面
+	  	NameMatchMethodPointcutAdvisor：定义按照方法名定义切点的切面
+	  	RegexpMethodPointcutAdvisor：定义正则表达式方法名切点
+	  	StaticMethodMatcherPointcutAdvisor：静态方法匹配器切点定义的切面，默认情况下匹配所有的目标类
+	  	AspectJExpressionPointcutAdvisor：用于AspectJ切点表达式定义切点的切面
+	  	AspectJPointcutAdvisor：用于AspectJ语法定义切点的切面
+	   -->
+	   
+	   <!-- static method matched advisor start-->
+	   <bean id="staticMMAdvisor" class="com.study.spring.aop.advisor.staticmethod.GreetingAdvisor">
+	   		<property name="advice" ref=”greetingBeforeAdvice“></property>
+	   </bean>
+		<bean id="parent"  abstract="true" class="org.springframework.aop.framework.ProxyFactoryBean">
+			<property name="interceptorNames" value="staticMMAdvisor"/>
+			<property name="proxyTargetClass" value="true" />
+		</bean>
+		<bean id="staticMMWaiter" parent="parent" >
+			<property name="target" ref="target" />
+		</bean>
+		<bean id="seller" class="com.study.spring.aop.advisor.SellerA">
+		<bean id="staticMMSeller" parent="parent">
+			<property name="target"  ref="seller"/>
+		</bean>
+	   <!-- static method matched advisor end-->
 </beans>
