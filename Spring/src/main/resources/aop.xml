@@ -100,7 +100,7 @@
 	   
 	   <!-- static method matched advisor start-->
 	   <bean id="staticMMAdvisor" class="com.study.spring.aop.advisor.staticmethod.GreetingAdvisor">
-	   		<property name="advice" ref=”greetingBeforeAdvice“></property>
+	   		<property name="advice" ref="greetingBeforeAdvice"/>
 	   </bean>
 		<bean id="parent"  abstract="true" class="org.springframework.aop.framework.ProxyFactoryBean">
 			<property name="interceptorNames" value="staticMMAdvisor"/>
@@ -109,9 +109,9 @@
 		<bean id="staticMMWaiter" parent="parent" >
 			<property name="target" ref="target" />
 		</bean>
-		<bean id="seller" class="com.study.spring.aop.advisor.SellerA">
+		<bean id="seller" class="com.study.spring.aop.advisor.SellerA" />
 		<bean id="staticMMSeller" parent="parent">
-			<property name="target"  ref="seller"/>
+			<property name="target" ref="seller"/>
 		</bean>
 	   <!-- static method matched advisor end-->
 </beans>
