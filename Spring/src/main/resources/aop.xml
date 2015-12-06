@@ -60,6 +60,7 @@
 	<!-- throw exception advice end -->
 	<!-- introduction advice start -->
 	<!-- 
+		TODO
 		引介增强是一种比较特殊的增强类型，它不是在目标方法周围织入增强，而是为目标类创建新的方法和属性，所以引介增强的连接点是类级别的，而非方法级别的。
 	 -->
 	<bean id="greetingIntroAdvice" class="com.study.spring.aop.advice.introduction.GreetingIntroAdvice" />
@@ -172,5 +173,18 @@
 	   <!-- composable advisor end -->
 	   
 	   <!-- introduction advisor start -->
+	   <!-- TODO -->
 	   <!-- introduction advisor end -->
+	   
+	   <!-- 
+	   	自动创建代理 
+	   	前面的例子，都是通过ProxyFactoryBean创建织入切面的代理，每一个需要被代理的bean都要使用一个ProxyFactoryBean进行配置，太过繁琐。
+	   	Spring使用BeanPostProcessor完成自动创建代理的工作
+	   	BeanPostProcessor的三类实现：
+	   	BeanNameAutoProxyCreator：基于Bean配置名规则的自动代理创建器
+		DefaultAdvisorAutoProxyCreator：基于Advisor匹配机制的自动代理创建器
+		AnnotationAwareAspectJAutoProxyCreator：基于Bean中AspjectJ注解标签的自动代理创建器
+		
+		TODO	   	
+	   	-->
 </beans>
