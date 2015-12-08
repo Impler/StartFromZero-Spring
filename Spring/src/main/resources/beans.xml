@@ -180,7 +180,13 @@
 	   	 	例如:
 	   	 	<bean id="..." class="..." p:foo-ref="fooBean" depends-on="fooBean" />
 	   -->
-	   
+	   <bean id="dependsOnBean" class="com.study.spring.bean.ioc.DependencyInjection" depends-on="fooUser" />
+	   <bean id="fooUser" class="com.study.spring.base.domain.User">
+			<property name="name" value="foo"/>
+			<property name="age" value="23"/>
+			<property name="married" value="false" />
+			<property name="sex" value="M" />
+		</bean>
 	   <!-- 
 	   	 8. Lazy-initialized
 	   	 	Spring在初始化容器时默认实例化singleton bean，如果希望某个bean使用时再实例化，可以指定lazy-init="true"
