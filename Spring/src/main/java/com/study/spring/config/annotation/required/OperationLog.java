@@ -1,4 +1,4 @@
-package com.study.spring.annotation.required;
+package com.study.spring.config.annotation.required;
 
 import java.util.Date;
 

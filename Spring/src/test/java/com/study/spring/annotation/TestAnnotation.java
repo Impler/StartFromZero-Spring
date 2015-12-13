@@ -7,13 +7,14 @@ import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-import com.study.spring.annotation.autowired.DBManager;
-import com.study.spring.annotation.required.OperationLog;
-import com.study.spring.annotation.resource.Foo;
 import com.study.spring.base.domain.User;
+import com.study.spring.config.annotation.UserManager;
+import com.study.spring.config.annotation.autowired.DBManager;
+import com.study.spring.config.annotation.required.OperationLog;
+import com.study.spring.config.annotation.resource.Foo;
 import com.study.spring.test.BaseTestObject;
 
-@ComponentScan("com.study.spring.annotation")
+@ComponentScan("com.study.spring.config.annotation")
 public class TestAnnotation extends BaseTestObject{
 	//只用于纯注解配置的测试案例
 	private AnnotationConfigApplicationContext annoCtx;

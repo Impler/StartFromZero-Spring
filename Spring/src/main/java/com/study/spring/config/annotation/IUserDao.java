@@ -1,4 +1,4 @@
-package com.study.spring.annotation;
+package com.study.spring.config.annotation;
 
 import com.study.spring.base.domain.User;
 
