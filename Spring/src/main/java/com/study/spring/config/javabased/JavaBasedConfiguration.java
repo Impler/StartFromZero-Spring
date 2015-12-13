@@ -1,4 +1,4 @@
-package com.study.spring.javabased;
+package com.study.spring.config.javabased;
 
 /**
  * @Configuration注解用来修饰类，表示该类将作为定义bean的资源，其本身也会作为一个bean，类似于Spring xml格式配置文件中的<beans>节点

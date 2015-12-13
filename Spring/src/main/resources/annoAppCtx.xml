@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 	
 	<!-- <context:annotation-config /> -->
-	<context:component-scan base-package="com.study.spring.annotation"/>
+	<context:component-scan base-package="com.study.spring.config.annotation"/>
 	
 	<!-- 
 		@Component，@Repository，@Service，@Controller
@@ -27,7 +27,7 @@
 			初始化bean时对bean进行依赖检查，只检查依赖是否设置过，而不论值是什么
 			注解只能标注在setter方法上
 	 -->
-	<bean id="operationLog" class="com.study.spring.annotation.required.OperationLog">
+	<bean id="operationLog" class="com.study.spring.config.annotation.required.OperationLog">
 		<!-- 如果没有设置required依赖，初始化时即会抛错： org.springframework.beans.factory.BeanInitializationException: Property 'operator' is required for bean 'operationLog'-->
 		<property name="operator" ref="user" />
 	</bean>

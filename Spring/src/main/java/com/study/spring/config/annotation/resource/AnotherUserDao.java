@@ -1,9 +1,9 @@
-package com.study.spring.annotation.resource;
+package com.study.spring.config.annotation.resource;
 
 import org.springframework.stereotype.Component;
 
-import com.study.spring.annotation.IUserDao;
 import com.study.spring.base.domain.User;
+import com.study.spring.config.annotation.IUserDao;
 
 @Component
 public class AnotherUserDao implements IUserDao {
