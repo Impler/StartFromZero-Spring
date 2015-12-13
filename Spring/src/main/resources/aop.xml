@@ -27,9 +27,9 @@
 	 -->
 	<!-- before advice start -->
 	<bean id="greetingBeforeAdvice" class="com.study.spring.aop.advice.before.GreetingBeforeAdvice" />
-	<bean id="target" class="com.study.spring.aop.advice.WaiterA" />
+	<bean id="target" class="com.study.spring.aop.WaiterA" />
 	<bean id="beforeWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="proxyInterfaces" value="com.study.spring.aop.Waiter"/>
 		<property name="interceptorNames" value="greetingBeforeAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>
@@ -37,7 +37,7 @@
 	<!-- after advice start -->
 	<bean id="greetingAfterAdvice" class="com.study.spring.aop.advice.after.GreetingAfterAdvice" />
 	<bean id="afterWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="proxyInterfaces" value="com.study.spring.aop.Waiter"/>
 		<property name="interceptorNames" value="greetingAfterAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>
@@ -45,7 +45,7 @@
 	<!-- around advice start -->
 	<bean id="greetingAroundAdvice" class="com.study.spring.aop.advice.around.GreetingAroundAdvice" />
 	<bean id="aroundWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="proxyInterfaces" value="com.study.spring.aop.Waiter"/>
 		<property name="interceptorNames" value="greetingAroundAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>
@@ -53,7 +53,7 @@
 	<!-- throw exception advice start -->
 	<bean id="greetingThrowExpAdvice" class="com.study.spring.aop.advice.throwexp.GreetingExceptionAdvice" />
 	<bean id="expWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring.aop.advice.Waiter"/>
+		<property name="proxyInterfaces" value="com.study.spring.aop.Waiter"/>
 		<property name="interceptorNames" value="greetingAroundAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>

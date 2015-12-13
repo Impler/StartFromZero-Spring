@@ -1,6 +1,6 @@
 package com.study.spring.aop.advisor.controlflow;
 
-import com.study.spring.aop.advice.Waiter;
+import com.study.spring.aop.Waiter;
 
 public class WaiterDelegate {
 	private Waiter waiter;

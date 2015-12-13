@@ -2,7 +2,7 @@ package com.study.spring.aop;
 
 import org.junit.Test;
 
-import com.study.spring.aop.advice.Waiter;
+import com.study.spring.aop.Waiter;
 import com.study.spring.aop.advisor.Seller;
 import com.study.spring.aop.advisor.controlflow.WaiterDelegate;
 import com.study.spring.test.BaseTestObject;
