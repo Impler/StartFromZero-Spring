@@ -19,5 +19,8 @@
 	
 	<!-- Composing XML-based configuration by import resource -->
 	<import resource="beans.xml" />
+	<!-- 避免与aspectj.xml互相影响
 	<import resource="aop.xml" />
+	 -->
+	<import resource="aspectj.xml" />
 </beans>
