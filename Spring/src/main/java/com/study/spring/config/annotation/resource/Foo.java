@@ -1,11 +1,11 @@
-package com.study.spring.annotation.resource;
+package com.study.spring.config.annotation.resource;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
-import com.study.spring.annotation.IUserDao;
-import com.study.spring.annotation.IUserService;
+import com.study.spring.config.annotation.IUserDao;
+import com.study.spring.config.annotation.IUserService;
 
 @Component
 public class Foo {

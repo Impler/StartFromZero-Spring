@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+        http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+		
+	<!-- 目标bean -->
+	<bean id="waiter" class="com.study.spring.aop.WaiterA" />
+	<!-- 切面类 -->
+	<bean class="com.study.spring.aop.aspectj.BeforeGreetingAspect" />
+	<!-- 自动代理创建器，自动将@AspectJ标识的切面类织入到目标bean中 -->
+	<!-- 
+	<bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator" />
+	 -->
+	<!-- 使用aop schema 可以代替上面注册的自动代理创建器 -->
+	<aop:aspectj-autoproxy />
+	
+	
+	<!-- 
+		使用@Aspect将com.study.spring.aop.aspectj.BeforeGreetingAspect标识为一个切面
+		使用@Before("execution(* greetTo(..))")定义切点和增强类型，在目标类的greetTo()方法上织入增强，标识在增强的逻辑方法上
+		@Before表示该增强为前置增强，可以向该注解传递参数，称execution(* greetTo(..))为切点表达式，execution()为切点表达式函数，* greetTo(..)为函数的入参
+
+		切点表达式函数
+		Spring支持9个切点表达式函数，分为4中类型
+		方法切点函数：通过描述目标类方法信息定义连接点 execution(), @annotation()
+		方法入参切点函数：通过描述目标类方法入参的信息定义连接点 args(), @args()
+		目标类切点函数：通过描述目标类类型信息定义连接点 within(), target(), @within(), @target()
+		代理类切点函数：通过描述目标类的代理类的信息定义连接点 this()	
+	 -->
+	
+	<!-- 
+		之前使用各种借口描述不同的增强类型，@AspectJ则提供了各种增强类型注解类
+		@Before 前置增强 相当于BeforeAdivce
+		@AfterReturning 后置增强 相当于AfterReturningAdvice
+		@Around 环绕增强 相当于MethodInterceptor
+		@AfterThrowing 异常抛出增强，相当于ThrowsAdvice
+		@After Final增强，不管是抛出异常或是正常退出，该增强都会执行。没有对应的接口，一般用于释放资源
+		@DeclareParents 引介增强 相当于IntroductionInterceptor
+	 -->
+	
+</beans>
