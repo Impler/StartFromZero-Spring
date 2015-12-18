@@ -12,7 +12,7 @@ public class DependencyInjection {
 	private User constBasedUser;
 	public DependencyInjection(){
 		super();
-		System.out.println(System.currentTimeMillis());
+		System.out.println(this.getClass().getName() + "is created at: " + System.currentTimeMillis());
 	}
 	// Constructor based dependency injection
 	// ① injection by argument type
