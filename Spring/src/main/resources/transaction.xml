@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/beans/spring-aop-3.1.xsd">
+        
+	<!-- 
+		数据库事务：多条sql，全部执行成功则成功，有一条失败则全部失败
+		事务的4个特性：
+		原子性：组成一个事务的多个数据库操作是一个不可分割的原子单元，只有所有的操作执行成功，整个事务才提交，事务中任何一个数据库操作失败，已经执行的任何操作都必须撤销，让数据库恢复到初始状态
+		一致性：事务操作成功后，数据库所处的状态和他的业务规则是一致的，即数据不会被破坏。如A转给B100元，不管成功与否，A、B总额不变
+		隔离性：在并发数据操作时，不同的事务拥有各自的数据空间，他们的操作不会对对方产生干扰
+		持久性：一旦事务提交成功后，事务中所有的数据操作都必须被持久化到数据库中，即使数据库崩溃，重启后必须要能保证可以通过某种机制恢复数据
+		
+		数据并发可能引起的问题：
+		脏读：A事务读取B事务尚未提交的更改数据，并在此基础上操作。如果恰巧B事务回滚，那么A事务读到的数据是不被承认的
+		不可重复读：A事务读取了B事务已经提交的更改数据。如在A事务两次查询数据间隔内，B修改提交了数据，导致A两次查询数据不一致
+		幻象读：A事务读取到B事务提交的新增数据。不可重复读是指读到了已经提交事务的更改数据，而幻象读是指读到了已经提交事务的新增数据
+		第一类丢失更新：A事务撤销时，覆盖B事务已经更新的数据
+		第二类丢失更新；A事务提交时，覆盖B事务已经提交的数据
+	 -->
+
+</beans>
