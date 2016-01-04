@@ -20,12 +20,14 @@ public class TestAnnotation extends BaseTestObject{
 	private AnnotationConfigApplicationContext annoCtx;
 	@Before
 	public void init(){
+		System.out.println("****test annotation start****");
 		annoCtx = new AnnotationConfigApplicationContext(this.getClass());
 	}
 	
 	@After
 	public void end(){
 		annoCtx.close();
+		System.out.println("****test annotation end****");
 	}
 
 	@Test

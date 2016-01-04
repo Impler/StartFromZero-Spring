@@ -1,11 +1,24 @@
 package com.study.spring.bean.ioc;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.study.spring.base.domain.User;
 import com.study.spring.test.BaseTestObject;
 
 public class TestDependencyInjection extends BaseTestObject{
+	
+	@Before
+	public void init(){
+		System.out.println("****test DI start****");
+	}
+	
+	@After
+	public void end(){
+		System.out.println("****test DI end****");
+	}
+	
 	@Test
 	//setter injection
 	public void testSetterInjection() {

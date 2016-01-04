@@ -1,5 +1,7 @@
 package com.study.spring.aop;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.aop.BeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
@@ -12,6 +14,15 @@ import com.study.spring.test.BaseTestObject;
 
 public class TestAdvice extends BaseTestObject{
 
+	@Before
+	public void init(){
+		System.out.println("****test advice start****");
+	}
+	
+	@After
+	public void end(){
+		System.out.println("****test advice end****");
+	}
 	@Test
 	public void testBeforeByHardCode() {
 		Waiter target = new WaiterA();

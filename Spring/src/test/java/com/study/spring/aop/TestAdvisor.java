@@ -1,5 +1,7 @@
 package com.study.spring.aop;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.study.spring.aop.Waiter;
@@ -8,6 +10,16 @@ import com.study.spring.aop.advisor.controlflow.WaiterDelegate;
 import com.study.spring.test.BaseTestObject;
 
 public class TestAdvisor  extends BaseTestObject{
+	
+	@Before
+	public void init(){
+		System.out.println("****test advisor start****");
+	}
+	
+	@After
+	public void end(){
+		System.out.println("****test advisor end****");
+	}
 	
 	/**
 	 * static method matched advisor
