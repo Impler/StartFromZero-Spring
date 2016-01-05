@@ -13,11 +13,8 @@
         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/beans/spring-aop-3.1.xsd">
-	<!-- hello world start -->
-	<bean id="userDao" class="com.study.spring.helloworld.dao.impl.UserDaoImpl"></bean>
-	<!-- hello world end -->
-	
 	<!-- Composing XML-based configuration by import resource -->
+	<import resource="helloworld.xml" />
 	<import resource="beans.xml" />
 	<!-- 避免与aspectj.xml互相影响
 	<import resource="aop.xml" />

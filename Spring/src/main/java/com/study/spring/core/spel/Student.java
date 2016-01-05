@@ -1,6 +1,7 @@
 package com.study.spring.core.spel;
 
 public class Student {
+	public static final String IDENTITY = "student";	//身份
 	private int id;
 	private String name;
 	private char sex;
@@ -28,6 +29,10 @@ public class Student {
 	}
 	public void setSex(char sex) {
 		this.sex = sex;
+	}
+	
+	public static String getIdentity(){
+		return IDENTITY;
 	}
 	@Override
 	public String toString() {
