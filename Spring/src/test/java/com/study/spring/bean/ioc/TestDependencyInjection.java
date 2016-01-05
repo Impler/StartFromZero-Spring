@@ -9,6 +9,11 @@ import com.study.spring.test.BaseTestObject;
 
 public class TestDependencyInjection extends BaseTestObject{
 	
+	@Override
+	protected String getConfigFileName() {
+		return "beans.xml";
+	}
+
 	@Before
 	public void init(){
 		System.out.println("****test DI start****");
@@ -95,4 +100,5 @@ public class TestDependencyInjection extends BaseTestObject{
 		DependencyInjection di = (DependencyInjection) super.getBean("dependsOnBean");
 		System.out.println(di.getSetterBasedUser());
 	}
+
 }

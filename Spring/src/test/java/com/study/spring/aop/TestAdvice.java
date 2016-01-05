@@ -6,14 +6,18 @@ import org.junit.Test;
 import org.springframework.aop.BeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
 
-import com.study.spring.aop.Waiter;
-import com.study.spring.aop.WaiterA;
 import com.study.spring.aop.advice.before.GreetingBeforeAdvice;
 import com.study.spring.aop.advice.introduction.IDoOthers;
 import com.study.spring.test.BaseTestObject;
 
+
 public class TestAdvice extends BaseTestObject{
 
+	@Override
+	protected String getConfigFileName() {
+		return "aop.xml";
+	}
+	
 	@Before
 	public void init(){
 		System.out.println("****test advice start****");

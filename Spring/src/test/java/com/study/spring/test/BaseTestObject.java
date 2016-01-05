@@ -2,36 +2,44 @@ package com.study.spring.test;
 
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class BaseTestObject {
-	private ClassPathXmlApplicationContext ctx;
-	private ClassPathXmlApplicationContext aCtx;
+import com.mysql.jdbc.StringUtils;
+
+public abstract class BaseTestObject {
+	private String configFileName;
+	private AbstractApplicationContext ctx;
+	
+	public BaseTestObject() {
+		super();
+		this.configFileName = getConfigFileName();
+	}
+	
+	protected abstract String getConfigFileName();
+	
 	@Before
 	public void prepare(){
-		ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-		aCtx = new ClassPathXmlApplicationContext("annoAppCtx.xml");
+		if(!StringUtils.isNullOrEmpty(this.configFileName)){
+			if(this.configFileName.startsWith("anno")){
+				ctx = new AnnotationConfigApplicationContext(configFileName);
+			}else{
+				ctx = new ClassPathXmlApplicationContext(configFileName);
+			}
+		}
+		
 	}
 	@After
 	public void close(){
 		ctx.close();
-		aCtx.close();
 	}
 	
-	public ClassPathXmlApplicationContext getContext(){
+	public AbstractApplicationContext getContext(){
 		return ctx;
 	}
 	
 	public Object getBean(String beanName){
 		return ctx.getBean(beanName);
 	}
-	
-	public ClassPathXmlApplicationContext getAnnotationContext(){
-		return aCtx;
-	}
-	
-	public Object getAnnoBean(String beanName){
-		return aCtx.getBean(beanName);
-	}
-	
 }

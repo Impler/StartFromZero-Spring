@@ -11,6 +11,11 @@ import com.study.spring.test.BaseTestObject;
 
 public class TestAdvisor  extends BaseTestObject{
 	
+	@Override
+	protected String getConfigFileName() {
+		return "aop.xml";
+	}
+	
 	@Before
 	public void init(){
 		System.out.println("****test advisor start****");

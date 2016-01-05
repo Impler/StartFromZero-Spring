@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
-        http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/beans/spring-aop-3.1.xsd">
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
         
 	<!-- 
 		数据库事务：多条sql，全部执行成功则成功，有一条失败则全部失败
@@ -26,4 +27,18 @@
 	 	Spring事务管理的亮点在于声明式事务管理。通过声明方式，在IoC配置中制定事务的边界和事务的属性，Spring自动在制定的事务边界上应用事务属性。
 	 	Spring的声明式事务管理是通过Spring AOP实现的，通过事务的声明性信息，Spring负责将事务管理增强逻辑动态植入到业务方法相应连接点中。这些逻辑包括获取线程绑定资源、开始事务、提交/回滚事务、进行异常转换和处理等工作
 	  -->
+	  
+	  <context:property-placeholder location="classpath:jdbc.properties" />
+	  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+	  	p:driverClassName="${jdbc.driverClassName}"
+		p:url="${jdbc.url}" 
+		p:username="${jdbc.username}" 
+		p:password="${jdbc.password}" />
+	  
+	  <!-- 
+	  	在Spring的早期版本，用户必须使用原始的TransactionProxyFactoryBean对需要事务管理的业务类进行代理，以便实施事务功能的增强
+	   -->
+	  <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+	  	p:dataSource-ref="dataSource"/>
+	   
 </beans>

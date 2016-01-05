@@ -10,6 +10,12 @@ import com.study.spring.aop.WaiterA;
 import com.study.spring.test.BaseTestObject;
 
 public class TestAspectJ extends BaseTestObject{
+	
+	@Override
+	protected String getConfigFileName() {
+		return "aspectj.xml";
+	}
+	
 	@Before
 	public void init(){
 		System.out.println("****test aspectJ start****");
@@ -55,4 +61,5 @@ public class TestAspectJ extends BaseTestObject{
 		waiter.greetTo("TOM");
 		waiter.serveTo("TOM");
 	}
+	
 }
