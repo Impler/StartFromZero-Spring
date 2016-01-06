@@ -28,7 +28,7 @@ import org.junit.Test;
  * 你也可以指定具体的资源路径来获取资源
  * 例如：
  * Resource template = ctx.getResource("classpath:some/resource/path/myTemplate.txt");将返回ClassPathResource对象，而不论application context是何种类型
- * Resource template = ctx.getResource("file:///some/resource/path/myTemplate.txt");将返回FileSystemResource对象，而不论application context是何种类型
+ * Resource template = ctx.getResource("file:///some/resource/path/myTemplate.txt");将返回UrlResource对象，而不论application context是何种类型
  * Resource template = ctx.getResource("http://myhost.com/resource/path/myTemplate.txt");将返回UrlResource对象，而不论application context是何种类型
  * 
  * ResourceLoaderAware接口
@@ -38,6 +38,19 @@ import org.junit.Test;
  * }
  * application context会自动调用受spring托管的实现了ResourceLoader接口的bean的setResourceLoader方法，将自己注入进去。因为application context 也是ResourceLoader的实例
  * 
+ * 
+ * classpath*:前缀
+ * 与classpath:前缀对应的，classpath*:前缀会扫描classpath下多个Jar包或文件，并将扫描到的多个资源组合在一起。该前缀适用于分模块打包的应用，每个模块单独打jar包，classpath*:可以扫描到位于不同jar包内的配置文件
+ * 
+ * Ant风格资源地址
+ * 3种匹配符：
+ * ?: 匹配文件名中的一个字符
+ * *: 匹配文件名中的任意个字符
+ * **: 匹配多层路径
+ * 例如:
+ * classpath:com/t?st.xml匹配classpath:com/test.xml和classpath:com/tast.xml
+ * file:D:/config/*.xml匹配config目录下所有xml格式文件
+ * classpath:com/** /test.xml匹配com类路径及子孙路径下的test.xml
  */
 public class TestResource {
 
