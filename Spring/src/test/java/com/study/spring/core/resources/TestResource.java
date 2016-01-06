@@ -22,6 +22,22 @@ import org.junit.Test;
  * 
  * ResourceLoader接口
  * ResourceLoader接口的实现用于返回Resource实例，所有的application context都实现了该接口，所以可以从application context中获取Resource实例
+ * 当从一个application context中调用getResource()方法，如果资源路径没有显示指定类型，将返回与当前context一致的Resource对象，
+ * 例如：Resource template = ctx.getResource("some/resource/path/myTemplate.txt");
+ * 当ctx为ClassPathXmlApplicationContext实例时，将返回ClassPathResource对象，同样的，如果ctx为FileSystemXmlApplicationContext实例，将返回FileSystemResource对象
+ * 你也可以指定具体的资源路径来获取资源
+ * 例如：
+ * Resource template = ctx.getResource("classpath:some/resource/path/myTemplate.txt");将返回ClassPathResource对象，而不论application context是何种类型
+ * Resource template = ctx.getResource("file:///some/resource/path/myTemplate.txt");将返回FileSystemResource对象，而不论application context是何种类型
+ * Resource template = ctx.getResource("http://myhost.com/resource/path/myTemplate.txt");将返回UrlResource对象，而不论application context是何种类型
+ * 
+ * ResourceLoaderAware接口
+ * ResourceLoaderAware是一个标识性接口，表示该对象需要一个ResourceLoader的引用
+ * public interface ResourceLoaderAware {
+ * 		void setResourceLoader(ResourceLoader resourceLoader);
+ * }
+ * application context会自动调用受spring托管的实现了ResourceLoader接口的bean的setResourceLoader方法，将自己注入进去。因为application context 也是ResourceLoader的实例
+ * 
  */
 public class TestResource {
 
