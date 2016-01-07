@@ -1,7 +1,5 @@
 package com.study.spring.core.resources;
 
-import org.junit.Test;
-
 /**
  * @author Impler
  * @date 2016-01-06
@@ -38,7 +36,7 @@ import org.junit.Test;
  * }
  * application context会自动调用受spring托管的实现了ResourceLoader接口的bean的setResourceLoader方法，将自己注入进去。因为application context 也是ResourceLoader的实例
  * 
- * 
+ * spring的资源路径可以是明确指定的资源，也可以是含有classpath*:前缀或Ant风格的表达式
  * classpath*:前缀
  * 与classpath:前缀对应的，classpath*:前缀会扫描classpath下多个Jar包或文件，并将扫描到的多个资源组合在一起。该前缀适用于分模块打包的应用，每个模块单独打jar包，classpath*:可以扫描到位于不同jar包内的配置文件
  * 
@@ -51,11 +49,15 @@ import org.junit.Test;
  * classpath:com/t?st.xml匹配classpath:com/test.xml和classpath:com/tast.xml
  * file:D:/config/*.xml匹配config目录下所有xml格式文件
  * classpath:com/** /test.xml匹配com类路径及子孙路径下的test.xml
+ * 
+ * FileSystemResource 相对路径与绝对路径
+ * FileSystemResource 将资源路径当做相对于当前工作目录的相对路径对待，不管路径是否以/开头，如果想要使用相对于根路径的绝对路径，最好使用file:前缀返回UrlResource
+ * 例如：
+ * FileSystemXmlApplicationContext ctx = ...;
+ * ctx.getResource("some/resource/path/myTemplate.txt");
+ * 与下面的配置结果是一样的
+ * FileSystemXmlApplicationContext ctx = ...;
+ * ctx.getResource("/some/resource/path/myTemplate.txt");
  */
 public class TestResource {
-
-	@Test
-	public void test(){
-		
-	}
 }
