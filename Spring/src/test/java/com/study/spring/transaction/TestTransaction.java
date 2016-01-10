@@ -2,8 +2,6 @@ package com.study.spring.transaction;
 
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.junit.Test;
 
 import com.study.spring.test.BaseTestObject;
@@ -16,9 +14,23 @@ public class TestTransaction extends BaseTestObject{
 	}
 	
 	@Test
-	public void test() throws SQLException {
-		DataSource ds = (DataSource) super.getBean("dataSource");
-		System.out.println(ds.getConnection().isClosed());;
+	public void testTransByTransactionProxyFactoryBean(){
+		UserService service = (UserService) super.getBean("userService");
+		try {
+			service.regist();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testAopTransaction(){
+		UserService service = (UserService)super.getBean("userServiceTarget");
+		try {
+			service.regist();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
