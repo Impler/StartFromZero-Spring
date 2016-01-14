@@ -15,7 +15,7 @@ public class TestTransaction extends BaseTestObject{
 	
 	@Test
 	public void testTransByTransactionProxyFactoryBean(){
-		UserService service = (UserService) super.getBean("userService");
+		UserService service = super.getContext().getBean("userService", UserService.class);
 		try {
 			service.regist();
 		} catch (SQLException e) {
