@@ -3,11 +3,13 @@ package com.study.spring.core.jdbc;
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.Arrays;
+import java.util.List;
 
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -63,7 +65,7 @@ public class BlogArticleDaoImpl implements IBlogArticleDao {
 
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS, ResultSet.CONCUR_UPDATABLE);
+				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setString(1, ba.getTitle());
 				ps.setString(2, ba.getAuthor());
 				ps.setBlob(3, new ByteArrayInputStream(ba.getContent().getBytes()));
@@ -74,4 +76,33 @@ public class BlogArticleDaoImpl implements IBlogArticleDao {
 		System.out.println("last blog id is: " + keyHolder.getKey());
 	}
 
+	@Override
+	public void batchUpdate(List<BlogArticle> bas) {
+		String[] sqls = {"update t_blog set author='李四' where id=1", 
+							"delete from t_blog where id=5"};
+		int[] result = jt.batchUpdate(sqls);
+		System.out.println("batchUpdate(sqls) result: " + Arrays.toString(result));
+		
+		//重载方法1
+		String sql = "update t_blog set author = ? where id = ?";
+		result = jt.batchUpdate(sql, new BatchPreparedStatementSetter(){
+
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				BlogArticle ba = bas.get(i);
+				ps.setString(1, ba.getAuthor());
+				ps.setInt(2, ba.getId());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return bas.size();
+			}
+			
+		});
+		
+		System.out.println("batchUpdate(sql, pssetter) result: " + Arrays.toString(result));
+	}
+
+	
 }

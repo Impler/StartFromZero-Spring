@@ -6,6 +6,22 @@ public class BlogArticle {
 	private String content;
 	private String author;
 
+	
+	public BlogArticle() {
+		super();
+	}
+	
+	
+	public BlogArticle(int id, String title, String author, String content) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.author = author;
+	}
+
+
+
 	public int getId() {
 		return id;
 	}
