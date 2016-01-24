@@ -54,4 +54,10 @@ public class BlogArticle {
 		this.author = author;
 	}
 
+
+	@Override
+	public String toString() {
+		return "BlogArticle [id=" + id + ", title=" + title + ", content=" + content + ", author=" + author + "]";
+	}
+	
 }

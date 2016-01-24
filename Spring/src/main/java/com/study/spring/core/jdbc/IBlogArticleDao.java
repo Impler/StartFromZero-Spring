@@ -6,4 +6,7 @@ public interface IBlogArticleDao {
 
 	public void add(BlogArticle ba);
 	public void batchUpdate(List<BlogArticle> bas);
+	public BlogArticle getBlogById(int id);
+	public List<BlogArticle> getBlogsByAuthor(String author);
+	public int getBlogCount();
 }

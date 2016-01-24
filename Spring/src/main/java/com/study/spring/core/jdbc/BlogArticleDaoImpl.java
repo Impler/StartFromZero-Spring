@@ -3,6 +3,7 @@ package com.study.spring.core.jdbc;
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
@@ -13,6 +14,8 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 public class BlogArticleDaoImpl implements IBlogArticleDao {
@@ -102,6 +105,52 @@ public class BlogArticleDaoImpl implements IBlogArticleDao {
 		});
 		
 		System.out.println("batchUpdate(sql, pssetter) result: " + Arrays.toString(result));
+	}
+
+	@Override
+	public BlogArticle getBlogById(int id) {
+		BlogArticle blog = new BlogArticle();
+		String sql = "select * from t_blog where id = ?";
+		jt.query(sql, new Object[]{id}, new RowCallbackHandler(){
+
+			@Override
+			public void processRow(ResultSet rs) throws SQLException {
+				blog.setId(rs.getInt("id"));
+				blog.setAuthor(rs.getString("author"));
+				blog.setTitle(rs.getString("title"));
+				blog.setContent(rs.getClob("content").toString());
+			}
+			
+		});
+		return blog;
+	}
+
+	@Override
+	public List<BlogArticle> getBlogsByAuthor(String title) {
+		List<BlogArticle> blogs = null;
+		String sql = "select * from t_blog where author like ?";
+		blogs = jt.query(sql, new Object[]{"%" + title + "%"}, new RowMapper<BlogArticle>(){
+
+			@Override
+			public BlogArticle mapRow(ResultSet rs, int rowNum) throws SQLException {
+				System.out.println("row mapper row num: " + rowNum);
+				BlogArticle blog = new BlogArticle();
+				blog.setId(rs.getInt("id"));
+				blog.setAuthor(rs.getString("author"));
+				blog.setTitle(rs.getString("title"));
+				blog.setContent(rs.getClob("content").toString());
+				return blog;
+			}
+			
+		});
+		return blogs;
+	}
+
+	@Override
+	public int getBlogCount() {
+		String sql = "select count(*) from t_blog";
+		// queryForInt/queryForLong is deprecated, all use queryForObject
+		return jt.queryForObject(sql, Integer.class);
 	}
 
 	

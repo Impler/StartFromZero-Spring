@@ -17,6 +17,9 @@ public class TestJDBC extends BaseTestObject{
 	}
 	
 	@Test
+	/**
+	 * test execute()
+	 */
 	public void testJDBCTmpByHardcode() {
 		DriverManagerDataSource ds = (DriverManagerDataSource) super.getBean("dataSource");
 		JdbcTemplate tmp = new JdbcTemplate(ds);
@@ -26,6 +29,9 @@ public class TestJDBC extends BaseTestObject{
 
 
 	@Test
+	/**
+	 * test update()
+	 */
 	public void testUpdate(){
 		IBlogArticleDao blogDao = (IBlogArticleDao) super.getBean("blogDao");
 		BlogArticle ba = new BlogArticle();
@@ -36,6 +42,9 @@ public class TestJDBC extends BaseTestObject{
 	}
 	
 	@Test
+	/**
+	 * test batchUpdate()
+	 */
 	public void testBatchUpdate(){
 		IBlogArticleDao blogDao = (IBlogArticleDao) super.getBean("blogDao");
 		List<BlogArticle> bas = new ArrayList<BlogArticle>();
@@ -45,4 +54,25 @@ public class TestJDBC extends BaseTestObject{
 		bas.add(new BlogArticle(7, "Spring JDBC4", "LISA", "Spring JDBC4Spring JDBC4Spring JDBC4Spring JDBC4Spring JDBC4"));
 		blogDao.batchUpdate(bas);
 	}
+	
+	@Test
+	/**
+	 * test query()
+	 * by RowCallbackHandler
+	 * by RowMap
+	 * RowCallbackHandler与RowMap功能类似，但RowCallbackHandler将每一行result转换成对象，RowMap批量化处理结果集返回List
+	 */
+	public void testQuery(){
+		IBlogArticleDao blogDao = (IBlogArticleDao) super.getBean("blogDao");
+		BlogArticle blog = blogDao.getBlogById(1);
+		System.out.println(" by id: " + blog);
+		List<BlogArticle> blogs = blogDao.getBlogsByAuthor("张");
+		for (BlogArticle b : blogs) {
+			System.out.println(b);
+		}
+		int count = blogDao.getBlogCount();
+		System.out.println("count: " + count);
+	}
+	
+	
 }
