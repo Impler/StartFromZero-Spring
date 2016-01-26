@@ -19,6 +19,7 @@ public class TestJDBC extends BaseTestObject{
 	@Test
 	/**
 	 * test execute()
+	 * 可用于执行DDL语句
 	 */
 	public void testJDBCTmpByHardcode() {
 		DriverManagerDataSource ds = (DriverManagerDataSource) super.getBean("dataSource");
@@ -74,5 +75,15 @@ public class TestJDBC extends BaseTestObject{
 		System.out.println("count: " + count);
 	}
 	
-	
+	@Test
+	/**
+	 * test NamedParameterJdbcTemplate
+	 */
+	public void testNameParaTmp(){
+		IBlogArticleDao blogDao = (IBlogArticleDao) super.getBean("blogDao");
+		BlogArticle ba = new BlogArticle();
+		ba.setAuthor("赵六");
+		ba.setId(3);
+		blogDao.update(ba);
+	}
 }

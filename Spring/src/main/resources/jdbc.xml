@@ -9,6 +9,10 @@
 	<!-- JdbcTemplate是线程安全的，可以被DAO共享 -->
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" 
 		p:dataSource-ref="dataSource"/>
+	<bean id="nameTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg type="javax.sql.DataSource" ref="dataSource"/>	
+	</bean>
 	<bean id="blogDao" class="com.study.spring.core.jdbc.BlogArticleDaoImpl"
-		p:jt-ref="jdbcTemplate"/>
+		p:jt-ref="jdbcTemplate"
+		p:nt-ref="nameTemplate"/>
 </beans>
