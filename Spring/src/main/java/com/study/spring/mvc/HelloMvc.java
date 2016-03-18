@@ -10,7 +10,7 @@ public class HelloMvc {
 	@RequestMapping("/mvc/hello")
 	public ModelAndView hello(){
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("mvc/hello.jsp");
+		mv.setViewName("hello");
 		mv.addObject("hello", "Hello Spring MVC");
 		return mv;
 	}

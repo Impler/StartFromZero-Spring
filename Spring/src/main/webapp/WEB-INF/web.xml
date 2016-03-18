@@ -7,7 +7,7 @@
   
   <context-param>
   	<param-name>contextConfigLocation</param-name>
-  	<param-value>classpath:mvc.xml</param-value>
+  	<param-value>classpath:mvc-context.xml</param-value>
   </context-param>
   
   <listener>
@@ -22,6 +22,6 @@
   
   <servlet-mapping>
   	<servlet-name>mvc</servlet-name>
-  	<url-pattern>/mvc</url-pattern>
+  	<url-pattern>/*</url-pattern>
   </servlet-mapping>
 </web-app>
