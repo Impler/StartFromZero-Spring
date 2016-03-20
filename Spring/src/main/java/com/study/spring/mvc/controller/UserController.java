@@ -1,7 +1,10 @@
 package com.study.spring.mvc.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 /**
  * 任何一个标注了@Controller的POJO都可以成为Spring MVC中的控制器
  * 使用@RequestMapping映射请求
@@ -26,5 +29,33 @@ public class UserController {
 	@RequestMapping("/createUser")
 	public void createUser(){
 		System.out.println("UserController-->createUser");
+	}
+	
+	//匹配URL WebRoot/user/createUser/createAdmin
+	@RequestMapping("/createUser/createAdmin")
+	public void createAdmin(){
+		System.out.println("UserController-->createUser-->createAdmin");
+	}
+	
+	/*
+	 * @RequestMapping不但支持标准的URL，还支持Ant风格（即?、*和**）和带{xxx}占位符的URL
+	 * 例如：
+	 * /user/* /createUser匹配/user/aaa/creatUser、/user/bbb/createUser等URL
+	 * /user/** /createUser匹配/user/createUser、/user/aaa/bbb/createUser等URL
+	 * /user/createUser??匹配/user/createUseraa、/user/createUserab等URL
+	 * /user/{userId}匹配/user/123、/user/456等URL
+	 */
+	//URL中的{xxx}占位符可以通过@PathVariable("xxx")绑定到操作方法的入参中，最好在@PathVariable中显式指定绑定的参数名
+	@RequestMapping("/id={id}")
+	public void showUserInfo(@PathVariable("id") String userId){
+		System.out.println("show user id：" + userId + " information");
+	}
+	
+	/*
+	 * 2 通过请求参数、请求方法或请求头进行映射
+	 */
+	@RequestMapping(value="/delete", method=RequestMethod.GET, params="userID", headers="Content-Type=text/*")
+	public void deleteUser(@RequestParam("userID") String userId){
+		System.out.println("UserController-->deleteUser id:" + userId);
 	}
 }
