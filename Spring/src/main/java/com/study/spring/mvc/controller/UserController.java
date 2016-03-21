@@ -53,8 +53,15 @@ public class UserController {
 	
 	/*
 	 * 2 通过请求参数、请求方法或请求头进行映射
+	 * params和headers分别通过请求参数及报文头属性进行映射，他们支持简单的表达式：
+	 * 	"param1" 表示请求必须包含名为param1的请求参数
+	 *  "!param1" 表示请求不能包含名为param1的请求参数
+	 *  "param1!=value1" 表示请求包含名为param1的请求参数，但其值不能为value1
+	 *  {"param1=value1","param2"} 表示请求中必须包含名为param1和param2的请求参数，且param1参数的值必须为value1
+	 *  
+	 * TODO headers测试不成功
 	 */
-	@RequestMapping(value="/delete", method=RequestMethod.GET, params="userID", headers="Content-Type=text/*")
+	@RequestMapping(value="/delete", method=RequestMethod.GET, params="userID", headers="content-type=text/html")
 	public void deleteUser(@RequestParam("userID") String userId){
 		System.out.println("UserController-->deleteUser id:" + userId);
 	}
