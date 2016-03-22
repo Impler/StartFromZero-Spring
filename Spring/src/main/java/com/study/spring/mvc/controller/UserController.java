@@ -1,10 +1,16 @@
 package com.study.spring.mvc.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.study.spring.mvc.domain.User;
 /**
  * 任何一个标注了@Controller的POJO都可以成为Spring MVC中的控制器
  * 使用@RequestMapping映射请求
@@ -31,12 +37,6 @@ public class UserController {
 		System.out.println("UserController-->createUser");
 	}
 	
-	//匹配URL WebRoot/user/createUser/createAdmin
-	@RequestMapping("/createUser/createAdmin")
-	public void createAdmin(){
-		System.out.println("UserController-->createUser-->createAdmin");
-	}
-	
 	/*
 	 * @RequestMapping不但支持标准的URL，还支持Ant风格（即?、*和**）和带{xxx}占位符的URL
 	 * 例如：
@@ -45,10 +45,16 @@ public class UserController {
 	 * /user/createUser??匹配/user/createUseraa、/user/createUserab等URL
 	 * /user/{userId}匹配/user/123、/user/456等URL
 	 */
+	//匹配URL WebRoot/user/createUser/createAdmin
+	@RequestMapping("/createUser/*")
+	public void createAdmin(){
+		System.out.println("UserController-->createUser-->createAdmin");
+	}
+	
 	//URL中的{xxx}占位符可以通过@PathVariable("xxx")绑定到操作方法的入参中，最好在@PathVariable中显式指定绑定的参数名
-	@RequestMapping("/id={id}")
-	public void showUserInfo(@PathVariable("id") String userId){
-		System.out.println("show user id：" + userId + " information");
+	@RequestMapping("/showUser/{role}")
+	public void showUserInfo(@PathVariable("role") String role){
+		System.out.println("show user role：" + role + " information");
 	}
 	
 	/*
@@ -61,8 +67,35 @@ public class UserController {
 	 *  
 	 * TODO headers测试不成功
 	 */
-	@RequestMapping(value="/delete", method=RequestMethod.GET, params="userID", headers="content-type=text/html")
+	//@RequestMapping(value="/deleteUser", method=RequestMethod.GET, params="userID", headers="content-type=text/html")
+	@RequestMapping(value="/deleteUser", method=RequestMethod.GET, params="userID")
 	public void deleteUser(@RequestParam("userID") String userId){
 		System.out.println("UserController-->deleteUser id:" + userId);
+	}
+	
+	//通过请求参数映射映射
+	@RequestMapping("/login1")
+	public void login1(@RequestParam("username") String username,
+				@RequestParam("password") String password){
+		System.out.println("user login. usernmae:" + username + ",password:" + password);
+	}
+	
+	//通过请求头，cookie映射
+	@RequestMapping("/requestInfo")
+	public void requestInfo(@CookieValue("JSESSIONID") String sessionId, 
+				@RequestHeader("Accept-Language") String lan){
+		System.out.println("jsessionid: " + sessionId + ", language：" + lan);
+	}
+	
+	//请求参数按名称匹配的方式绑定到javabean中
+	@RequestMapping("/login2")
+	public void login2(User user){
+		System.out.println("login user: " + user);
+	}
+	
+	@RequestMapping("/login3")
+	public void login3(HttpServletRequest request){
+		System.out.println("request username: " + request.getParameter("username"));
+		System.out.println("request password: " + request.getParameter("password"));
 	}
 }
