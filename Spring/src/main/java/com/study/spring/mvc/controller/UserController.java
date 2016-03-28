@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.study.spring.mvc.domain.User;
 /**
@@ -92,10 +93,19 @@ public class UserController {
 	public void login2(User user){
 		System.out.println("login user: " + user);
 	}
-	
+	//Servlet API对象作为入参
 	@RequestMapping("/login3")
 	public void login3(HttpServletRequest request){
 		System.out.println("request username: " + request.getParameter("username"));
 		System.out.println("request password: " + request.getParameter("password"));
+	}
+	
+	//处理模型数据
+	@RequestMapping("/login4")
+	public ModelAndView login4(){
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("hello");
+		mv.addObject("hello", "welcome");
+		return mv;
 	}
 }

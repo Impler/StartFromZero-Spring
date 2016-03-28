@@ -7,6 +7,11 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Spring Maven Webapp</name>
 	<url>http://maven.apache.org</url>
+	<properties>
+		<version.spring>4.1.7.RELEASE</version.spring>
+		<!-- 防止执行maven test 控制台log中文乱码 -->
+		<argLine>-Dfile.encoding=UTF-8</argLine>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -21,31 +26,41 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- JSP API -->
+		<!-- SERVLET API -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>4.1.7.RELEASE</version>
+			<version>${version.spring}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>4.1.7.RELEASE</version>
+			<version>${version.spring}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-			<version>4.1.7.RELEASE</version>
+			<version>${version.spring}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
-			<version>4.1.7.RELEASE</version>
+			<version>${version.spring}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>4.1.7.RELEASE</version>
+			<version>${version.spring}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${version.spring}</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -57,22 +72,8 @@
 			<artifactId>validation-api</artifactId>
 			<version>1.1.0.Final</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>4.1.7.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>4.1.7.RELEASE</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<finalName>Spring</finalName>
 	</build>
-	<properties>
-		<!-- 防止执行maven test 控制台log中文乱码 -->
-		<argLine>-Dfile.encoding=UTF-8</argLine>
-	</properties>
 </project>
