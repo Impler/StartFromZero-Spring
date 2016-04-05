@@ -1,9 +1,12 @@
 package com.study.spring.mvc.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,5 +110,31 @@ public class UserController {
 		mv.setViewName("hello");
 		mv.addObject("hello", "welcome");
 		return mv;
+	}
+	
+	//处理模型数据通过@ModelAttribute，Spring将被@ModelAttribute标识的入参自动添加到模型中
+	@RequestMapping("/login5")
+	public String login5(@ModelAttribute("hello")User user){
+		System.out.println("callof login5");
+		user.setUsername("zhangsan");
+		return "hello";
+	}
+	
+	//SpringMVC在调用任何一个请求处理方法前都会调用被@ModelAttribute标识的方法，将返回值传递到拥有相同属性名的@ModelAttribute()方法入参中
+	@ModelAttribute("hello")
+	public User getBaseUser(){
+		System.out.println("callof getBaseUser");
+		User u = new User();
+		u.setUsername("lisi");
+		u.setPassword("QWEasd123");
+		return u;
+	}
+	@RequestMapping("/login6")
+	public String login6(Map<String, Object> map){
+		//获取隐含模型中的对象
+		User u = (User) map.get("hello");
+		System.out.println("login6:" + u);
+		u.setUsername("wanger");
+		return "hello";
 	}
 }
