@@ -22,7 +22,7 @@ public class SpringHelloWorld {
 	
 	@Test
 	public void testHello() {
-		ClassPathXmlApplicationContext  ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ClassPathXmlApplicationContext  ctx = new ClassPathXmlApplicationContext("helloworld.xml");
 		IUserDao userDao = (IUserDao) ctx.getBean("userDao");
 		userDao.save();
 		ctx.close();

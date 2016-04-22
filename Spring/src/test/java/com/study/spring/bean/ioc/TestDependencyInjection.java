@@ -31,32 +31,41 @@ public class TestDependencyInjection extends BaseTestObject{
 		System.out.print(di.getSetterBasedUser());
 	}
 	
+	//constructor injection s
 	@Test
 	//injection by argument type
 	public void testConstInjection1(){
 		DependencyInjection di = (DependencyInjection) super.getBean("constDIBean1");
-		System.out.print(di.getConstBasedUser());
+		System.out.println(di.getConstBasedUser());
 	}
 	
 	@Test
 	//arguments with the same type
 	public void testConstInjection2(){
 		DependencyInjection di = (DependencyInjection) super.getBean("constDIBean2");
-		System.out.print(di.getConstBasedUser());
+		System.out.println(di.getConstBasedUser());
 	}
 	@Test
 	//arguments with the same type, use index to avoid ambiguity 
 	public void testConstInjection3(){
 		DependencyInjection di = (DependencyInjection) super.getBean("constDIBean3");
-		System.out.print(di.getConstBasedUser());
+		System.out.println(di.getConstBasedUser());
 	}
 	@Test
 	//more complication, use index and type together 
 	public void testConstInjection4(){
 		DependencyInjection di = (DependencyInjection) super.getBean("constDIBean4");
-		System.out.print(di.getConstBasedUser());
+		System.out.println(di.getConstBasedUser());
 	}
 	
+	@Test
+	//use constructor parameter name
+	public void testConstInjection5(){
+		DependencyInjection di = (DependencyInjection) super.getBean("constDIBean5");
+		System.out.println(di.getConstBasedUser());
+	}
+	//constructor injection e
+	//factory method injection s
 	@Test
 	//non static factory method injection
 	public void testNonStaticFactoryInjection(){
@@ -70,6 +79,7 @@ public class TestDependencyInjection extends BaseTestObject{
 		User u = (User) super.getBean("staticFactoryDIBean");
 		System.out.print(u);
 	}
+	//factory method injection e
 	
 	@Test
 	public void testInjectPB2SBBaseOnSpring(){
@@ -97,8 +107,7 @@ public class TestDependencyInjection extends BaseTestObject{
 	
 	@Test
 	public void testDependsOn(){
-		DependencyInjection di = (DependencyInjection) super.getBean("dependsOnBean");
-		System.out.println(di.getSetterBasedUser());
+		super.getBean("dependsOnBean");
 	}
 
 }

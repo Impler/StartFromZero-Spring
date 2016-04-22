@@ -12,41 +12,54 @@ public class DependencyInjection {
 	private User constBasedUser;
 	public DependencyInjection(){
 		super();
-		System.out.println(this.getClass().getName() + "is created at: " + System.currentTimeMillis());
+		System.out.println(this.getClass().getName() + " is created at: " + System.currentTimeMillis());
 	}
-	// Constructor based dependency injection
+	// Constructor based dependency injection s
 	// ① injection by argument type
 	public DependencyInjection(String name, int age){
 		this.constBasedUser = new User();
 		this.constBasedUser.setName(name);
 		this.constBasedUser.setAge(age);
+		System.out.println("constDIBean1");
 	}
-	// ② injection by argument type 
+	// ② injection by argument type and index
 	public DependencyInjection(String location, String name){
 		this.constBasedUser = new User();
 		this.constBasedUser.setName(name);
 		this.constBasedUser.setLocation(location);
+		System.out.println("constDIBean2");
 	}
 	
-	// ③ injection by argument type and index
-	public DependencyInjection(String location, String name, char sex){
+	// ④ injection by argument type and index
+	public DependencyInjection(String name, char sex, String location){
 		this.constBasedUser = new User();
 		this.constBasedUser.setName(name);
 		this.constBasedUser.setLocation(location);
 		this.constBasedUser.setSex(sex);
+		System.out.println("constDIBean4");
 	}
-	// ④ injection by argument type and index
-	public DependencyInjection(String name, char sex, String location){
-		this(location, name, sex);
+	
+	// ⑤ injection by constructor parameter name
+	public DependencyInjection(char se, String nam, String locatio){
+		this.constBasedUser = new User();
+		this.constBasedUser.setName(nam);
+		this.constBasedUser.setLocation(locatio);
+		this.constBasedUser.setSex(se);
+		System.out.println("constDIBean5:" + se + " " + nam + " " + locatio);
 	}
-	// Setter based dependency injection
+	// Constructor based dependency injection e
+	// Setter based dependency injection s
 	public User getSetterBasedUser() {
 		return setterBasedUser;
 	}
 
 	public void setSetterBasedUser(User setterBasedUser) {
+		System.out.println("setSetterBasedUser is called");
 		this.setterBasedUser = setterBasedUser;
 	}
+	
+	// Setter based dependency injection e
+	
 	public User getConstBasedUser() {
 		return constBasedUser;
 	}

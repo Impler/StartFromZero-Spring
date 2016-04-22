@@ -5,7 +5,9 @@
 	xmlns:c="http://www.springframework.org/schema/c"
 	xsi:schemaLocation=
 		"http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+        default-lazy-init="true">
+    <!-- abstract bean which is lazy initial. -->
 	<!-- bean start -->
 	<bean id="setterUser" class="com.study.spring.base.domain.User">
 		<property name="name" value="TOM"/>
@@ -38,9 +40,9 @@
 	<bean id="constDIBean4" class="com.study.spring.bean.ioc.DependencyInjection">
 		<!-- 其他较复杂的情况需要同时使用类型和index-->
 		
-		<constructor-arg index="1" value="KITTY"/>
-		<constructor-arg index="0" value="NanJing"/>
-		<constructor-arg index="2" value="M"/>
+		<constructor-arg index="0" value="KITTY"/>
+		<constructor-arg index="2" value="NanJing"/>
+		<constructor-arg index="1" value="M"/>
 		
 		<!-- 
 			<constructor-arg index="0" value="TOM"/>
@@ -48,19 +50,23 @@
 			<constructor-arg index="1" value="F"/>
 		 -->
 	</bean>
+	<bean id="constDIBean5" class="com.study.spring.bean.ioc.DependencyInjection">
+		<!-- 使用构造方法参数名称匹配 -->
+		<constructor-arg name="nam" value="KITTY"/>
+		<constructor-arg name="locatio" value="NanJing"/>
+		<constructor-arg name="se" value="M"/>
+	</bean>
 	<!-- *****constructor based dependency end***** -->
 	<!-- *****factory dependency injection start***** -->
 	<!-- 非静态工厂 -->
 	<!-- 注册工厂bean -->
 	<bean id="userFactory" class="com.study.spring.bean.ioc.UserFactory" />
-	<!-- class 可以不写 -->
+	<!-- 目标bean class 可以不写 -->
 	<bean id="factoryDIBean" 
 		factory-bean="userFactory"
 		factory-method="createUser"/>
 	<!-- 静态工厂 -->
-	<!-- *****TODO***** -->
-	<!-- 通过静态工厂实例化的bean需要配置class，而通过普通工厂实例化的bean不需要配置class？？？ -->
-	<!-- *****TODO***** -->
+	<!-- 目标bean class不用写 -->
 	<bean id="staticFactoryDIBean" 
 		class="com.study.spring.bean.ioc.UserFactory" 
 		factory-method="staticCreateUser" scope="prototype"/>
@@ -92,7 +98,7 @@
 	 	<!-- 相当于 <property name="name" value="setterUser" /> -->
 	 </bean>
 	 <!-- 
-	 	2. ref 引用其他bean，ref有三个属性可选：
+	 	2. ref 引用其他bean对应的实例，ref有三个属性可选：
 	 		bean: 可以引用所有配置的bean
 	 		local: 仅能引用当前配置文件中的bean
 	 		parent: 引用parent中的bean

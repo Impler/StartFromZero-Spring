@@ -12,6 +12,7 @@ public class User {
 	private String location;
 	public User(){
 		super();
+		System.out.println(this.getClass().getName() + " is created at: " + System.currentTimeMillis());
 	}
 
 	public User(String name, int age, char sex, String location) {
