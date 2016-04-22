@@ -10,13 +10,11 @@ public class AnotherUserDao implements IUserDao {
 
 	@Override
 	public void addUser(User user) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void deleteUser(User user) {
-		// TODO Auto-generated method stub
 
 	}
 
