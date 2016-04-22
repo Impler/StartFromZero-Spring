@@ -183,6 +183,7 @@
 	   <!--
 	   	 7. depends-on
 	   	 	bean A 依赖于bean B，如果不能确定初始化A时B是否已经实例化，使用depends-on属性，确保依赖bean B在A之前实例化
+	   	 	多个依赖之间用,;或空格间隔：fooBean;barBean
 	   	 	例如:
 	   	 	<bean id="..." class="..." p:foo-ref="fooBean" depends-on="fooBean" />
 	   -->
@@ -199,6 +200,7 @@
 	   	 	<bean id="..." class="..."  lazy-init="true"/>
 	   	 	全局的实例化机制也是支持的，在beans节点上添加default-lazy-init="true":
 	   	 	<beans default-lazy-init="true" />
+	   	 	Spring会在启动时实例化非延迟实例化 singleton bean的依赖bean，而不论该依赖bean是否延迟实例化
 	    -->
 	    
 	    <!-- 
@@ -208,6 +210,7 @@
 	      		- by name 自动注入与该bean属性名相同的bean
 	      		- by type 自动注入与该bean属性类型相同的bean
 	      		- constructor 自动注入与该bean构造函数参数类型相同的bean
+	      	<bean autowire="true"></bean>
 	     -->
 	     
 	 <!-- configuration detail end -->
