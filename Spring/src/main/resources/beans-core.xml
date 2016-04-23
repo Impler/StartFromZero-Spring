@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation=
+		"http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+        default-init-method="init" 
+        default-destroy-method="destroy">
+
+	<!-- 
+		Bean的生命周期回调方法
+		Spring容器对bean 生命周期的管理依赖于两个生命周期回调接口的实现：InitializingBean和DisposableBean
+		InitializingBean->afterPropertiesSet: 在该bean的配置信息被容器设置完毕后，执行实例化工作
+		DisposableBean->destroy：处理bean销毁时的行为
+		
+		以上两个接口与Spring高度耦合，所以更加推荐JSR-250提供的@PostConstruct和@PreDestroy注解，或者基于xml配置的,<bean init-method="" destroy-method="" />。
+		也可以在beans元素上设置默认的default-init-method和default-destroy-method，会被应用于当前所有bean上
+		
+		如果以上三种方式都配置了对应的回调函数，且名称不相同，Spring将会依次调用这些回调方法，顺序如下：
+			首先调用 @PostConstruct或@PreDestroy标识的方法
+			再调用InitializingBean或DisposableBean实现类的对应方法
+			最后调用自定义的init-method或destroy-method方法
+			(??貌似不会同时调用三种方式的配置嘛！！！??)
+		如果回调方法名称相同，那么只执行一次
+		
+		通常，Spring 使用BeanPostProcessor接口的实现来处理回调接口	
+		
+		<bean init-method="" destroy-method="" />
+	 -->
+	 
+	 
+	 
+	 <!-- 
+	 	Bean的继承体系
+	 	一个bean可以继承abstract属性为true的bean的相关配置
+	 	包括 class, scope, constructor值,  property值，工厂方法等，子bean可以重写覆盖继承来的属性
+	 	但 depend-on, autowire mode, 依赖检查, singleton, lazy-init将不参与继承
+	 	
+	 	abstract bean只作为模板，不会被容器实例化
+	 	
+	 	<bean id="parentBean" class="" abstract="true">
+			<constructor-arg></constructor-arg>
+		</bean>
+		<bean id="childBean" parent="parentBean"></bean>
+	  -->
+
+	<bean id="simpleUser" class="com.study.spring.base.domain.User" init-method="initMethod" destroy-method="destroyMethod">
+		<property name="name" value="TOM" />
+		<property name="age" value="23" />
+		<property name="married" value="false" />
+		<property name="sex" value="M" />
+	</bean>
+	<!-- 
+		BeanPostProcessor
+		不需要指定bean id name， Spring ApplicationContext自动扫描BeanPostProcessor实现，并把他们注册为post-processors 
+	 -->
+	<bean class="com.study.spring.bean.core.InstantiationTracingBeanPostProcessor"/>  
+	<!-- 
+		类似于BeanPostProcessor，只不过BeanPostProcessor用来操作bean实例，而BeanFactoryPostProcessor用来操作Bean的配置信息，在bean实例化之前
+		常见的BeanFactoryPostProcessor：
+		PropertyPlaceholderConfigurer
+		PropertyOverrideConfigurer
+	 -->
+	<bean class="com.study.spring.bean.core.MyBeanFactoryPostProcessor"/>  
+	
+	<!-- 
+		BeanFactory
+		BeanFactory是Spring容器的一个扩展点，如果有些比较复杂的对象不好通过配置的方式创建，即可实现BeanFactory接口来实现
+	 -->
+</beans>

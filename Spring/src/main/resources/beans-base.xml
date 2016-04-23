@@ -72,6 +72,8 @@
 		factory-method="staticCreateUser" scope="prototype"/>
 	<!-- *****factory dependency injection end***** -->
 	<!-- dependency injection end -->
+	
+	<!-- method injection s -->
 	<!-- 
 		向singleton bean中注入prototype bean，并且每次调用都能获取不同的prototype bean的两种实现方式
 		1. singleton bean实现BeanFactoryAware接口，与Spring框架耦合度高，不建议使用
@@ -87,6 +89,7 @@
 	 <bean id="singletonBean2" class="com.study.spring.bean.ioc.InjectPB2SBBaseOnDynamicProxy">
 	 	<lookup-method bean="prototypeBean" name="getUser"/>
 	 </bean>
+	 <!-- method injection e -->
 	 <!-- configuration detail start -->
 	 <!-- 
 	 	1. idref 引用配置文件中配置的bean的id(字符串)，为其他bean的属性赋值。相当于value，只不过会多一步验证，如果引用的id不存在将会抛错

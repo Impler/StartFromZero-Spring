@@ -7,11 +7,11 @@ import org.junit.Test;
 import com.study.spring.base.domain.User;
 import com.study.spring.test.BaseTestObject;
 
-public class TestDependencyInjection extends BaseTestObject{
+public class TestBasicBeanDefinition extends BaseTestObject{
 	
 	@Override
 	protected String getConfigFileName() {
-		return "beans.xml";
+		return "beans-base.xml";
 	}
 
 	@Before
@@ -81,6 +81,7 @@ public class TestDependencyInjection extends BaseTestObject{
 	}
 	//factory method injection e
 	
+	//method injection s
 	@Test
 	public void testInjectPB2SBBaseOnSpring(){
 		InjectPB2SBBaseOnSpring bean = (InjectPB2SBBaseOnSpring) super.getBean("singletonBean1");
@@ -92,7 +93,7 @@ public class TestDependencyInjection extends BaseTestObject{
 		InjectPB2SBBaseOnDynamicProxy bean = (InjectPB2SBBaseOnDynamicProxy) super.getBean("singletonBean2");
 		System.out.print(bean.getUser() == bean.getUser());
 	}
-	
+	//method injection e
 	@Test
 	public void testIdref(){
 		User u = (User) super.getBean("idrefBean");
@@ -104,7 +105,7 @@ public class TestDependencyInjection extends BaseTestObject{
 		DependencyInjection di = (DependencyInjection) super.getBean("innerBean");
 		System.out.println(di.getSetterBasedUser());
 	}
-	
+
 	@Test
 	public void testDependsOn(){
 		super.getBean("dependsOnBean");

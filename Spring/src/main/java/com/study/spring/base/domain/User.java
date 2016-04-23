@@ -1,4 +1,8 @@
 package com.study.spring.base.domain;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 /**
  * a user POJO
  * @author Impler
@@ -58,4 +62,27 @@ public class User {
 		return System.currentTimeMillis() + "User [name=" + name + ", age=" + age + ", sex=" + sex
 				+ ", isMarried=" + isMarried + ", location=" + location + "]";
 	}
+	
+	//lifestyle method s
+	public void init(){
+		System.out.println("user --> init");
+	}
+	public void initMethod(){
+		System.out.println("user --> initMethod");
+	}
+	public void destroy(){
+		System.out.println("user --> destroy");
+	}
+	public void destroyMethod(){
+		System.out.println("user --> destroyMethod");
+	}
+	@PostConstruct
+	public void initAnno(){
+		System.out.println("user --> initAnno");
+	}
+	@PreDestroy
+	public void destroyAnno(){
+		System.out.println("user --> destroyAnno");
+	}
+	//lifestyle method e
 }
