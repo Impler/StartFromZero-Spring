@@ -5,8 +5,7 @@ import org.junit.Before;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.mysql.jdbc.StringUtils;
+import org.springframework.util.StringUtils;
 
 public abstract class BaseTestObject {
 	private String configFileName;
@@ -21,14 +20,13 @@ public abstract class BaseTestObject {
 	
 	@Before
 	public void prepare(){
-		if(!StringUtils.isNullOrEmpty(this.configFileName)){
-			if(this.configFileName.startsWith("anno")){
+		if(!StringUtils.isEmpty(this.configFileName)){
+			if(this.configFileName.startsWith("javaconfig")){
 				ctx = new AnnotationConfigApplicationContext(configFileName);
 			}else{
 				ctx = new ClassPathXmlApplicationContext(configFileName);
 			}
 		}
-		
 	}
 	@After
 	public void close(){

@@ -4,7 +4,6 @@ package com.study.spring.annotation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.ComponentScan;
 
 import com.study.spring.base.domain.User;
 import com.study.spring.config.annotation.UserManager;
@@ -13,7 +12,6 @@ import com.study.spring.config.annotation.required.OperationLog;
 import com.study.spring.config.annotation.resource.Foo;
 import com.study.spring.test.BaseTestObject;
 
-@ComponentScan("com.study.spring.config.annotation")
 public class TestAnnotation extends BaseTestObject{
 	
 	@Override
@@ -31,13 +29,6 @@ public class TestAnnotation extends BaseTestObject{
 		System.out.println("****test annotation end****");
 	}
 
-	@Test
-	public void testAnnotationWithXMLContext() {
-		UserManager manager = (UserManager) super.getBean("userManager");
-		User u = new User("kitty", 22, 'F', "NanJing");
-		manager.register(u);
-	}
-	
 	@Test
 	public void testAnnotationWithAnnoContext(){
 		UserManager manager = (UserManager) super.getBean("userManager");

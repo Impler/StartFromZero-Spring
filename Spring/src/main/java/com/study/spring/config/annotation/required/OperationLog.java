@@ -11,7 +11,6 @@ import com.study.spring.base.domain.User;
  * @author Impler
  * @date 2015年11月23日
  */
-
 public class OperationLog {
 	private User operator;
 	private Date time = new Date();
