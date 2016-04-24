@@ -17,7 +17,13 @@
 		这 4 个BeanPostProcessor，为了能够让容器识别注解
 		不过一般配置都会使用context:component-scan，扫描指定的包路径，包含了annotation-config的工作，所以，有了component-scan就不用annotation-config了
 	 -->
-	<context:component-scan base-package="com.study.spring.config.annotation"/>
+	<context:component-scan base-package="com.study.spring.config.annotation">
+		<!-- 
+			可以配置多个filter，过滤Spring组件
+			<context:exclude-filter type="annotation" expression=""/>
+			<context:include-filter type="regex" expression=""/>
+		 -->
+	</context:component-scan>
 	
 	<!-- 
 		@Component，@Repository，@Service，@Controller
@@ -48,7 +54,8 @@
 			可标注在属性，setter方法以及构造方法上
 		@Qualifier
 			配合@AutoWired，精确匹配依赖，避免冲突 @Qualifier("user")
-			可标注在属性上，setter和构造方法上以及其方法的参数前
+			可标注在属性上，setter和构造方法上以及其方法的参数前。
+			支持泛型
 	 -->
 	 
 	 <!-- 
