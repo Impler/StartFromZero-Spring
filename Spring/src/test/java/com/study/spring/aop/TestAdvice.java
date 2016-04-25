@@ -85,7 +85,7 @@ public class TestAdvice extends BaseTestObject{
 	}
 	
 	/**
-	 * 异常抛出增强
+	 * 引介增强
 	 */
 	@Test
 	public void testIntroduction(){

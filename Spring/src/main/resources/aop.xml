@@ -9,13 +9,13 @@
 	AOP: Aspect Oriented Programming
 	AOP概念简介：
 		连接点(JoinPoint)：程序执行特定的点，如方法执行前、后，异常抛出时等
-		增强(Advice)：在特定的连接点，AOP植入的额外的程序逻辑
+		增强(Advice)：在特定的连接点，AOP植入的额外的程序逻辑，包括前置、后置、环绕增强等。一般采用拦截器链实现
 		切点(PointCut)：满足一定条件的连接点的集合
 		引介(Introduction)：为目标对象新增属性和方法
-		切面(Aspect)：
-		目标对象(Target Object)：
-		AOP代理(AOP Proxy)：
-		织入(Weaving)：
+		切面(Aspect)：切面由切点和增强组成，它既包括了横切逻辑的定义，也包括了连接点的定义。Spring AOP的工作就是将切面定义的横切逻辑织入到切面多定义的连接点中
+		目标对象(Target Object)：被织入增强的普通对象
+		AOP代理(AOP Proxy)：AOP框架生成的目标对象的代理对象，一般基于JDK动态代理或CGLIB代理实现
+		织入(Weaving)：将增强添加到目标对象指定连接点的过程。三种织入方式：1 编译器织入 2 类装载器织入 3 动态代理织入 Spring采用动态代理织入，AspectJ采用编译器织入和类装载期织入
 	-->
 	<!-- 
 	Spring支持5种类型的增强：
@@ -60,7 +60,6 @@
 	<!-- throw exception advice end -->
 	<!-- introduction advice start -->
 	<!-- 
-		TODO
 		引介增强是一种比较特殊的增强类型，它不是在目标方法周围织入增强，而是为目标类创建新的方法和属性，所以引介增强的连接点是类级别的，而非方法级别的。
 	 -->
 	<bean id="greetingIntroAdvice" class="com.study.spring.aop.advice.introduction.GreetingIntroAdvice" />
@@ -68,6 +67,7 @@
 		<property name="proxyInterfaces" value="com.study.spring.aop.advice.introduction.IDoOthers"/>
 		<property name="interceptorNames" value="greetingIntroAdvice"/>
 		<property name="target" ref="target"/>
+		<!-- 引介增强必须通过创建子类来生成代理，所以必须采用cglib -->
 		<property name="proxyTargetClass" value="true" />
 	</bean>
 	<!-- introduction advice end -->
