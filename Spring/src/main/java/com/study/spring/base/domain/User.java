@@ -63,7 +63,7 @@ public class User {
 				+ ", isMarried=" + isMarried + ", location=" + location + "]";
 	}
 	
-	//lifestyle method s
+	//lifecycle method s
 	public void init(){
 		System.out.println("user --> init");
 	}
@@ -84,5 +84,5 @@ public class User {
 	public void destroyAnno(){
 		System.out.println("user --> destroyAnno");
 	}
-	//lifestyle method e
+	//lifecycle method e
 }

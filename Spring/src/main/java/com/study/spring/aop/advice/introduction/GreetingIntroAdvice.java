@@ -13,7 +13,7 @@ public class GreetingIntroAdvice extends DelegatingIntroductionInterceptor imple
 
 	@Override
 	public void settleAccounts() {
-		System.out.println("waiter settle account for guests");
+		System.out.println("advice msg: waiter settle account for guests");
 	}
 
 }

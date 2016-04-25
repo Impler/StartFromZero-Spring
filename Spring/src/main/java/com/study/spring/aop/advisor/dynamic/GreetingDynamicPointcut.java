@@ -37,6 +37,7 @@ public class GreetingDynamicPointcut extends DynamicMethodMatcherPointcut{
 	@Override
 	public boolean matches(Method method, Class<?> targetClass, Object[] args) {
 		String guestName = (String) args[0];
+		System.out.println("advice msg: Dynamic parameter check: " + "TOM".equals(guestName)) ;
 		return "TOM".equals(guestName);
 	}
 

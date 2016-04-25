@@ -8,7 +8,7 @@ public class GreetingAfterAdvice implements AfterReturningAdvice {
 
 	@Override
 	public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
-		System.out.println("Please enjoy yourself!!");
+		System.out.println("advice msg: Please enjoy yourself!!");
 	}
 
 }

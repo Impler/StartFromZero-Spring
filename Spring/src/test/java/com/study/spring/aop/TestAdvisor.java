@@ -13,7 +13,7 @@ public class TestAdvisor  extends BaseTestObject{
 	
 	@Override
 	protected String getConfigFileName() {
-		return "aop.xml";
+		return "aop-api.xml";
 	}
 	
 	@Before
@@ -33,13 +33,17 @@ public class TestAdvisor  extends BaseTestObject{
 	public void testStaticMMAdvisor(){
 		Waiter w = (Waiter) super.getBean("staticMMWaiter");
 		Seller s = (Seller) super.getBean("staticMMSeller");
+		//matched class and matched method
 		w.greetTo("TOM");
+		//matched class but unmatched method
+		w.serveTo("TOM");
+		//unmatched class
 		s.greetTo("Kitty");
 	}
 	
 	
 	/**
-	 * regex method meatched advisor
+	 * regex method matched advisor
 	 */
 	@Test
 	public void testRegexMMAdvisor(){
@@ -56,6 +60,7 @@ public class TestAdvisor  extends BaseTestObject{
 		Waiter w = (Waiter) super.getBean("dynamicWaiter");
 		w.greetTo("Kitty");
 		w.greetTo("TOM");
+		w.serveTo("John");
 	}
 	
 	/**

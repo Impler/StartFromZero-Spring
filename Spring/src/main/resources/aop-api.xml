@@ -72,7 +72,16 @@
 	</bean>
 	<!-- introduction advice end -->
 	
-	<!-- 
+	<!--
+		增强提供了连接点的方位信息，如织入到方法前、后灯，而切点进一步描述织入到哪些类的那些方法上
+		Spring通过org.springframework.aop.Pointcut描述切点
+		Pointcut由ClassFilter和MethodMatcher构成
+		ClassFilter确定目标类
+		MethodMatcher确定目标方法
+			Spring提供两种MethodMatcher匹配：静态方法匹配和动态方法匹配
+			静态方法匹配表示仅对方法签名（包括方法名和参数类型及顺序）进行匹配，只判别一次
+			动态方法匹配表示除静态匹配外还会在运行期间检查方法入参的值，每次调用匹配的方法都会判别，效率低
+			动静态类型根据isRuntime()返回值确定
 		Spring提供了六种类型切点：
 		静态方法切点：org.springframework.aop.support.StaticMethodMatcherPointcut是静态方法切点的抽象类，两个主要子类StaticMethodMatcherPointcutAdvisor根据字符串匹配方法签名，AbstractRegexpMethodPointcut根据正则表达式陪陪方法签名
 		动态方法切点：org.springframework.aop.support.DynamicMethodMatcherPointcut
@@ -100,17 +109,20 @@
 	   -->
 	   
 	   <!-- static method matched advisor start-->
-	   <bean id="staticMMAdvisor" class="com.study.spring.aop.advisor.staticmethod.GreetingAdvisor">
-	   		<!-- 向切面注入一个前置增强 -->
-	   		<property name="advice" ref="greetingBeforeAdvice"/>
-	   </bean>
-		<bean id="parent"  abstract="true" class="org.springframework.aop.framework.ProxyFactoryBean">
+	   <bean id="parent"  abstract="true" class="org.springframework.aop.framework.ProxyFactoryBean">
 			<property name="interceptorNames" value="staticMMAdvisor"/>
 			<property name="proxyTargetClass" value="true" />
 		</bean>
+			<!-- Advisor match Waiter.greetTo()-->
+		<bean id="staticMMAdvisor" class="com.study.spring.aop.advisor.staticmethod.GreetingAdvisor">
+			<!-- 向切面注入一个前置增强 -->
+			<property name="advice" ref="greetingBeforeAdvice" />
+		</bean>
+		<!-- matched -->
 		<bean id="staticMMWaiter" parent="parent" >
 			<property name="target" ref="target" />
 		</bean>
+		<!-- unmatched -->
 		<bean id="seller" class="com.study.spring.aop.advisor.SellerA" />
 		<bean id="staticMMSeller" parent="parent">
 			<property name="target" ref="seller"/>

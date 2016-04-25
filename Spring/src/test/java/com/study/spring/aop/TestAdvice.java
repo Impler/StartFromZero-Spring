@@ -15,7 +15,7 @@ public class TestAdvice extends BaseTestObject{
 
 	@Override
 	protected String getConfigFileName() {
-		return "aop.xml";
+		return "aop-api.xml";
 	}
 	
 	@Before

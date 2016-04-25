@@ -38,6 +38,6 @@ import org.springframework.aop.ThrowsAdvice;
  */
 public class GreetingExceptionAdvice implements ThrowsAdvice {
 	public void afterThrowing(Exception e){
-		System.out.println(e.getMessage());
+		System.out.println("advice msg: " + e.getMessage());
 	}
 }
