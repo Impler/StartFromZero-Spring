@@ -19,18 +19,42 @@
 	-->
 	<!-- 
 	Spring支持5种类型的增强：
-		前置增强：org.springframework.aop.BeforeAdvice代表前置增强，因为Spring只支持方法级别的曾倩，所以MethodBeforeAdvice是目前可用的前置增强，表示在目标方法执行前实施增强
+		前置增强：org.springframework.aop.BeforeAdvice代表前置增强，因为Spring只支持方法级别的增强，所以MethodBeforeAdvice是目前可用的前置增强，表示在目标方法执行前实施增强
 		后置增强：org.springframework.aop.AfterReturningAdvice代表后置增强，表示在目标方法执行后实施增强
 		环绕增强：org.aopalliance.intercept.MethodInterceptor代表环绕增强，表示在目标方法执行前后实施增强
 		异常抛出增强：org.springframework.aop.ThrowsAdvice代表抛出异常增强，表示在目标方法抛出异常后实施增强
 		引介增强：org.springframework.aop.IntroductionInterceptor代表引介增强，表示在目标累中添加新的方法和属性
 	 -->
+	 
+	<!-- 
+		使用ProxyFactoryBean 创建代理对象
+		重要属性：
+		- target：被代理对象
+		- proxyTargetClass：true：使用cglib创建代理对象，false：使用jdk创建代理对象
+		- optimize：控制是否优化创建cglib代理对象，仅对cglib方式有效
+		- frozen：代理对象创建后是否允许修改配置，默认false
+		- exposeProxy：是否将代理对象暴露在ThreadLocal中
+		- proxyInterfaces：代理接口的全限定类名，可配置多个
+		- interceptorNames：Advisor、interceptor或Advice的字符串名称
+		
+		JDK和CGLIB代理对象的使用策略
+		1 如果被代理对象没有实现任何接口，则使用cglib创建代理对象，而不论proxyTargetClass怎么设置
+		2 如果被代理对象实现了一个或多个接口，代理对象的类型根据配置来确定
+			- proxyTargetClass设置为true，使用cglib创建代理对象，而不论proxyInterfaces怎么设置
+			- proxyInterfaces设置为一个或多个接口的全限定类名，使用jdk创建代理对象
+			- proxyInterfaces没有值，ProxyFactoryBean将自动扫描被代理对象是否实现接口
+	 -->
+	<!-- debugInterceptor Logs full invocation details on method entry and method exit -->
+	<bean id="debugInterceptor" class="org.springframework.aop.interceptor.DebugInterceptor"/>
 	<!-- before advice start -->
+	<!-- 
+		前置增强仅在目标方法执行前执行，不会影响拦截链以及方法的返回值。不过假设增强中有异常抛出，如果该异常是目标方法声明的异常，则该异常归并到目标方法中，否则作为运行时异常抛出
+	 -->
 	<bean id="greetingBeforeAdvice" class="com.study.spring.aop.advice.before.GreetingBeforeAdvice" />
 	<bean id="target" class="com.study.spring.aop.WaiterA" />
 	<bean id="beforeWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces" value="com.study.spring.aop.Waiter"/>
-		<property name="interceptorNames" value="greetingBeforeAdvice"/>
+		<property name="interceptorNames" value="greetingBeforeAdvice,debugInterceptor"/>
 		<property name="target" ref="target"/>
 	</bean>
 	<!-- before advice end -->
@@ -83,7 +107,7 @@
 			动态方法匹配表示除静态匹配外还会在运行期间检查方法入参的值，每次调用匹配的方法都会判别，效率低
 			动静态类型根据isRuntime()返回值确定
 		Spring提供了六种类型切点：
-		静态方法切点：org.springframework.aop.support.StaticMethodMatcherPointcut是静态方法切点的抽象类，两个主要子类StaticMethodMatcherPointcutAdvisor根据字符串匹配方法签名，AbstractRegexpMethodPointcut根据正则表达式陪陪方法签名
+		静态方法切点：org.springframework.aop.support.StaticMethodMatcherPointcut是静态方法切点的抽象类，两个主要子类StaticMethodMatcherPointcutAdvisor根据字符串匹配方法签名，AbstractRegexpMethodPointcut根据正则表达式匹配方法签名
 		动态方法切点：org.springframework.aop.support.DynamicMethodMatcherPointcut
 		注解切点：org.springframework.aop.support.annotation.AnnotationMatchingPointcut
 		表达式切点：org.springframework.aop.support.ExpressionPointcut
