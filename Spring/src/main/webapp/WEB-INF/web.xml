@@ -8,21 +8,31 @@
   
   <context-param>
   	<param-name>contextConfigLocation</param-name>
+  	<!-- 指定业务层Spring容器的配置文件 -->
   	<param-value>classpath:mvc-context.xml</param-value>
   </context-param>
   
   <listener>
+  	<!-- ContextLoaderListener是一个ServletContextListener, 它通过contextConfigLocation参数所指定的配置文件启动业务层Spring容器（父容器） -->
   	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   
   <servlet>
   	<servlet-name>mvc</servlet-name>
+  	<!-- 默认加载WEB-INF/<servlet-name>-servlet.xml 此处为mvc-servlet.xml-->
   	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<!-- 
+  		除了使用DispatcherServlet默认的操作外，也可以通过contextConfigLocation属性值，指定WebApplicationContext对应的配置文件
+  	 -->
+  	 <init-param>
+  	 	<param-name>contextConfigLocation</param-name>
+  	 	<param-value>classpath:mvc-context.xml</param-value>
+  	 </init-param>
   	<load-on-startup>1</load-on-startup>
   </servlet>
   
   <servlet-mapping>
   	<servlet-name>mvc</servlet-name>
-  	<url-pattern>/</url-pattern>
+  	<url-pattern>/*</url-pattern>
   </servlet-mapping>
 </web-app>
