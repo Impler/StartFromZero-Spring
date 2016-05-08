@@ -24,15 +24,19 @@
   	<!-- 
   		除了使用DispatcherServlet默认的操作外，也可以通过contextConfigLocation属性值，指定WebApplicationContext对应的配置文件
   	 -->
+  	 <!-- 
+  	 	每个DisptcherServlet都拥有自己独立的WebApplicationContext，并且继承父容器所有定义的bean，即子容器可以访问父容器内的bean，反之不可。
+  	 	可以在自己的WebApplicationContext定义bean
+  	  -->
   	 <init-param>
   	 	<param-name>contextConfigLocation</param-name>
-  	 	<param-value>classpath:mvc-context.xml</param-value>
+  	 	<param-value>/WEB-INF/mvc-servlet.xml</param-value>
   	 </init-param>
   	<load-on-startup>1</load-on-startup>
   </servlet>
   
   <servlet-mapping>
   	<servlet-name>mvc</servlet-name>
-  	<url-pattern>/*</url-pattern>
+  	<url-pattern>/</url-pattern>
   </servlet-mapping>
 </web-app>
