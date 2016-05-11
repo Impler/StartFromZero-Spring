@@ -18,16 +18,46 @@
   </listener>
   
   <servlet>
-  	<servlet-name>mvc</servlet-name>
-  	<!-- 默认加载WEB-INF/<servlet-name>-servlet.xml 此处为mvc-servlet.xml-->
-  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-  	<!-- 
-  		除了使用DispatcherServlet默认的操作外，也可以通过contextConfigLocation属性值，指定WebApplicationContext对应的配置文件
-  	 -->
+  	<!--
+  		WebApplicationContext扩展自ApplicationContext，添加了额外的web应用必须的特性。  
+  		WebApplicationContext被绑定在ServletContext中，可以通过RequestContextUtils辅助类从ServletContext获取WebApplicationContext对象
+  	-->
   	 <!-- 
   	 	每个DisptcherServlet都拥有自己独立的WebApplicationContext，并且继承父容器所有定义的bean，即子容器可以访问父容器内的bean，反之不可。
   	 	可以在自己的WebApplicationContext定义bean
   	  -->
+  	<!-- DistpatcherServer使用特殊的bean来处理请求和渲染视图。在SpringMVC jar中的DispatcherServlet.properties文件中定义了这些默认的bean -->
+  	<!--
+  		org.springframework.web.servlet. 
+	  		LocaleResolver=i18n.AcceptHeaderLocaleResolver
+	  		ThemeResolver=theme.FixedThemeResolver
+	  		HandlerMapping=handler.BeanNameUrlHandlerMapping,
+	  							mvc.annotation.DefaultAnnotationHandlerMapping
+	  		HandlerAdapter=mvc.HttpRequestHandlerAdapter,
+	  								mvc.SimpleControllerHandlerAdapter,mvc.annotation.AnnotationMethodHandlerAdapter
+	  		HandlerExceptionResolver=mvc.annotation.AnnotationMethodHandlerExceptionResolver,
+	  									mvc.annotation.ResponseStatusExceptionResolver,
+	  									mvc.support.DefaultHandlerExceptionResolver
+	  		RequestToViewNameTranslator=view.DefaultRequestToViewNameTranslator
+	  		ViewResolver=view.InternalResourceViewResolver
+	  		FlashMapManager=support.SessionFlashMapManager
+	  		WebApplicationContext自定义同类型的bean将会覆盖默认的配置
+  	 -->
+  	<!-- 
+  		DispatcherServlet处理请求的流程如下：
+  		- 将WebApplicationContext以DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE作为key绑定到request attribute中
+  		- 绑定locale处理器
+  		- 绑定theme处理器
+  		- 针对multipart，重新包装请求为MultipartHttpServletRequest 
+  		- 找到合适的处理器(preprocessors, postprocessors, and controllers)执行
+  		- 返回model
+  	 -->
+  	<!-- 默认加载WEB-INF/<servlet-name>-servlet.xml 此处为mvc-servlet.xml-->
+  	<servlet-name>mvc</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<!-- 
+  		除了使用DispatcherServlet默认的操作外，也可以通过contextConfigLocation属性值，指定WebApplicationContext对应的配置文件
+  	 -->
   	 <init-param>
   	 	<param-name>contextConfigLocation</param-name>
   	 	<param-value>/WEB-INF/mvc-servlet.xml</param-value>
