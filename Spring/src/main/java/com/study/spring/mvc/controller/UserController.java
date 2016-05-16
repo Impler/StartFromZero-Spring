@@ -6,12 +6,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.study.spring.mvc.domain.User;
@@ -37,8 +40,9 @@ public class UserController {
 	 */
 	//匹配URL WebRoot/user/createUser
 	@RequestMapping("/createUser")
-	public void createUser(){
-		System.out.println("UserController-->createUser");
+	public ModelAndView createUser(){
+		String msg = "UserController-->createUser";
+		return commonMV(msg);
 	}
 	
 	/*
@@ -51,16 +55,32 @@ public class UserController {
 	 */
 	//匹配URL WebRoot/user/createUser/createAdmin
 	@RequestMapping("/createUser/*")
-	public void createAdmin(){
-		System.out.println("UserController-->createUser-->createAdmin");
+	public ModelAndView createAdmin(){
+		String msg = "UserController-->createUser-->createAdmin";
+		return commonMV(msg);
 	}
 	
 	//URL中的{xxx}占位符可以通过@PathVariable("xxx")绑定到操作方法的入参中，最好在@PathVariable中显式指定绑定的参数名
 	@RequestMapping("/showUser/{role}")
-	public void showUserInfo(@PathVariable("role") String role){
-		System.out.println("show user role：" + role + " information");
+	public ModelAndView showUserInfo(@PathVariable("role") String role){
+		String msg = "show user role：" + role + " information";
+		return commonMV(msg);
 	}
-	
+	//支持正则表达式，格式：{varName:regex}
+	@RequestMapping("/showUserDetail/{userId:\\d}")
+	public ModelAndView acceptRegex(@PathVariable String userId){
+		String msg = "user id: " + userId;
+		return commonMV(msg);
+	}
+	//支持矩阵形式的URL   必须设置参数<mvc:annotation-driven enable-matrix-variables="true"/>
+	@RequestMapping("/showUserDetail/{userId}")
+	public ModelAndView acceptMatrix(@PathVariable int userId, @MatrixVariable("u") String username, @MatrixVariable("p") String password){
+		User u = new User();
+		u.setId(userId);
+		u.setUsername(username);
+		u.setPassword(password);
+		return commonMV(u);
+	}
 	/*
 	 * 2 通过请求参数、请求方法或请求头进行映射
 	 * params和headers分别通过请求参数及报文头属性进行映射，他们支持简单的表达式：
@@ -73,54 +93,50 @@ public class UserController {
 	 */
 	//@RequestMapping(value="/deleteUser", method=RequestMethod.GET, params="userID", headers="content-type=text/html")
 	@RequestMapping(value="/deleteUser", method=RequestMethod.GET, params="userID")
-	public void deleteUser(@RequestParam("userID") String userId){
-		System.out.println("UserController-->deleteUser id:" + userId);
+	public ModelAndView deleteUser(@RequestParam("userID") String userId){
+		String msg = "UserController-->deleteUser id:" + userId;
+		return commonMV(msg);
 	}
 	
 	//通过请求参数映射映射
 	@RequestMapping("/login1")
-	public void login1(@RequestParam("username") String username,
+	public ModelAndView login1(@RequestParam("username") String username,
 				@RequestParam("password") String password){
-		System.out.println("user login. usernmae:" + username + ",password:" + password);
+		String msg = "user login. usernmae:" + username + ",password:" + password;
+		return commonMV(msg);
 	}
 	
 	//通过请求头，cookie映射
 	@RequestMapping("/requestInfo")
-	public void requestInfo(@CookieValue("JSESSIONID") String sessionId, 
+	public ModelAndView requestInfo(@CookieValue("JSESSIONID") String sessionId, 
 				@RequestHeader("Accept-Language") String lan){
-		System.out.println("jsessionid: " + sessionId + ", language：" + lan);
+		String msg = "jsessionid: " + sessionId + ", language：" + lan;
+		return commonMV(msg);
 	}
 	
 	//请求参数按名称匹配的方式绑定到javabean中
 	@RequestMapping("/login2")
-	public void login2(User user){
-		System.out.println("login user: " + user);
+	public ModelAndView login2(User user){
+		String msg = "login user: " + user;
+		return commonMV(msg);
 	}
 	//Servlet API对象作为入参
 	@RequestMapping("/login3")
-	public void login3(HttpServletRequest request){
-		System.out.println("request username: " + request.getParameter("username"));
-		System.out.println("request password: " + request.getParameter("password"));
-	}
-	
-	//处理模型数据
-	@RequestMapping("/login4")
-	public ModelAndView login4(){
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("hello");
-		mv.addObject("hello", "welcome");
-		return mv;
+	public ModelAndView login3(HttpServletRequest request){
+		String msg = "request username: " + request.getParameter("username") 
+				+ ", request password: " + request.getParameter("password");
+		return commonMV(msg);
 	}
 	
 	//处理模型数据通过@ModelAttribute，Spring将被@ModelAttribute标识的入参自动添加到模型中
-	@RequestMapping("/login5")
-	public String login5(@ModelAttribute("hello")User user){
-		System.out.println("callof login5");
+	@RequestMapping("/login4")
+	public String login4(@ModelAttribute("hello")User user){
+		System.out.println("callof login4");
 		user.setUsername("zhangsan");
 		return "hello";
 	}
 	
-	//SpringMVC在调用任何一个请求处理方法前都会调用被@ModelAttribute标识的方法，将返回值传递到拥有相同属性名的@ModelAttribute()方法入参中
+	//SpringMVC在调用任何一个请求处理方法前都会调用被@ModelAttribute标识的方法，将返回值已“hello”为key添加到model中
 	@ModelAttribute("hello")
 	public User getBaseUser(){
 		System.out.println("callof getBaseUser");
@@ -129,12 +145,38 @@ public class UserController {
 		u.setPassword("QWEasd123");
 		return u;
 	}
-	@RequestMapping("/login6")
-	public String login6(Map<String, Object> map){
+	@RequestMapping("/login5")
+	public String login5(Map<String, Object> map){
 		//获取隐含模型中的对象
 		User u = (User) map.get("hello");
-		System.out.println("login6:" + u);
+		System.out.println("login5:" + u);
 		u.setUsername("wanger");
 		return "hello";
+	}
+	//TODO unsuccess
+	@RequestMapping("/requestBody")
+	public ModelAndView getRequestBody(@RequestBody String body){
+		return commonMV("request body:" + body);
+	}
+	
+	//@RequestBody意味着返回值将会直接被写入到响应体中，适用于ajax相应，不会被当做View处理
+	@RequestMapping("/responseBody")
+	@ResponseBody
+	public String getResponseBody(){
+		return "Response Body";
+	}
+	
+	//TODO Using HttpEntity
+	//TODO 
+	/**
+	 * 通用返回 ModelAndView
+	 * @param msg
+	 * @return
+	 */
+	public ModelAndView commonMV(Object msg){
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("hello");
+		mv.addObject("hello", msg);
+		return mv;
 	}
 }

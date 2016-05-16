@@ -23,7 +23,10 @@
  		<ul>
  			<li>URL映射：<a href="../user/createUser">@RequestMapping("/createUser")：/user/createUser</a></li>
  			<li>支持Ant风格的URL：<a href="../user/createUser/createAdmin">@RequestMapping("/createUser/*")：/user/createUser/createAdmin</a></li>
- 			<li>支持{xxx}占位符搭配@PathVariable：<a href="../user/showUser/admin">@RequestMapping("/showUser/{role}")：/user/showUser/admin</a></li>
+ 			<li>支持{xxx}占位符搭配<b>@PathVariable</b>：<a href="../user/showUser/admin">@RequestMapping("/showUser/{role}")：/user/showUser/admin</a></li>
+ 			<li>支持{varName:regex}形式的正则表达式URL（匹配）：<a href="../user/showUserDetail/2">@RequestMapping("/showUserDetail/{userId:\\d}")：/user/showUserDetail/2</a></li>
+ 			<li>支持{varName:regex}形式的正则表达式URL（不匹配）：<a href="../user/showUserDetail/abc">@RequestMapping("/showUserDetail/{userId:\\d}")：/user/showUserDetail/abc</a></li>
+ 			<li>支持矩阵形式的URL：<a href="../user/showUserDetail/2;u=abc;p=123">@RequestMapping("/showUserDetail/{userId}")：/user/showUserDetail/2;u=abc;p=123</a></li>
  		</ul>
  	</li>
  </ul>
@@ -32,8 +35,12 @@
 	<li>@RequestMapping value/method/params/headers属性：<a href="../user/deleteUser?userID=2">@RequestMapping(value="/delete", method=RequestMethod.GET, params="userID", headers="content-type=text/html")</a></li>
 	<li>@RequestParam：<a href="../user/login1?username=jack&password=123456">@RequestMapping("/login") @RequestParam("username") @RequestParam("password")</a></li>
 	<li>@CookieValue, @RequestHeader：<a href="../user/requestInfo">@RequestMapping("/requestInfo") @CookieValue("JSESSIONID") @RequestHeader("Accept-Language")</a></li>
-	<li><a href="../user/login2?username=tom&password=654321">按属性名称匹配的方式为java bean赋值</a></li>
-	<li><a href="../user/login3?username=kitty&password=65432111">将Http对象传递给处理方法</a></li>
+	<li>按属性名称匹配的方式为java bean赋值<a href="../user/login2?username=tom&password=654321">@RequestMapping("/login2")：/user/login2?username=tom&amp;password=654321</a></li>
+	<li>将Http对象传递给处理方法<a href="../user/login3?username=kitty&password=65432111">@RequestMapping("/login3")：/user/login3?username=kitty&amp;password=65432111</a></li>
+	<li>@ModelAttribute标识方法入参<a href="../user/login4?username=kitty&password=65432111">@RequestMapping("/login4")：login4(@ModelAttribute("hello")User user)</a></li>
+	<li>@ModelAttribute标识方法<a href="../user/login5">@RequestMapping("/login5")</a></li>
+	<li><a href="../user/requestBody?username=kitty&password=65432111">@RequestBody</a></li>
+	<li><a href="../user/responseBody">@ResponseBody</a></li>
 	<li><a href=""></a>Spring MVC还支持处理方法其他类型的入参，包括IO对象、java.util.Locale等</li>
 </ul>
 </body>
