@@ -153,17 +153,22 @@ public class UserController {
 		u.setUsername("wanger");
 		return "hello";
 	}
-	//TODO unsuccess
+	
+	/**
+	 * 无法接收GET请求，因为GET请求没有请求体
+	 * @param body
+	 * @return
+	 */
 	@RequestMapping("/requestBody")
 	public ModelAndView getRequestBody(@RequestBody String body){
 		return commonMV("request body:" + body);
 	}
 	
-	//@RequestBody意味着返回值将会直接被写入到响应体中，适用于ajax相应，不会被当做View处理
+	//@RequestBody意味着返回值将会直接被写入到响应体中，适用于ajax响应，不会被当做View处理
 	@RequestMapping("/responseBody")
 	@ResponseBody
 	public String getResponseBody(){
-		return "Response Body";
+		return "Response Body: Hello World";
 	}
 	
 	//TODO Using HttpEntity
