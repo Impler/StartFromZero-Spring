@@ -72,8 +72,8 @@ public class TestSpEL {
 		Expression nullExp = parser.parseExpression("NulL");
 		//step3 get value
 		String strVal = (String) strExp.getValue();
-		int numVal = (int) numExp.getValue();
-		boolean boolVal = (boolean) boolExp.getValue();
+		int numVal = (Integer) numExp.getValue();
+		boolean boolVal = (Boolean) boolExp.getValue();
 		Object nullVal = nullExp.getValue();
 		System.out.println("strVal: " + strVal);
 		System.out.println("numVal: " + numVal);
