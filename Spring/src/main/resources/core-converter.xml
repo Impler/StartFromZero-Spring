@@ -10,7 +10,9 @@
 	<!-- 
 		String 的类型转换机制
 		1 org.springframework.core.convert.converter.Converter<S, T> 简单的从一个类型转换为另一个类型
-		2 org.springframework.core.convert.converter.ConverterFactory<S, R>
-	
+		2 org.springframework.core.convert.converter.ConverterFactory<S, R> 将一个类型的对象转换为另一个对象及其子对象
+		3 org.springframework.core.convert.converter.GenericConverter 支持多种类型之间的转换，根据源对象与目标对象在宿主类中的上下文信息进行类型转换
+			- org.springframework.core.convert.converter.ConditionalGenericConverter 扩展自GenericConverter，在满足一定条件进行转换
+		4 org.springframework.core.convert.ConversionService 
 	 -->
 </beans>
