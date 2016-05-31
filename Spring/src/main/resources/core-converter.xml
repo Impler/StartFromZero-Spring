@@ -13,6 +13,93 @@
 		2 org.springframework.core.convert.converter.ConverterFactory<S, R> 将一个类型的对象转换为另一个对象及其子对象
 		3 org.springframework.core.convert.converter.GenericConverter 支持多种类型之间的转换，根据源对象与目标对象在宿主类中的上下文信息进行类型转换
 			- org.springframework.core.convert.converter.ConditionalGenericConverter 扩展自GenericConverter，在满足一定条件进行转换
-		4 org.springframework.core.convert.ConversionService 
+		4 org.springframework.core.convert.ConversionService conversionService默认注册strings, numbers, enums, collections, maps等基本类型转换器
 	 -->
+	
+	<!-- 仅仅为了测试使用，实际工作环境可能略有不同 -->
+	<!-- 实现converter接口 -->
+	<bean id="stringToDateConverter" class="com.study.spring.core.converter.StringToDateConverter">
+		<property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"></property>
+	</bean>
+	
+	<!-- 实现ConverterFactory接口 -->
+	<bean id="stringToEnumConverter"
+		class="com.study.spring.core.converter.StringToGenericEnumConverterFactory" />
+		
+	<!-- 实现GenericConverter接口 -->
+	<bean id="objectToStringConverter" class="com.study.spring.core.converter.ObjectToStringConverter" />
+	
+	<!-- 
+		ConditionalGenericConverter扩展自GeneircConverter，添加一个接口方法matches(TypeDescriptor sourceType, TypeDescriptor targetType)，转换前先验证两个类型间是否满足转换条件
+	-->
+	
+	<!-- 
+		ConversionServiceFactoryBean创建后做两件准备工作：
+		1 注册默认的converter
+			
+		2 注册自定义converter
+		
+	 -->
+	<bean id="conversionService"
+		class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<!-- 自定义converter注册 -->
+		<property name="converters">
+			<list>
+				<ref bean="stringToDateConverter" />
+				<ref bean="stringToEnumConverter" />
+				<ref bean="objectToStringConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- DefaultConversionService 默认注册的转换器 
+		// 基本类型转换器 
+		java.lang.Boolean -> java.lang.String : org.springframework.core.convert.support.ObjectToStringConverter@14a55e5 
+		java.lang.Character -> java.lang.Number : org.springframework.core.convert.support.CharacterToNumberFactory@ad5fab 
+		java.lang.Character -> java.lang.String : org.springframework.core.convert.support.ObjectToStringConverter@16dba0a 
+		java.lang.Enum -> java.lang.String : org.springframework.core.convert.support.EnumToStringConverter@d36ff3 
+		java.lang.Number -> java.lang.Character : org.springframework.core.convert.support.NumberToCharacterConverter@d0f59e 
+		java.lang.Number -> java.lang.Number : org.springframework.core.convert.support.NumberToNumberConverterFactory@79b177 
+		java.lang.Number -> java.lang.String : org.springframework.core.convert.support.ObjectToStringConverter@e1eae7 
+		java.lang.String -> java.lang.Boolean : org.springframework.core.convert.support.StringToBooleanConverter@63f09e 
+		java.lang.String -> java.lang.Character : org.springframework.core.convert.support.StringToCharacterConverter@523be 
+		java.lang.String -> java.lang.Enum : org.springframework.core.convert.support.StringToEnumConverterFactory@14d581b 
+		java.lang.String -> java.lang.Number : org.springframework.core.convert.support.StringToNumberConverterFactory@1723c7f 
+		java.lang.String -> java.util.Locale : org.springframework.core.convert.support.StringToLocaleConverter@15af049 
+		java.lang.String -> java.util.Properties : org.springframework.core.convert.support.StringToPropertiesConverter@5b28c9 
+		java.lang.String -> java.util.UUID : org.springframework.core.convert.support.StringToUUIDConverter@1c19919 
+		java.util.Locale -> java.lang.String : org.springframework.core.convert.support.ObjectToStringConverter@1555185 
+		java.util.Properties -> java.lang.String : org.springframework.core.convert.support.PropertiesToStringConverter@d2d58b 
+		java.util.UUID -> java.lang.String : org.springframework.core.convert.support.ObjectToStringConverter@12a416a 
+		
+		// 集合转换器 
+		org.springframework.core.convert.support.ArrayToCollectionConverter@bd93cd 
+		org.springframework.core.convert.support.CollectionToArrayConverter@3299f6 
+		org.springframework.core.convert.support.ArrayToArrayConverter@19fc25 
+		org.springframework.core.convert.support.CollectionToCollectionConverter@1f8f8c8 
+		org.springframework.core.convert.support.MapToMapConverter@952905 
+		org.springframework.core.convert.support.ArrayToStringConverter@b83be0 
+		org.springframework.core.convert.support.StringToArrayConverter@1631573 
+		org.springframework.core.convert.support.ArrayToObjectConverter@1533c8 
+		org.springframework.core.convert.support.ObjectToArrayConverter@1faa614 
+		org.springframework.core.convert.support.CollectionToStringConverter@ad7d80 
+		org.springframework.core.convert.support.StringToCollectionConverter@a6d35 
+		org.springframework.core.convert.support.CollectionToObjectConverter@87d472 
+		org.springframework.core.convert.support.ObjectToCollectionConverter@18ca663 
+		
+		// ByteBufferConverter 
+		org.springframework.core.convert.support.ByteBufferConverter@ffc3eb 
+		org.springframework.core.convert.support.ByteBufferConverter@ffc3eb 
+		org.springframework.core.convert.support.ByteBufferConverter@ffc3eb 
+		org.springframework.core.convert.support.ByteBufferConverter@ffc3eb 
+		
+		//对象与对象之间转换 
+		org.springframework.core.convert.support.ObjectToObjectConverter@1e779a1 
+		
+		//ID转实体 
+		org.springframework.core.convert.support.IdToEntityConverter@a6e0a9 
+		
+		//回调对象转
+		String org.springframework.core.convert.support.FallbackObjectToStringConverter@1e26e52 
+	-->
 </beans>
