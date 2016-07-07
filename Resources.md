@@ -85,7 +85,32 @@ public interface ResourceLoaderAware {
 template具体的Resource类型基于上面讲的路径前缀或当前Application Context类型。  
 
 ###构建ApplicationContext
+ApplicationContext的创建需要传递一个String类型或者String数组的配置文件路径参数。如果路径参数没有指定特定的前缀，生成的Resource类型由要创建的ApplicationContext类型决定。如：  
+```java
+// 从classpath下加载配置文件
+ApplicationContext ctx = new ClassPathXmlApplicationContext("conf/appContext.xml");
+
+// 从相对于当前工作目录的文件系统加载配置文件
+ApplicationContext ctx = new FileSystemXmlApplicationContext("conf/appContext.xml");
+```
 
 ###资源路径中通配符的使用
+spring的资源路径可以是明确指定的资源，也可以是含有classpath*:前缀或Ant风格的表达式。  
+classpath*:前缀：  
+与classpath:前缀对应的，classpath*:前缀会扫描classpath下多个Jar包或文件，并将扫描到的多个资源组合在一起。该前缀适用于分模块打包的应用，每个模块单独打jar包，classpath*:可以扫描到位于不同jar包内的配置文件。  
+Ant风格：  
+3种匹配符：  
+- ?: 匹配文件名中的一个字符
+- *: 匹配文件名中的任意个字符
+- **: 匹配多层路径
 
 ###关于FileSystemResource的注意点
+FileSystemResource 将资源路径当做相对于当前工作目录的相对路径对待，不管路径是否以/开头，如果想要使用相对于根路径的绝对路径，最好使用file:前缀返回UrlResource。  
+例如：  
+```java
+	FileSystemXmlApplicationContext ctx = ...;
+	ctx.getResource("some/resource/path/myTemplate.txt");
+	// 与下面的配置结果是一样的
+	FileSystemXmlApplicationContext ctx = ...;
+	ctx.getResource("/some/resource/path/myTemplate.txt");
+```
