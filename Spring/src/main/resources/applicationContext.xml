@@ -19,19 +19,21 @@
     	id: 唯一标识符
     	class: 对应的全限定类名，对应BeanDefinition对象
      -->
-    <bean id="" class="">
+    <bean id="xxx" class="xxx">
     	<!-- 
     		name: 对象属性名； 
     		ref：引用配置文件中配置的其他bean对象；
     		idref: 引用bean id（字符串），相当于value，只不过会验证bean存不存在
     		value: 值 
     	-->
+    	<!-- 
     	<property name="" ref=""></property>
     	<property name="">
     		<idref/>
     		<ref/>
     	</property>
     	<property name="" value=""></property>
+    	 -->
     </bean>
 	<!-- Composing XML-based configuration by import resource -->
 	<import resource="helloworld.xml" />
