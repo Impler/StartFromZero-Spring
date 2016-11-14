@@ -24,6 +24,19 @@ ConfigurableApplicationContext是ApplicationContext的子接口，此外还继�
 ![ConfigurableApplicationContext](resources/images/ConfigurableApplicationContext.png)
 
 #### 1.2.2 AbstractApplicationContext
+作为ApplicationContext接口的抽象实现，仅仅实现了容器基本的方法，包括getBean等，但Bean的配置和创建方式还需要子类实现抽象方法来实现。此外，该类还会自动注册一些特殊的Bean，BeanFactoryPostProcessors, BeanPostProcessors和ApplicationListeners。
+![AbstractApplicationContext](resources/images/AbstractApplicationContext.png)
+
 #### 1.2.3 AbstractRefreshableConfigApplicationContext
+AbstractRefreshableApplicationContext的抽象子类，添加了处理特定位置配置的功能，并且作为基于XML配置的ApplicationContext实现的基础父类。  
+- Aware：标识型接口，标识Bean可被Spring容器通过回调方法通知到。一般回调方法为单参数的无返回值得方法。
+- BeanNameAware：Bean在BeanFactory中的名称
+- InitializingBean：当BeanFactory配置完所有的Properties时调用该接口方法，可用于自定义检查，例如检查一些必要属性是否存在等。可使用init-method注解完成该接口的工作。  
+![AbstractRefreshableConfigApplicationContext](resources/images/AbstractRefreshableConfigApplicationContext.png)
+
 #### 1.2.4 AbstractXmlApplicationContext
+使在XML中定义的Bean能够被XmlBeanDefinitionReader识别、加载。子类只需要实现getConfigResources或getConfigLocations方法接口，告知配置文件的路径。  
+![AbstractXmlApplicationContext](resources/images/AbstractXmlApplicationContext.png)
+
 #### 1.2.5 ClassPathXmlApplicationContext
+
