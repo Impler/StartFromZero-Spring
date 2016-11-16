@@ -20,19 +20,19 @@ BeanFactory 顾名思义，是Spring保管Bean定义的工厂或容器。外部�
 - FactoryBeanRegistrySupport 可以管理FactoryBean的存储器  
 *注意：* BeanFactory与FactoryBean的区别  
 
-#### 1.1.3 HierarchicalBeanFactory
+#### 1.1.2 HierarchicalBeanFactory
 HierarchicalBeanFactory是BeanFactory的子接口。Hierarchical，分层的，多级的，即HierarchicalBeanFactory的引入可以将整个Bean容器分层，child-parent BeanFactory的形式，便于同级之间、上下级之间资源的共享与隔离。
 ![HierarchicalBeanFactory.png](resources/images/HierarchicalBeanFactory.png)
 
-#### 1.1.4 ConfigurableBeanFactory
+#### 1.1.3 ConfigurableBeanFactory
 ConfigurableBeanFactory提供配置BeanFactory的方法。  
 ![ConfigurableBeanFactory.png](resources/images/ConfigurableBeanFactory.png)
 
-#### 1.1.5 AbstractBeanFactory
+#### 1.1.4 AbstractBeanFactory
 AbstractBeanFactory是一个抽象的BeanFactory的基础实现。其完全实现了ConfigurableBeanFactory的功能，还实现了单例Bean的缓存、处理FactoryBean、别名、BeanDefinition管理、销毁Bean的功能。子类需要实现getBeanDefinition()和createBean()方法, 根据Bean名称获取BeanDefinition和根据给定的BeanDefinition创建一个Bean实例。  
 ![AbstractBeanFactory.png](resources/images/AbstractBeanFactory.png)
 
-#### 1.1.2 AutowireCapableBeanFactory
+#### 1.1.5 AutowireCapableBeanFactory
 AutowireCapableBeanFactory提供自动装载依赖的功能。  
 ![AutowireCapableBeanFactory.png](resources/images/AutowireCapableBeanFactory.png)
 
@@ -42,7 +42,7 @@ AbstractBeanFactory的扩展，新增自动装载依赖的功能。
 
 #### 1.1.7 ListableBeanFactory
 ListableBeanFactory是BeanFactory的子接口。提供了额外的可罗列所有指定规格的Bean实例的方法，比起每次通过BeanName一个一个获取Bean的方式，功能更加强大。
-![HierarchicalAndListableBeanFactory.png](resources/images/HierarchicalAndListableBeanFactory.png)
+![ListableBeanFactory.png](resources/images/ListableBeanFactory.png)
 
 #### 1.1.8 StaticListableBeanFactory
 BeanFactory的静态实现，支持编程式的注册已经存在的单实例对象，不支持基于BeanDefinition创建新的Bean实例。
@@ -56,7 +56,7 @@ BeanFactory的静态实现，支持编程式的注册已经存在的单实例对
 DefaultListableBeanFactory是一个功能完全的BeanFactory。
 ![DefaultListableBeanFactory.png](resources/images/DefaultListableBeanFactory.png)
 
-#### 1.1.11 SimpleJndiBeanFactory
+![BeanFactoryHierarchy.png](resources/images/BeanFactoryHierarchy.png)
 
 ### 1.2 ApplicationContext
 ApplicationContext是Spring的核心，通过继承多个功能接口为整个应用程序提供全面的服务支持。
