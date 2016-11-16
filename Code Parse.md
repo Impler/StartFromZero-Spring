@@ -20,10 +20,6 @@ BeanFactory 顾名思义，是Spring保管Bean定义的工厂或容器。外部�
 - FactoryBeanRegistrySupport 可以管理FactoryBean的存储器  
 *注意：* BeanFactory与FactoryBean的区别  
 
-#### 1.1.2 AutowireCapableBeanFactory
-AutowireCapableBeanFactory提供自动装载依赖的功能。  
-![AutowireCapableBeanFactory.png](resources/images/AutowireCapableBeanFactory.png)
-
 #### 1.1.3 HierarchicalBeanFactory
 HierarchicalBeanFactory是BeanFactory的子接口。Hierarchical，分层的，多级的，即HierarchicalBeanFactory的引入可以将整个Bean容器分层，child-parent BeanFactory的形式，便于同级之间、上下级之间资源的共享与隔离。
 ![HierarchicalBeanFactory.png](resources/images/HierarchicalBeanFactory.png)
@@ -35,6 +31,10 @@ ConfigurableBeanFactory提供配置BeanFactory的方法。
 #### 1.1.5 AbstractBeanFactory
 AbstractBeanFactory是一个抽象的BeanFactory的基础实现。其完全实现了ConfigurableBeanFactory的功能，还实现了单例Bean的缓存、处理FactoryBean、别名、BeanDefinition管理、销毁Bean的功能。子类需要实现getBeanDefinition()和createBean()方法, 根据Bean名称获取BeanDefinition和根据给定的BeanDefinition创建一个Bean实例。  
 ![AbstractBeanFactory.png](resources/images/AbstractBeanFactory.png)
+
+#### 1.1.2 AutowireCapableBeanFactory
+AutowireCapableBeanFactory提供自动装载依赖的功能。  
+![AutowireCapableBeanFactory.png](resources/images/AutowireCapableBeanFactory.png)
 
 #### 1.1.6 AbstractAutowireCapableBeanFactory
 AbstractBeanFactory的扩展，新增自动装载依赖的功能。
