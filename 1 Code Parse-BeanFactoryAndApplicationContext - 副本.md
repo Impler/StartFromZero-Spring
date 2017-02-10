@@ -1,6 +1,6 @@
 # Spring 源码解析
 ## 1 BeanFactory和ApplicationContext
-BeanFactory是基本的IOC容器，提供Bean的获取和保存维护等基础功能。首先ApplicationContext就是一个BeanFactory，而且更高级。它除了提供基础的IOC容器功能外，还提供了一些高级的功能：
+BeanFactory是基本的IOC容器，提供Bean的获取和保存维护等基础功能。ApplicationContext就是一个BeanFactory，而且更高级。它除了提供基础的IOC容器功能外，还提供了一些高级的功能：
 - 支持国际化信息（MessageSource）
 - 资源访问能力（ResourceLoader）
 - 注册事件监听（ApplicationEventPublisher）
@@ -56,6 +56,7 @@ BeanFactory的静态实现，支持编程式的注册已经存在的单实例对
 DefaultListableBeanFactory是一个功能完全的BeanFactory。
 ![DefaultListableBeanFactory.png](resources/images/DefaultListableBeanFactory.png)
 
+#### 1.1.11 BeanFactory层级结构图
 ![BeanFactoryHierarchy.png](resources/images/BeanFactoryHierarchy.png)
 
 ### 1.2 ApplicationContext
