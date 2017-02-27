@@ -6,10 +6,4 @@
 
 	<bean id="businessDao" class="com.study.spring._01core._01ioc._01baseconfig.BusinessDao"></bean>
 
-	<bean id="businessService" class="com.study.spring._01core._01ioc._01baseconfig.BusinessService">
-		<property name="serviceName" value="TestServcice" />
-		<property name="businessDao" ref="businessDao" />
-	</bean>
-
-
 </beans>

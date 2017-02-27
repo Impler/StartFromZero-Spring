@@ -8,7 +8,8 @@ public class BusinessServiceTest {
 	@Test
 	public void test() {
 		
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("config/01core/01ioc/01baseconfig/beans-base.xml");
+		ClassPathXmlApplicationContext context = 
+				new ClassPathXmlApplicationContext("config/01core/01ioc/01baseconfig/beans-base-service.xml");
 		
 		BusinessService businessService = context.getBean("businessService", BusinessService.class);
 		
