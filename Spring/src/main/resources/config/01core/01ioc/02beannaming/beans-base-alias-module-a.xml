@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="businessDao" name="bd1 bd2 bd3" class="com.study.spring._01core._01ioc._01baseconfig.BusinessDao"></bean>
-	
-	<alias name="businessDao" alias="bussDaoA"/>
-	<alias name="businessDao" alias="bussDaoB"/>
+	<bean id="businessServiceA" class="com.study.spring._01core._01ioc._01baseconfig.BusinessService">
+		<property name="serviceName" value="Module-A" />
+		<property name="businessDao" ref="bussDaoA" />
+	</bean>
 </beans>
