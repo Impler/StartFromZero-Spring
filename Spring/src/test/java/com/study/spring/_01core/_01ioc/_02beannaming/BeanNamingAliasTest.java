@@ -17,13 +17,14 @@ public class BeanNamingAliasTest {
 		ClassPathXmlApplicationContext context = 
 				new ClassPathXmlApplicationContext(configFiles);
 		
-		
+		// get all alias of bean, includes name attribute, and alias element defines
 		String[] alias = context.getAliases("businessDao");
 		System.out.println("******businessDao all aliases are below:");
 		for(String a : alias){
 			System.out.println("alias:" + a);
 		}
 		
+		// check is referenced the same bean by alias
 		BusinessService serviceA = (BusinessService) context.getBean("businessServiceA");
 		BusinessService serviceB = (BusinessService) context.getBean("businessServiceB");
 		System.out.println("******is refed the same bean by alias: ");

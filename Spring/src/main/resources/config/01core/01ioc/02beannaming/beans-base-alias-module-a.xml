@@ -6,6 +6,7 @@
 
 	<bean id="businessServiceA" class="com.study.spring._01core._01ioc._01baseconfig.BusinessService">
 		<property name="serviceName" value="Module-A" />
+		<!-- referenced by alias -->
 		<property name="businessDao" ref="bussDaoA" />
 	</bean>
 </beans>

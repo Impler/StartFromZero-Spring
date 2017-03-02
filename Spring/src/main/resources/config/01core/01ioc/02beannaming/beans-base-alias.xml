@@ -4,8 +4,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<!-- name a bean alias by 'name' attribute -->
 	<bean id="businessDao" name="bd1 bd2 bd3" class="com.study.spring._01core._01ioc._01baseconfig.BusinessDao"></bean>
 	
+	<!-- name a bean alias by 'alias' element -->
 	<alias name="businessDao" alias="bussDaoA"/>
 	<alias name="businessDao" alias="bussDaoB"/>
 </beans>
