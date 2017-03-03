@@ -10,7 +10,7 @@
 <!-- 	
 	<import resource="/beans-base-dao.xml"/>
  -->
-	<bean id="businessService" class="com.study.spring._01core._01ioc._01baseconfig.BusinessService">
+	<bean id="businessService" class="com.study.spring._01core._01ioc._01base_config.BusinessService">
 		<property name="serviceName" value="TestServcice" />
 		<property name="businessDao" ref="businessDao" />
 	</bean>

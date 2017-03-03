@@ -1,4 +1,4 @@
-package com.study.spring._01core._01ioc._03beaninstantiation;
+package com.study.spring._01core._01ioc._03bean_instantiation;
 
 public class Foo {
 

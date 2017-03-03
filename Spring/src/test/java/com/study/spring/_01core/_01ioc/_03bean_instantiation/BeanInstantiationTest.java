@@ -1,11 +1,12 @@
-package com.study.spring._01core._01ioc._03beaninstantiation;
+package com.study.spring._01core._01ioc._03bean_instantiation;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.study.spring._01core._01ioc._03beaninstantiation.Foo.Bar;
+import com.study.spring._01core._01ioc._03bean_instantiation.Foo;
+import com.study.spring._01core._01ioc._03bean_instantiation.Foo.Bar;
 
 public class BeanInstantiationTest {
 	
@@ -14,7 +15,7 @@ public class BeanInstantiationTest {
 	@Before
 	public void before(){
 		context = new ClassPathXmlApplicationContext(
-				"config/01core/01ioc/03beaninstantiation/beans-base-instantiation.xml");
+				"config/01core/01ioc/03bean-instantiation/beans-base-instantiation.xml");
 	}
 
 	@After

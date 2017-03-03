@@ -1,17 +1,17 @@
-package com.study.spring._01core._01ioc._02beannaming;
+package com.study.spring._01core._01ioc._02bean_naming;
 
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.study.spring._01core._01ioc._01baseconfig.BusinessService;
+import com.study.spring._01core._01ioc._01base_config.BusinessService;
 
 public class BeanNamingAliasTest {
 
 	@Test
 	public void test() {
-		String[] configFiles = {"config/01core/01ioc/02beannaming/beans-base-alias.xml"
-				, "config/01core/01ioc/02beannaming/beans-base-alias-module-a.xml"
-				, "config/01core/01ioc/02beannaming/beans-base-alias-module-b.xml"
+		String[] configFiles = {"config/01core/01ioc/02bean-naming/beans-base-alias.xml"
+				, "config/01core/01ioc/02bean-naming/beans-base-alias-module-a.xml"
+				, "config/01core/01ioc/02bean-naming/beans-base-alias-module-b.xml"
 		};
 		
 		ClassPathXmlApplicationContext context = 

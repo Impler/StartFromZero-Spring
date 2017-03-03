@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 
+		基于XML配置的Bean，主要通过 <property />、<constructor-arg />元素注入依赖。
+		下面就主要来介绍下<property />元素各个属性/子元素的含义及使用
+	-->
+	<!-- 1 value -->
+	<!-- 
+		value属性用于指定字面意义的（字符串）值。
+		spring conversion service 负责将这些字面意义的值转换成对应属性类型的值
+	 -->
+	<bean id="" class="">
+		<property name="xx" value="xxxx"></property>
+	</bean>
+	
+	<!-- 2 idref -->
+	<!-- 
+	 	idref 引用配置文件中配置的bean的id(字符串)，为其他bean的属性赋值。相当于value，只不过会多一步验证，如果引用的id不存在将会抛错
+	 -->
+	 <bean id="xx" class="xxx">
+	 	<property name="name">
+	 		<idref bean="xxx"/>
+	 	</property>
+	 	<!-- 相当于 <property name="name" value="xxx" /> -->
+	 </bean>
+	 
+	 <!-- 
+	 	3. ref 引用其他bean对应的实例，ref有三个属性可选：
+	 		bean: 可以引用所有配置的bean
+	 		local: 仅能引用当前配置文件中的bean(4.0以后版本，不建议使用)
+	 		parent: 引用parent中的bean
+	 -->
+	 <bean id="xx" class="xxx">
+	 	<property name="bar" ref="bar">
+	 </bean>
+	 
+	 <!-- 
+	 	4. inner bean 在一个bean的<property/>或<constructor-arg/>元素内定义的bean（<bean/>）
+	 	spring 忽略inner bean的 id、name以及scope属性
+	  -->
+	 <bean id="xxx" class="xxx">
+	 	<property name="target">
+	 		<bean class="xxx">
+	 			<property name="xxx" value="xxx"/>
+	 		</bean>
+	 	</property>
+	 </bean>
+	 <!-- 
+	 	5. 集合 
+	 	spring支持List，Set，Map，Properties等集合属性的注入
+	  -->
+	 <bean id="xx" class="xxx">
+	 	<!-- 注入properties对象 -->
+	    <property name="properties">
+	        <props>
+	        	<!-- key-value均为字面值 -->
+	            <prop key="xx">xxx</prop>
+	            <prop key="xx">xxx</prop>
+	        </props>
+	    </property>
+	    <!-- 注入 list对象-->
+	    <property name="list">
+	        <list>
+	        	<!-- 字面值 -->
+	            <value>xxx</value>
+	            <!-- 引用其他bean -->
+	            <ref bean="xxx" />
+	        </list>
+	    </property>
+	    <!-- 注入map对象 -->
+	    <property name="map">
+	        <map>
+	        	<!-- 字面值 -->
+	            <entry key="xxx" value="xxx"/>
+	            <!-- 可以引用其他bean -->
+	            <entry key ="xxx" value-ref="xxx"/>
+	        </map>
+	    </property>
+	    <!-- 注入set对象 -->
+	    <property name="set">
+	        <set>
+	        	<!-- 字面值 -->
+	            <value>xxx</value>
+	            <!-- 引用其他bean -->
+	            <ref bean="xxx" />
+	        </set>
+	    </property>
+	    
+	    <!-- *************************************** -->
+	    <!-- 
+	    	map中的key/value，以及set的value属性值可以使用下列元素：
+	    	bean | ref | idref | list | set | map | props | value | null
+	    	
+	    	以上这些集合元素还有一个'merge'属性，用于子bean中的集合元素与父bean中的集合元素合并.
+	    	对于map、props、set等无序集合来说，子bean会覆盖父bean集合中相同的元素，而list是无序的，因此不会覆盖
+	    -->
+	    <!-- *************************************** -->
+	</bean>
+	 
+	<!-- 
+	6. NULL和空值
+		null用<null /> 元素表示
+		""用value="" 表示
+	-->
+	  
+	<!-- 
+	7. 命名空间p，c， 简化配置
+		p：
+		在beans节点中添加命名空间 xmlns:p="http://www.springframework.org/schema/p"
+		使用命名空间p后，在定义bean的时候，可以使用"p:属性=xxx"或"p:属性-ref"的行级属性形式代替<property />
+		如：
+	-->
+	<bean name="xxx" class="xxx">
+	    <property name="name" value="xxx"/>
+	    <property name="spouse" ref="xxx"/>
+	</bean>
+	<!-- 
+		使用p命名空间：
+	 -->
+	<bean id="xxx" class="xxx" 
+		p:name="xxx"
+		p:spouse-ref="xxx"/>
+	<!-- 
+		c：
+		在beans节点中添加命名空间pxmlns:c="http://www.springframework.org/schema/c"
+		在定义构造方法注入的bean中，使用"c:属性=xxx"或"c:属性-ref"的行级属性形式代替<constructor-arg />
+	  	如:
+	 -->  			
+	<bean id="xxx" class="xxx">
+	    <constructor-arg ref="bar"/>
+	    <constructor-arg ref="baz"/>
+	    <constructor-arg value="xxx"/>
+	</bean>
+	<!-- 
+		使用c命名空间：
+	 -->
+    <bean id="xxx" class="xxx" 
+    	c:bar-ref="bar" 
+    	c:baz-ref="baz" 
+    	c:email="xxx"/>
+    	
+	<!--
+	8. depends-on
+		bean A 依赖于bean B，如果不能确定初始化A时B是否已经实例化，使用depends-on属性，确保依赖bean B在A之前实例化
+		多个依赖之间用,;或空格间隔：fooBean;barBean
+		例如:
+	-->
+	<bean id="xx" class="xxx" p:foo-ref="fooBean" depends-on="fooBean" />
+	
+	<!-- 
+	9. Lazy-initialized
+		Spring在初始化容器时默认实例化singleton bean，如果希望某个bean使用时再实例化，可以指定lazy-init="true"
+		<bean id="..." class="..."  lazy-init="true"/>
+		全局的实例化机制也是支持的，在beans节点上添加default-lazy-init="true":
+		<beans default-lazy-init="true" />
+		但是如果一个非lazy-init的bean A依赖一个lazy-init的bean B，那么B的lazy-init属性会被忽略，因为要满足被A依赖。
+	-->
+	    
+	<!-- 
+	10. 自动装配
+		不需要指定依赖，依靠spring容器自动装配
+		三种装配方式（默认不使用自动装配）：
+			- by name 自动注入与该bean属性名相同的bean
+			- by type 自动注入与该bean属性类型相同的bean
+			- constructor 自动注入与该bean构造函数参数类型相同的bean
+		
+		<bean autowire="true"></bean>
+		spring不支持基本类型、string类型、以及Class类型对象的自动注入。
+		如果一个bean不希望被其他的bean自动注入，可以设置属性autowire-candidate="false"
+	-->
+	     
+	 <!-- configuration detail end -->
+</beans>

@@ -1,4 +1,4 @@
-package com.study.spring._01core._01ioc._01baseconfig;
+package com.study.spring._01core._01ioc._01base_config;
 
 /**
  * a pojo in dao layer
