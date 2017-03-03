@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd" 
+        default-lazy-init="true"> <!-- in order to influence each other between multi test case -->
+	
+	<!-- Bean instantiation -->
+	<!-- 1. Instantiation with a constructor  -->
+	<!-- 	1.1 default constructor -->
+	<!-- 	1.2 constructor with parameters-->
+	<!-- 2. Instantiation with a static factory method -->
+	<!-- 3. Instantiation using an instance factory method -->
+	
+	<!-- Instantiation with a constructor s -->
+	<!--  -->
+	<bean id="foo" class="com.study.spring._01core._01ioc._03beaninstantiation.Foo" />
+	<!-- Instantiation with a constructor e -->
+	
+	<!-- Instantiation with a parameter-constructor s -->
+	<bean id="fooWithParamConstructor" class="com.study.spring._01core._01ioc._03beaninstantiation.Foo">
+		<constructor-arg name="name" value="testFoo"/>
+	</bean>
+	<!-- Instantiation with a parameter-constructor e -->
+	
+	<!-- Instantiation with a static factory method s -->
+	<bean id="fooByStaticFactoryMethod"
+		class="com.study.spring._01core._01ioc._03beaninstantiation.FooFactory"
+		factory-method="staticCreateFoo" />
+	<!-- Instantiation with a static factory method e -->
+	
+	<!-- Instantiation with a factory method s -->
+	<!-- define the factory bean -->
+	<bean id="fooFactory" class="com.study.spring._01core._01ioc._03beaninstantiation.FooFactory"/>
+	
+	<bean id="fooByFactoryMethod" factory-bean="fooFactory" factory-method="createFoo" />
+	<!-- Instantiation with a  factory method e -->
+	
+	<!-- Instantiation inner static class bean s-->
+	<!-- use '$' connect outer class name and inner class name -->
+	<bean id="innerStaticClassBean" class="com.study.spring._01core._01ioc._03beaninstantiation.Foo$Bar" />
+</beans>

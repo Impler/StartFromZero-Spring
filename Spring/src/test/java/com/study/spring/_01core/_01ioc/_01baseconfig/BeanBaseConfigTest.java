@@ -3,7 +3,7 @@ package com.study.spring._01core._01ioc._01baseconfig;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class BusinessServiceTest {
+public class BeanBaseConfigTest {
 
 	@Test
 	public void test() {
