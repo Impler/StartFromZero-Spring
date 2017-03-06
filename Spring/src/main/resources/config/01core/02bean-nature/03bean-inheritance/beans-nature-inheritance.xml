@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+		Bean的继承体系
+		一个Bean可以继承另一个Bean
+		包括 class, scope, constructor值,  property值，工厂方法等，子bean可以重写覆盖继承来的属性
+		但 depend-on, autowire mode, 依赖检查, singleton, lazy-init将不参与继承
+		
+		abstract bean只作为模板，不会被容器实例化
+	-->
+	
+	<bean id="parentBean" class="" abstract="true"></bean>
+	<bean id="childBean" parent="parentBean"></bean>
+	  
+</beans>
