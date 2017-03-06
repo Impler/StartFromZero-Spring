@@ -5,6 +5,29 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- 
-		TODO
+		通常来讲，大多数bean是以singleton的形式保存在容器中的。如果singleton Bean A 需要依赖一个singleton Bean B，那么只需要在A中添加一个B类型的属性即可。
+		同样的，两个prototype Bean之间的依赖也是如此。
+		但是当两个Bean的生命周期不一致时，上面的方法就行不通了，这时候需要使用方法注入。
+		例如：singleton Bean A 需要在每次调用时，使用prototype Bean B
+		
+		两种方式：
+		1. singleton Bean实现ApplicationContextAware接口，每次调用时，从容器中获取依赖的prototype Bean
+		2. look-up
+			Spring容器可以重写被管理Bean中的方法，通过字节码的形式重写（cglib）代理方法，返回容器中lookup出来的其他bean
 	 -->
+	 
+	<!-- prototype bean -->
+	<bean id="bar" scope="prototype" class="com.study.spring._01core._01ioc._04dependency_injection.method_injection.PrototypeBeanBar" />
+	
+	<!-- 1. by Aware s -->
+	<!-- singleton bean -->
+	<bean id="fooAware" class="com.study.spring._01core._01ioc._04dependency_injection.method_injection.FooApplicationContextAware"></bean>
+	<!-- 1. by Aware e -->
+	
+	<!-- 2. by look-up s -->
+	<bean id="fooLookUp" class="com.study.spring._01core._01ioc._04dependency_injection.method_injection.FooLookup">
+		<!-- getBar为非final方法名 -->
+		<lookup-method name="getBar" bean="bar"/>
+	</bean>
+	<!-- 2. by look-up e -->
 </beans>
