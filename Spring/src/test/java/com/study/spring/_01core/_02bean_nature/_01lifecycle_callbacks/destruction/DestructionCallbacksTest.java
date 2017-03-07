@@ -1,4 +1,4 @@
-package com.study.spring._01core._02bean_nature._01lifecycle_callbacks.initialization;
+package com.study.spring._01core._02bean_nature._01lifecycle_callbacks.destruction;
 
 import org.junit.Test;
 

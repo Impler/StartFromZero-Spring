@@ -9,7 +9,7 @@ public class BeanPostProcessorTest extends BaseTestObject{
 
 	@Override
 	protected String getConfigFileName() {
-		return "config/01core/02bean-nature/04extension-points/01bean-post-processor/beans-bean-post-processor.xml";
+		return "config/01core/04extension-points/01bean-post-processor/beans-bean-post-processor.xml";
 	}
 	
 	

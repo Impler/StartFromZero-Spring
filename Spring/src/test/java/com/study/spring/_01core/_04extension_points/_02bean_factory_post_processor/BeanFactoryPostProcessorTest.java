@@ -10,7 +10,7 @@ public class BeanFactoryPostProcessorTest extends BaseTestObject{
 
 	@Override
 	protected String getConfigFileName() {
-		return "config/01core/02bean-nature/04extension-points/02bean-factory-post-processor/beans-bean-factory-post-processor.xml";
+		return "config/01core/04extension-points/02bean-factory-post-processor/beans-bean-factory-post-processor.xml";
 	}
 	
 	

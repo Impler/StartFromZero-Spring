@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd" default-lazy-init="true">
+
+    <context:annotation-config/>
+    
+    <!-- 
+    	@Autowired 为Bean自动完成依赖注入
+		根据类型自动装配
+			required属性用于依赖检查，默认为true，@Autowired (required=true)
+			当且仅当有1个依赖匹配时，才能注入成功，否则抛出异常(测试情况来看，如果有多个候选依赖，且存在依赖对象名与属性名一致的情况，不会报错)
+			可标注在属性，setter方法以及构造方法上
+	 -->
+	
+	<bean id="foo" class="com.study.spring._01core._05anno_config._02autowired.Foo" />
+	
+	<bean id="barr" class="com.study.spring._01core._05anno_config._02autowired.Bar" 
+		p:name="barr" 
+		p:order="0"/>
+		
+	<bean id="bar" class="com.study.spring._01core._05anno_config._02autowired.Bar" 
+		p:name="bar" 
+		p:order="2"/>
+		
+	<bean id="bas" class="com.study.spring._01core._05anno_config._02autowired.Bar"
+		p:name="bas" 
+		p:order="1"/>
+		
+	<!-- autowired collections s -->
+	<!-- autowired 可以自动注入集合、数组属性，
+		如果集合中的元素实现了org.springframework.core.Ordered接口 
+		或使用了@Order、@Priority注解，那么会将合要求依赖，有序的注入到集合或数组中-->	
+	
+	<bean id="foos" class="com.study.spring._01core._05anno_config._02autowired.Foos" />
+	<!-- autowired collections e -->
+	
+	<!-- autowired map e -->
+	<bean id="fooMap" class="com.study.spring._01core._05anno_config._02autowired.FooMap" />
+	<!-- autowired map e -->
+	
+	
+	<!-- 
+		
+		@Qualifier
+			配合@AutoWired，精确匹配依赖，避免冲突 @Qualifier("user")
+			可标注在属性上，setter和构造方法上以及其方法的参数前。
+			支持泛型
+	 -->	
+</beans>
