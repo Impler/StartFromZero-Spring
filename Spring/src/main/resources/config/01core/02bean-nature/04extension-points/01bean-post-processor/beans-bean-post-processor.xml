@@ -5,7 +5,16 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- 
-		
+		BeanPostProcessor接口允许我们在Spring容器初始化（实例化、afterPropertiesSet()、init-method方法等）每个bean的前后插入额外的逻辑。
+	 	BeanPostProcessor的作用于仅在当前Spring容器中起效。
+	 	BeanPostProcessor Bean是区别于其他普通的Spring Bean的，其配置方式不需要指定id、name等属性，Spring容器会自动扫描所有的BeanPostProcessors.
+	 	由于其在其他普通Bean实例化前就开始工作，所以BeanPostProcessors 需要在Spring容器启动后就会立刻实例化。
+	 	多个BeanPostProcessor之间的执行顺序靠实现Order接口实现。
 	 -->
-		  
+	
+	<!-- 无需指定id，name等属性 -->
+	<bean class="com.study.spring._01core._04extension_points.bean_post_processor.InstantiationTracingBeanPostProcessor" />
+
+	<!-- 和bean initialization 的过程比较 -->
+	<import resource="classpath:config/01core/02bean-nature/01lifecycle-callbacks/beans-lifecycle-callbacks-initialization.xml" />
 </beans>

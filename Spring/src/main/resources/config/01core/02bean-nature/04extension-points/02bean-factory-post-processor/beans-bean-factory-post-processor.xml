@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+		BeanFactoryPostProcessor接口允许在Spring容器初始化所有Bean之前修改bean的配置信息。
+		如PropertyPlaceholderConfigurer就是该接口的一个实现类。主要负责在实例化bean前，将bean配置中的占位符使用实际的变量替换
+		相较于BeanPostProcessor，BeanFactoryPostProcessor是作用于所有bean的配置上，
+		而BeanPostProcessor作用于单个bean的初始化过程
+	 -->
+	
+	<!-- 详情查阅 PropertyPlaceholderConfigurer。PropertyOverrideConfigurer源码-->
+	
+	<bean id="foo" class="com.study.spring._01core._04extension_points.bean_factory_post_processor.Foo">
+		<property name="name" value="fooName" />
+	</bean>
+	
+	<!-- 自定义 BeanFactoryPostProcessor，将会覆盖foo bean中的属性值-->
+	<bean class="com.study.spring._01core._04extension_points.bean_factory_post_processor.MyBeanFactoryPostProcessor" />
+
+</beans>
