@@ -15,18 +15,27 @@ public class AutowiredTest extends BaseTestObject{
 		return "config/01core/05anno_config/02@Autowired/beans-anno-autowired.xml";
 	}
 
+	/**
+	 * 自动注入依赖
+	 */
 	@Test
 	public void testAutowired() {
 		Foo foo = (Foo) super.getContext().getBean("foo");
 		System.out.println(foo);
 	}
 	
+	/**
+	 * 自动注入集合类型依赖
+	 */
 	@Test
 	public void testAutowiredCollections(){
 		Foos foos = (Foos) super.getContext().getBean("foos");
 		System.out.println(foos);
 	}
 	
+	/**
+	 * 自动注入Map类型依赖
+	 */
 	@Test
 	public void testAutowiredMap(){
 		FooMap fooMap = (FooMap) super.getContext().getBean("fooMap");

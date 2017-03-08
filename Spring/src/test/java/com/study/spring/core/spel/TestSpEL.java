@@ -10,16 +10,12 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.expression.BeanFactoryResolver;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.ParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-
-import com.study.spring.helloworld.dao.IUserDao;
 
 
 public class TestSpEL {
@@ -243,10 +239,10 @@ public class TestSpEL {
 		 * 引用bean
 		 * 使用@beanName引用bean，在引用Bean时需要使用BeanResolver接口实现来查找Bean，Spring提供BeanFactoryResolver实现
 		 */
-		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("helloworld.xml");
-		context.setBeanResolver(new BeanFactoryResolver(ctx));
-		IUserDao userDao = (IUserDao) parser.parseExpression("@userDao").getValue(context);
-		userDao.save();
+//		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("helloworld.xml");
+//		context.setBeanResolver(new BeanFactoryResolver(ctx));
+//		IUserDao userDao = (IUserDao) parser.parseExpression("@userDao").getValue(context);
+//		userDao.save();
 	}
 	
 	@Test
