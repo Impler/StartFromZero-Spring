@@ -11,6 +11,6 @@ public class Foos {
 
 	@Override
 	public String toString() {
-		return "Foos [bars=" + bars + "]";
+		return "Foo [bars=" + bars + "]";
 	}
 }

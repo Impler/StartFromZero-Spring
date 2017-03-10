@@ -44,12 +44,4 @@
 	<bean id="fooMap" class="com.study.spring._01core._05anno_config._02autowired.FooMap" />
 	<!-- autowired map e -->
 	
-	
-	<!-- 
-		
-		@Qualifier
-			配合@AutoWired，精确匹配依赖，避免冲突 @Qualifier("user")
-			可标注在属性上，setter和构造方法上以及其方法的参数前。
-			支持泛型
-	 -->	
 </beans>
