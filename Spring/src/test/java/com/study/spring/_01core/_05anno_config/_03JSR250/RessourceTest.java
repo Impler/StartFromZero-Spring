@@ -2,6 +2,7 @@ package com.study.spring._01core._05anno_config._03JSR250;
 
 import org.junit.Test;
 
+import com.study.spring._01core._05anno_config._03JSR250._01resource.Foo;
 import com.study.spring.test.BaseTestObject;
 
 public class RessourceTest extends BaseTestObject{

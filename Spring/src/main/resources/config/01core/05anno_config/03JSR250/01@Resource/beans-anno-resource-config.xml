@@ -16,8 +16,8 @@
     		当标识在setter方法时，默认查找与该方法对应的属性名相同的bean
     		当标识在类上时，没有默认值，必须指定
      -->
-    <bean id="foo" class="com.study.spring._01core._05anno_config._03JSR250.Foo"></bean>
-	<bean id="bar" class="com.study.spring._01core._05anno_config._03JSR250.Bar">
+    <bean id="foo" class="com.study.spring._01core._05anno_config._03JSR250._01resource.Foo"></bean>
+	<bean id="bar" class="com.study.spring._01core._05anno_config._03JSR250._01resource.Bar">
 		<property name="name" value="bar" />
 	</bean>
 	

@@ -1,4 +1,4 @@
-package com.study.spring._01core._05anno_config._03JSR250;
+package com.study.spring._01core._05anno_config._03JSR250._01resource;
 
 public class Bar {
 

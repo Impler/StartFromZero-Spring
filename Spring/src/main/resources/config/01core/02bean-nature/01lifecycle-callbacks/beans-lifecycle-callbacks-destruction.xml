@@ -26,6 +26,7 @@
 	 	3 destroy-method
 	 	如果多种方式指定的是同一个方法，那么只执行一次
 	  -->
+	 <!-- 更多，见@PreDestroy -->
 	 <!-- allInOne s -->
 	<bean id="allInOne"
 		class="com.study.spring._01core._02bean_nature._01lifecycle_callbacks.destruction.AllIn"

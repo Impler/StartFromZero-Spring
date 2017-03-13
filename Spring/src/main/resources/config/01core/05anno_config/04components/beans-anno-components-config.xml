@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 
+		前面注解的例子中，bean的定义还是使用XML的形式，注解只是用于依赖注入（@Autowired、@Resource）等。
+		实际上，Spring可以扫描classpath下的基于注解的Bean的定义。
+	-->
+    
+    <!-- 
+    	@Component标识在类上，表示该类的实例将会被Spring容器管理，即作为Spring Bean存在。
+    	@Component是一个通用的注解，凡是需要作为Spring Bean的类都可以使用该注解。
+    	但是Spring提供了更加语义明确的注解：
+    		@Repository -- DAO层的Bean
+    		@Service -- Service层的Bean
+    		@Controller -- Controller层中的控制器Bean
+    	上面三个注解从功能上与@Component无异，都是@Component的具体语义体现。
+     -->
+     
+     <!-- 
+     	自动扫描并注册Bean
+     	使用@ComponentScan配合@Configuration注解，将会自动扫描满足一定规则的Bean，并注册到Spring中.
+     	此外，也可以通过xml的方式，使用<context:component-scan/>元素完成相同的工作。
+     	注意，<context:component-scan/>包含了前面使用的<context:annotation-config/>的全部功能，所以牵着可以完全替代后者。
+      -->
+      
+      <!-- 
+      	可以为扫描机制配置不同的匹配策略，主要包括：
+      	1. annotation -- 基于注解的匹配规则（默认）
+      	2. assignable -- 基于类之间继承关系的匹配规则
+      	3. aspectj -- 基于切面的匹配规则
+      	4. regex -- 基于正则式的匹配规则
+      	5. custom -- 自定义匹配规则，实现TypeFilter接口
+       -->
+       <context:component-scan base-package="org.example">
+	        <context:include-filter type="regex"
+	                expression=".*Stub.*Repository"/>
+	        <context:exclude-filter type="annotation"
+	                expression="org.springframework.stereotype.Repository"/>
+    	</context:component-scan>
+
+</beans>
