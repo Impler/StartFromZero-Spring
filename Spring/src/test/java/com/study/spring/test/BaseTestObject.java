@@ -21,7 +21,7 @@ public abstract class BaseTestObject {
 	@Before
 	public void prepare(){
 		if(!StringUtils.isEmpty(this.configFileName)){
-			if(this.configFileName.startsWith("javaconfig")){
+			if(this.configFileName.startsWith("a")){
 				ctx = new AnnotationConfigApplicationContext(configFileName);
 			}else{
 				ctx = new ClassPathXmlApplicationContext(configFileName);
