@@ -36,7 +36,8 @@
 	  -->
 	 
 	 <!-- 
-	 	Spring AOP并没有提供完全的AOP实现,仅支持在spring bean方法级别的切点，如果需要更细粒度的在属性级别上的切点，可以使用AspectJ。
+	 	Spring AOP并没有提供完整的AOP实现,仅支持在spring bean方法级别的切点。相反，它侧重于提供一种和Spring IOC容器整合的AOP实现，用以解决企业级开发中的常见问题。
+	 	如果需要使用更细粒度AOP实现，可以使用AspectJ。Spring可以无缝地将Spring AOP、IOC和AspectJ整合在一起。
 	  -->
 	 <!-- 
 	 	启用@AspectJ支持
