@@ -12,7 +12,7 @@ import org.aspectj.lang.annotation.Before;
 public class FooAdvice {
 	
 	/*
-	 * 增强是在切点上执行的额外的程序逻辑
+	 * 增强是在切点上执行的额外的程序逻辑，并且包含了连接点的方位信息
 	 * Spring支持的增强类型包括：
 	 * 前置增强 @Before
 	 * 后置增强 @AfterReturning
@@ -76,5 +76,12 @@ public class FooAdvice {
 		return returnVal;
 	}
 	// 环绕增强 e
+	
+	// TODO advice 传参
+	
+	/*
+	 * 如果一个连接点匹配多个增强，那么多个增强的执行顺序依靠切面类实现Ordered接口或标注@Order注解实现
+	 * order值越小，越先执行
+	 */
 	
 }

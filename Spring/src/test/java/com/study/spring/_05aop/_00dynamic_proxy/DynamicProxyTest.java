@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 
-import net.sf.cglib.proxy.Enhancer;
-
 import org.junit.Test;
 
 import com.study.spring._05aop._00dynamic_proxy._01jdk.FooService;
@@ -31,10 +29,7 @@ public class DynamicProxyTest {
 	
 	@Test
 	public void testCglib() throws IOException{
-		Enhancer en = new Enhancer();
-		en.setSuperclass(BarService.class);
-		en.setCallback(new BarServiceMethodInterceptor());
-		BarService proxy = (BarService) en.create();
+		BarService proxy = (BarService) new BarServiceMethodInterceptor().getProxy(BarService.class);
 		proxy.doService();
 		
 		exportDynamicClassFile(BarService.class, proxy);
