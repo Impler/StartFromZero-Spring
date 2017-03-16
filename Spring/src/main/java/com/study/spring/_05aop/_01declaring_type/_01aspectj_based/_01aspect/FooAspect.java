@@ -14,4 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FooAspect {
 
+	/**
+	 * 切面类像其他类一样，可以拥有自己的属性和方法，此外还可以在其内部声明pointcut（切点）, advice（增强） 和introduction（引介增强）等
+	 */
 }

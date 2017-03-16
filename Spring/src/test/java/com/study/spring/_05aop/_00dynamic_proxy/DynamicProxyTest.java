@@ -50,8 +50,8 @@ public class DynamicProxyTest {
 		@SuppressWarnings("restriction")
 		byte[] bytes = sun.misc.ProxyGenerator.generateProxyClass("$Proxy", proxy.getClass().getInterfaces());
 		String dir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + target.getPackage().getName().replaceAll("\\.", "\\" + File.separator);
-		System.out.println(dir);
 		File file = new File(dir, "$Proxy.class");
+		System.out.println("代理类生成在:" + file.getPath());
 		FileOutputStream out = new FileOutputStream(file);
 		out.write(bytes);
 		out.close();
