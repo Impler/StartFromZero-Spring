@@ -22,4 +22,82 @@
 		        http://www.springframework.org/schema/aop/spring-aop.xsd">
 	 -->
 	 
+	 <!-- 
+		使用xml配置AOP，所有的切面、增强都放在<aop:config></aop:config>元素中。
+		<aop:config></aop:config>的proxy-target-class属性用于配置使用的代理技术，默认false表示使用jdk代理技术，true表示使用cglib的代理技术
+		可以配置多个<aop:config></aop:config>元素，因此可以使用不同的代理技术
+	  -->
+	
+	<aop:config proxy-target-class="false"></aop:config>
+	
+	<!-- 
+		定义切面 <aop:aspect />
+	 -->
+	<aop:config>
+		<aop:aspect id="aspect" ref="aspectBean"></aop:aspect>
+	</aop:config>
+
+	<bean id="aspectBean"></bean>
+	 
+	 <!-- 
+	 	定义切点<aop:pointcut />
+	 	<aop:pointcut />可以定义在<aop:config />中，可以被多个切面引用
+	 	也可以定义在<aop:aspect />中
+	  -->
+	<aop:config>
+		<!-- 切面外部定义的切点可被多个切面引用 -->
+		<aop:pointcut id="pointCut1"
+			expression="execution(* com.xyz.myapp.service.*.*(..))" />
+
+		<!-- 切面内部定义切点 -->
+		<aop:aspect id="aspect" ref="aspectBean">
+			<aop:pointcut id="pointCut2" expression="execution(* com.xyz.myapp.service.*.*(..))" />
+		</aop:aspect>
+
+	</aop:config>
+
+
+	<!-- 
+		定义增强 
+	-->
+	<aop:config>
+		<aop:aspect>
+			<aop:pointcut id="pointCut" expression="execution(* com.xyz.myapp.service.*.*(..))"/>
+			
+			<!-- 前置增强  s-->
+			<!-- 关联pointcut -->
+			<aop:before method="doAccessCheck" pointcut-ref="pointCut"/>
+			<!-- 内联pointcut -->
+			<aop:before method="doAccessCheck" pointcut="execution(* com.xyz.myapp.service.*.*(..))"/>
+			<!-- 前置增强  e-->
+			
+			<!-- 后置增强 s -->
+			<aop:after-returning pointcut-ref="dataAccessOperation" returning="retVal" method="doAccessCheck" />
+			<!-- 后置增强 e -->
+			
+			<!-- 异常抛出增强 s -->
+			<aop:after-throwing pointcut-ref="dataAccessOperation" method="doRecoveryActions" />
+			<!-- 异常抛出增强 e -->
+			
+			<!-- Final增强 s -->
+			<aop:after pointcut-ref="dataAccessOperation" method="doReleaseLock" />
+			<!-- Final增强 e -->
+			
+			<!-- 环绕增强 s -->
+			<aop:around pointcut-ref="businessService" method="doBasicProfiling" />
+			<!-- 环绕增强 e -->
+			
+			<!-- TODO 引介增强 -->
+		</aop:aspect>
+	</aop:config>
+	
+	<!-- 
+		定义Advisor
+		Advisor是切点和增强的结合体，不过仅包含一个切点和一个切面。
+		在AspectJ中并没有对应的等价物
+	 -->
+	<aop:config>
+		<aop:advisor advice-ref="" pointcut-ref=""/>
+	</aop:config>
+	
 </beans>
