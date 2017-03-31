@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation=
+		"http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	<!-- 
+	AOP: Aspect Oriented Programming
+	AOP概念简介：
+		连接点(JoinPoint)：程序执行特定的点，如方法执行前、后，异常抛出时等
+		增强(Advice)：在特定的连接点，AOP植入的额外的程序逻辑，包括前置、后置、环绕增强等。一般采用拦截器链实现
+		切点(PointCut)：满足一定条件的连接点的集合
+		引介(Introduction)：为目标对象新增属性和方法
+		切面(Aspect)：切面由切点和增强组成，它既包括了横切逻辑的定义，也包括了连接点的定义。Spring AOP的工作就是将切面定义的横切逻辑织入到切面多定义的连接点中
+		目标对象(Target Object)：被织入增强的普通对象
+		AOP代理(AOP Proxy)：AOP框架生成的目标对象的代理对象，一般基于JDK动态代理或CGLIB代理实现
+		织入(Weaving)：将增强添加到目标对象指定连接点的过程。三种织入方式：1 编译器织入 2 类装载器织入 3 动态代理织入 Spring采用动态代理织入，AspectJ采用编译器织入和类装载期织入
+	-->
+	<!-- 
+	Spring支持5种类型的增强：
+		前置增强：org.springframework.aop.BeforeAdvice代表前置增强，因为Spring只支持方法级别的增强，所以MethodBeforeAdvice是目前可用的前置增强，表示在目标方法执行前实施增强
+		后置增强：org.springframework.aop.AfterReturningAdvice代表后置增强，表示在目标方法执行后实施增强
+		环绕增强：org.aopalliance.intercept.MethodInterceptor代表环绕增强，表示在目标方法执行前后实施增强
+		异常抛出增强：org.springframework.aop.ThrowsAdvice代表抛出异常增强，表示在目标方法抛出异常后实施增强
+		引介增强：org.springframework.aop.IntroductionInterceptor代表引介增强，表示在目标累中添加新的方法和属性
+	 -->
+	 
+	<!-- 
+		使用ProxyFactoryBean 创建代理对象
+		重要属性：
+		- target：被代理对象
+		- proxyTargetClass：true：使用cglib创建代理对象，false：使用jdk创建代理对象
+		- optimize：控制是否优化创建cglib代理对象，仅对cglib方式有效
+		- frozen：代理对象创建后是否允许修改配置，默认false
+		- exposeProxy：是否将代理对象暴露在ThreadLocal中
+		- proxyInterfaces：代理接口的全限定类名，可配置多个
+		- interceptorNames：Advisor、interceptor或Advice的字符串名称
+		
+		JDK和CGLIB代理对象的使用策略
+		1 如果被代理对象没有实现任何接口，则使用cglib创建代理对象，而不论proxyTargetClass怎么设置
+		2 如果被代理对象实现了一个或多个接口，代理对象的类型根据配置来确定
+			- proxyTargetClass设置为true，使用cglib创建代理对象，而不论proxyInterfaces怎么设置
+			- proxyInterfaces设置为一个或多个接口的全限定类名，使用jdk创建代理对象
+			- proxyInterfaces没有值，ProxyFactoryBean将自动扫描被代理对象是否实现接口
+	 -->
+	<!-- debugInterceptor Logs full invocation details on method entry and method exit -->
+	<bean id="debugInterceptor" class="org.springframework.aop.interceptor.DebugInterceptor"/>
+	<!-- before advice start -->
+	<!-- 
+		前置增强仅在目标方法执行前执行，不会影响拦截链以及方法的返回值。不过假设增强中有异常抛出，如果该异常是目标方法声明的异常，则该异常归并到目标方法中，否则作为运行时异常抛出
+	 -->
+	<bean id="target" class="com.study.spring.aop.WaiterA" />
+	<!-- introduction advice start -->
+	<!-- 
+		引介增强是一种比较特殊的增强类型，它不是在目标方法周围织入增强，而是为目标类创建新的方法和属性，所以引介增强的连接点是类级别的，而非方法级别的。
+	 -->
+	<bean id="greetingIntroAdvice" class="com.study.spring.aop.advice.introduction.GreetingIntroAdvice" />
+	<bean id="introWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="com.study.spring.aop.advice.introduction.IDoOthers"/>
+		<property name="interceptorNames" value="greetingIntroAdvice"/>
+		<property name="target" ref="target"/>
+		<!-- 引介增强必须通过创建子类来生成代理，所以必须采用cglib -->
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<!-- introduction advice end -->
+	
+	<!--
+		增强提供了连接点的方位信息，如织入到方法前、后灯，而切点进一步描述织入到哪些类的那些方法上
+		Spring通过org.springframework.aop.Pointcut描述切点
+		Pointcut由ClassFilter和MethodMatcher构成
+		ClassFilter确定目标类
+		MethodMatcher确定目标方法
+			Spring提供两种MethodMatcher匹配：静态方法匹配和动态方法匹配
+			静态方法匹配表示仅对方法签名（包括方法名和参数类型及顺序）进行匹配，只判别一次
+			动态方法匹配表示除静态匹配外还会在运行期间检查方法入参的值，每次调用匹配的方法都会判别，效率低
+			动静态类型根据isRuntime()返回值确定
+		Spring提供了六种类型切点：
+		静态方法切点：org.springframework.aop.support.StaticMethodMatcherPointcut是静态方法切点的抽象类，两个主要子类StaticMethodMatcherPointcutAdvisor根据字符串匹配方法签名，AbstractRegexpMethodPointcut根据正则表达式匹配方法签名
+		动态方法切点：org.springframework.aop.support.DynamicMethodMatcherPointcut
+		注解切点：org.springframework.aop.support.annotation.AnnotationMatchingPointcut
+		表达式切点：org.springframework.aop.support.ExpressionPointcut
+		流程切点：org.springframework.aop.support.ControlFlowPointcut 由某个方法直接或间接发起调用的其他方法
+		复合切点：org.springframework.aop.support.ComposablePointcut 组合多个切点形成切面
+	 -->
+	 
+	 <!-- 
+	 	Spring切面类型：
+	 	一般切面(Advisor)：仅包含一个Advice，因为Advice包含了横切代码和连接点的信息，所以Advice本身就是一个简单切面，只不过它代表的横切的连接点是所有目标类的所有方法。太宽泛，不会直接使用
+	 	切点切面(PointcutAdvisor)：具有切点的切面，它包含Advice和Pointcut两个类，这样我们就可以通过类、方法名以及方法方位等信息灵活的定义切面的连接点，提供工具适用性的切面
+	 	引介切面(IntroductionAdvisor)：对应引介增强的特殊切面，应用于类层面上
+	  -->
+	  
+	  <!-- 
+	  	PointcutAdvisor主要有6个具体的实现类：
+	  	DefaultPointcutAdvisor：可以通过任意Pointcut和Advice定义一个切面，但不支持引介切面，一般可以通过扩展该类实现自定义的切面
+	  	NameMatchMethodPointcutAdvisor：定义按照方法名定义切点的切面
+	  	RegexpMethodPointcutAdvisor：定义正则表达式方法名切点
+	  	StaticMethodMatcherPointcutAdvisor：静态方法匹配器切点定义的切面，默认情况下匹配所有的目标类
+	  	AspectJExpressionPointcutAdvisor：用于AspectJ切点表达式定义切点的切面
+	  	AspectJPointcutAdvisor：用于AspectJ语法定义切点的切面
+	   -->
+	   
+	   <!-- static method matched advisor start-->
+	   <bean id="parent"  abstract="true" class="org.springframework.aop.framework.ProxyFactoryBean">
+			<property name="interceptorNames" value="staticMMAdvisor"/>
+			<property name="proxyTargetClass" value="true" />
+		</bean>
+			<!-- Advisor match Waiter.greetTo()-->
+		<bean id="staticMMAdvisor" class="com.study.spring.aop.advisor.staticmethod.GreetingAdvisor">
+			<!-- 向切面注入一个前置增强 -->
+			<property name="advice" ref="greetingBeforeAdvice" />
+		</bean>
+		<!-- matched -->
+		<bean id="staticMMWaiter" parent="parent" >
+			<property name="target" ref="target" />
+		</bean>
+		<!-- unmatched -->
+		<bean id="seller" class="com.study.spring.aop.advisor.SellerA" />
+		<bean id="staticMMSeller" parent="parent">
+			<property name="target" ref="seller"/>
+		</bean>
+	   <!-- static method matched advisor end-->
+	   
+	   <!-- regex method matched advisor start -->
+	   <bean id="regexpAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+	   		<property name="advice" ref="greetingBeforeAdvice"/>
+	   		<property name="patterns">
+	   			<list>
+	   				<value>.*greet.*</value>
+	   			</list>
+	   		</property>
+	   </bean>
+	   <bean id="regexWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+	   		<property name="interceptorNames" value="regexpAdvisor" />
+	   		<property name="target" ref="target"/>
+	   </bean>
+	   <!-- regex method matched advisor end -->
+	   
+	   <!-- dynamic advisor start -->
+	   <bean id="dynamicAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+	   		<property name="pointcut">
+	   			<bean class="com.study.spring.aop.advisor.dynamic.GreetingDynamicPointcut"/>
+	   		</property>
+	   		<property name="advice" ref="greetingBeforeAdvice" />
+	   </bean>
+	    <bean id="dynamicWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+	   		<property name="interceptorNames" value="dynamicAdvisor" />
+	   		<property name="target" ref="target"/>
+	   </bean>
+	   <!-- dynamic advisor end -->
+	   
+	   <!-- control flow advisor start -->
+	   <bean id="controlFlowPointcut" class="org.springframework.aop.support.ControlFlowPointcut">
+	   		<constructor-arg type="java.lang.Class" value="com.study.spring.aop.advisor.controlflow.WaiterDelegate" />
+	   		<constructor-arg type="java.lang.String" value="service" />
+	   </bean>
+	   <bean id="controlFlowAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+	   		<property name="pointcut" ref="controlFlowPointcut" />
+	   		<property name="advice" ref="greetingBeforeAdvice"/>
+	   </bean>
+	   <bean id="controlFWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+	   		<property name="interceptorNames" value="controlFlowAdvisor" />
+	   		<property name="target" ref="target" />
+	   </bean>
+	   <!-- control flow advisor end -->
+	   
+	   <!-- composable advisor start -->
+	   <bean id="gcp" class="com.study.spring.aop.advisor.composable.GreetingComposablePointcut"/>
+	   <bean id="composableAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+	   		<property name="pointcut" value="#{gcp.intersectionPointcut}" />
+	   		<property name="advice" ref="greetingBeforeAdvice" />
+	   </bean>
+	   <bean id="composableWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+	   		<property name="interceptorNames" value="composableAdvisor" />
+	   		<property name="target" ref="target" />
+	   </bean>
+	   <!-- composable advisor end -->
+	   
+	   <!-- introduction advisor start -->
+	   <!-- TODO -->
+	   <!-- introduction advisor end -->
+	   
+	   <!-- 
+	   	自动创建代理 
+	   	前面的例子，都是通过ProxyFactoryBean创建织入切面的代理，每一个需要被代理的bean都要使用一个ProxyFactoryBean进行配置，太过繁琐。
+	   	Spring使用BeanPostProcessor完成自动创建代理的工作
+	   	BeanPostProcessor的三类实现：
+	   	BeanNameAutoProxyCreator：基于Bean配置名规则的自动代理创建器
+		DefaultAdvisorAutoProxyCreator：基于Advisor匹配机制的自动代理创建器
+		AnnotationAwareAspectJAutoProxyCreator：基于Bean中AspjectJ注解标签的自动代理创建器
+		
+		TODO	   	
+	   	-->
+</beans>

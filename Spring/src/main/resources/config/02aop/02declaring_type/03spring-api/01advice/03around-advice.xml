@@ -11,9 +11,9 @@
 	
 	<!-- around advice start -->
 	<bean id="greetingAroundAdvice" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._03around.GreetingAroundAdvice" />
-	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice.WaiterA" />
+	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api.WaiterA" />
 	<bean id="aroundWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api._01advice.Waiter"/>
+		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api.Waiter"/>
 		<property name="interceptorNames" value="greetingAroundAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>

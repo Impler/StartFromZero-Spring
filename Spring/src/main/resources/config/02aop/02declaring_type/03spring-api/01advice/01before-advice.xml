@@ -14,9 +14,9 @@
 		前置增强仅在目标方法执行前执行，不会影响拦截链以及方法的返回值。不过假设增强中有异常抛出，如果该异常是目标方法声明的异常，则该异常归并到目标方法中，否则作为运行时异常抛出
 	 -->
 	<bean id="greetingBeforeAdvice" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._01before.GreetingBeforeAdvice" />
-	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice.WaiterA" />
+	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api.WaiterA" />
 	<bean id="beforeWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api._01advice.Waiter"/>
+		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api.Waiter"/>
 		<property name="interceptorNames" value="greetingBeforeAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>

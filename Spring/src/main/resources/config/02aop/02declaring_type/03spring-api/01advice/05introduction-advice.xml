@@ -14,7 +14,7 @@
 		引介增强是一种比较特殊的增强类型，它不是在目标方法周围织入增强，而是为目标类创建新的方法和属性，所以引介增强的连接点是类级别的，而非方法级别的。
 	 -->
 	<bean id="greetingIntroAdvice" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._05introduction.GreetingIntroAdvice" />
-	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice.WaiterA" />
+	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api.WaiterA" />
 	<bean id="introWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api._01advice._05introduction.IDoOthers"/>
 		<property name="interceptorNames" value="greetingIntroAdvice"/>

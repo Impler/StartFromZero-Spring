@@ -2,7 +2,7 @@ package com.study.spring._05aop._01declaring_type._03spring_api._01advice._02aft
 
 import org.junit.Test;
 
-import com.study.spring._05aop._01declaring_type._03spring_api._01advice.Waiter;
+import com.study.spring._05aop._01declaring_type._03spring_api.Waiter;
 import com.study.spring.test.BaseTestObject;
 
 public class AfterAdviceTest extends BaseTestObject{

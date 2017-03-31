@@ -11,9 +11,9 @@
 	
 	<!-- after advice start -->
 	<bean id="greetingAfterAdvice" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._02after.GreetingAfterAdvice" />
-	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice.WaiterA" />
+	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api.WaiterA" />
 	<bean id="afterWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api._01advice.Waiter"/>
+		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api.Waiter"/>
 		<property name="interceptorNames" value="greetingAfterAdvice"/>
 		<property name="target" ref="target"/>
 	</bean>

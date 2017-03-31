@@ -2,7 +2,7 @@ package com.study.spring._05aop._01declaring_type._03spring_api._01advice._05int
 
 import org.junit.Test;
 
-import com.study.spring._05aop._01declaring_type._03spring_api._01advice.WaiterA;
+import com.study.spring._05aop._01declaring_type._03spring_api.WaiterA;
 import com.study.spring.aop.Waiter;
 import com.study.spring.test.BaseTestObject;
 

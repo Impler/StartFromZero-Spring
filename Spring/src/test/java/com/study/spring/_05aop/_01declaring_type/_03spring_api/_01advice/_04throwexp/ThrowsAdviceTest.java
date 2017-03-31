@@ -2,7 +2,7 @@ package com.study.spring._05aop._01declaring_type._03spring_api._01advice._04thr
 
 import org.junit.Test;
 
-import com.study.spring._05aop._01declaring_type._03spring_api._01advice.Waiter;
+import com.study.spring._05aop._01declaring_type._03spring_api.Waiter;
 import com.study.spring.test.BaseTestObject;
 
 public class ThrowsAdviceTest extends BaseTestObject{
