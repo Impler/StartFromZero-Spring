@@ -1,4 +1,4 @@
-package com.study.spring.aop.advice.introduction;
+package com.study.spring._05aop._01declaring_type._03spring_api._01advice._05introduction;
 
 import org.springframework.aop.support.DelegatingIntroductionInterceptor;
 /**

@@ -1,4 +1,4 @@
-package com.study.spring.aop.advice.around;
+package com.study.spring._05aop._01declaring_type._03spring_api._01advice._03around;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

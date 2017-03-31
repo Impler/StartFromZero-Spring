@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation=
+		"http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- debugInterceptor Logs full invocation details on method entry and method exit -->
+	<bean id="debugInterceptor" class="org.springframework.aop.interceptor.DebugInterceptor"/>
+	
+	<!-- introduction advice start -->
+	<!-- 
+		引介增强是一种比较特殊的增强类型，它不是在目标方法周围织入增强，而是为目标类创建新的方法和属性，所以引介增强的连接点是类级别的，而非方法级别的。
+	 -->
+	<bean id="greetingIntroAdvice" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._05introduction.GreetingIntroAdvice" />
+	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice.WaiterA" />
+	<bean id="introWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api._01advice._05introduction.IDoOthers"/>
+		<property name="interceptorNames" value="greetingIntroAdvice"/>
+		<property name="target" ref="target"/>
+		<!-- 引介增强必须通过创建子类来生成代理，所以必须采用cglib -->
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<!-- introduction advice end -->
+	
+</beans>

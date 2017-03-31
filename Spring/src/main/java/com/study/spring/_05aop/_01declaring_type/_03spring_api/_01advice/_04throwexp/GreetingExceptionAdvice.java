@@ -1,4 +1,4 @@
-package com.study.spring.aop.advice.throwexp;
+package com.study.spring._05aop._01declaring_type._03spring_api._01advice._04throwexp;
 
 import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
@@ -37,6 +37,7 @@ import org.springframework.aop.ThrowsAdvice;
  * @see MethodBeforeAdvice
  */
 public class GreetingExceptionAdvice implements ThrowsAdvice {
+	
 	public void afterThrowing(Exception e){
 		System.out.println("advice msg: " + e.getMessage());
 	}
