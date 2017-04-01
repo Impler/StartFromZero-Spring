@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 
-import com.study.spring.aop.Waiter;
+import com.study.spring._05aop._01declaring_type._03spring_api.Waiter;
 
 public class GreetingAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
@@ -29,11 +29,5 @@ public class GreetingAdvisor extends StaticMethodMatcherPointcutAdvisor {
 		});
 		return super.getClassFilter();
 	}
-
-
-
-	
-	
-	
 
 }

@@ -1,11 +1,12 @@
-package com.study.spring.aop.advisor.dynamic;
+package com.study.spring._05aop._01declaring_type._03spring_api._02advisor._02dynamic;
 
 import java.lang.reflect.Method;
 
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.support.DynamicMethodMatcherPointcut;
 
-import com.study.spring.aop.Waiter;
+import com.study.spring._05aop._01declaring_type._03spring_api.Waiter;
+
 
 public class GreetingDynamicPointcut extends DynamicMethodMatcherPointcut{
 

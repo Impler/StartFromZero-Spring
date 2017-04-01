@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="greetingBeforeAdvice" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._01before.GreetingBeforeAdvice" />
+
+	<bean id="waiter" class="com.study.spring._05aop._01declaring_type._03spring_api.WaiterA" />
+	
+	<bean id="dynamicAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+   		<property name="pointcut">
+   			<bean class="com.study.spring._05aop._01declaring_type._03spring_api._02advisor._02dynamic.GreetingDynamicPointcut"/>
+   		</property>
+   		<property name="advice" ref="greetingBeforeAdvice" />
+   </bean>
+    <bean id="dynamicWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+   		<property name="interceptorNames" value="dynamicAdvisor" />
+   		<property name="target" ref="waiter"/>
+   		<property name="proxyTargetClass" value="true" />
+   </bean>
+</beans>

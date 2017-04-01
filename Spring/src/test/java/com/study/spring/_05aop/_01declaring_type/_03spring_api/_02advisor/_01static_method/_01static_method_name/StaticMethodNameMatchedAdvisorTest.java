@@ -2,8 +2,8 @@ package com.study.spring._05aop._01declaring_type._03spring_api._02advisor._01st
 
 import org.junit.Test;
 
-import com.study.spring.aop.Waiter;
-import com.study.spring.aop.advisor.Seller;
+import com.study.spring._05aop._01declaring_type._03spring_api.Seller;
+import com.study.spring._05aop._01declaring_type._03spring_api.Waiter;
 import com.study.spring.test.BaseTestObject;
 
 public class StaticMethodNameMatchedAdvisorTest extends BaseTestObject {

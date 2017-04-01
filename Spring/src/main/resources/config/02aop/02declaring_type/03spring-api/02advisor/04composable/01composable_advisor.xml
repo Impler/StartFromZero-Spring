@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="greetingBeforeAdvice"
+		class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._01before.GreetingBeforeAdvice" />
+
+	<bean id="waiter"
+		class="com.study.spring._05aop._01declaring_type._03spring_api.WaiterA" />
+
+	<bean id="composablePointCut" 
+		class="com.study.spring._05aop._01declaring_type._03spring_api._02advisor._04composable.GreetingComposablePointcut" />
+	
+	<bean id="composableAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="pointcut" value="#{composablePointCut.intersectionPointcut}" />
+		<property name="advice" ref="greetingBeforeAdvice" />
+	</bean>
+	
+	<bean id="composableWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="interceptorNames" value="composableAdvisor" />
+		<property name="target" ref="waiter" />
+	</bean>
+
+	<bean id="seller" class="com.study.spring._05aop._01declaring_type._03spring_api.SellerA" />
+	<bean id="composableSeller" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="interceptorNames" value="composableAdvisor" />
+		<property name="target" ref="seller" />
+	</bean>
+	
+</beans>

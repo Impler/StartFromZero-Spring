@@ -2,8 +2,7 @@ package com.study.spring._05aop._01declaring_type._03spring_api._01advice._05int
 
 import org.junit.Test;
 
-import com.study.spring._05aop._01declaring_type._03spring_api.WaiterA;
-import com.study.spring.aop.Waiter;
+import com.study.spring._05aop._01declaring_type._03spring_api.Waiter;
 import com.study.spring.test.BaseTestObject;
 
 public class IntroductionAdviceTest extends BaseTestObject{
@@ -15,19 +14,10 @@ public class IntroductionAdviceTest extends BaseTestObject{
 
 	@Test
 	public void test() {
-		// 此处必须使用目标类的类型
-		// 不能使用目标类实现的接口类型
-		WaiterA waiter = (WaiterA) super.getBean("introWaiter");
-		System.out.println(waiter instanceof Waiter);
+		Waiter waiter = (Waiter) super.getBean("introWaiter");
 		waiter.serveTo("Tom");
 		// 调用引介方法
 		((IDoOthers)waiter).settleAccounts();
-		
-		// 从打印出的结果可以看出，代理类对象实现的接口中并没有目标类实现的Waiter接口
-		Class<?>[] clazz = waiter.getClass().getInterfaces();
-		for(Class<?> cla : clazz){
-			System.out.println(cla);
-		}
 	}
 
 }
