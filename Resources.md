@@ -35,7 +35,7 @@ Spring提供了多个Resource接口的实现：
 	- ftp: 用于通过ftp协议访问资源
 	- ...
 如果路径中没有包含可识别的前缀（如：classpath），默认使用UrlResource
-- ClassPathResource：根据指定的classloader访问classpath下的资源。路径中包好classpath前缀
+- ClassPathResource：根据指定的classloader访问classpath下的资源。路径中包含classpath前缀
 - FileSystemResource：访问文件系统资源
 - ServletContextResource：访问ServletContext相对路径下的资源
 - InputStreamResource：访问指定的InputStream资源，不可多次读。只有在没有其他指定的Resource实现类时使用，一般首选ByteArrayResource或其他基于文件的实现
