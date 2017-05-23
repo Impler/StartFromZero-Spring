@@ -19,6 +19,7 @@ BeanFactory 顾名思义，是Spring保管Bean定义的工厂或容器。外部�
 	- DefaultSingletonBeanRegistry
 - FactoryBeanRegistrySupport 可以管理FactoryBean的存储器  
 *注意：* BeanFactory与FactoryBean的区别  
+BeanFactory是Spring IOC容器的核心，是管理所有SpringBean的场所。而FactoryBean是个特殊的SpringBean，是个能够创建特定类型对象的工厂，它的实现与设计模式中的工厂模式类似。  
 
 #### 1.1.2 HierarchicalBeanFactory
 HierarchicalBeanFactory是BeanFactory的子接口。Hierarchical，分层的，多级的，即HierarchicalBeanFactory的引入可以将整个Bean容器分层，child-parent BeanFactory的形式，便于同级之间、上下级之间资源的共享与隔离。
