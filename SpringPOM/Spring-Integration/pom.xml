@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.study</groupId>
@@ -9,12 +7,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>Spring-Integration</artifactId>
-	<packaging>war</packaging>
-	<name>Spring-Integration Maven Webapp</name>
-	<url>http://maven.apache.org</url>
-	<dependencies>
-	</dependencies>
-	<build>
-		<finalName>Spring-Integration</finalName>
-	</build>
+	<packaging>pom</packaging>
+	<modules>
+		<module>Spring-Integration-Ehcache</module>
+		<module>Spring-Integration-Redis</module>
+	</modules>
 </project>
