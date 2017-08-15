@@ -154,7 +154,7 @@ protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate d
 	}
 }
 
-// f3 此处以<context:component-scan />
+// f3 此处以<context:component-scan />为例
 public BeanDefinition parse(Element element, ParserContext parserContext) {
 	String basePackage = element.getAttribute(BASE_PACKAGE_ATTRIBUTE);
 	basePackage = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(basePackage);
