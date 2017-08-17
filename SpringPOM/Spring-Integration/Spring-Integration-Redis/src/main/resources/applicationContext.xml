@@ -11,6 +11,7 @@
 	
 	<context:component-scan base-package="com.study.spring"/>
 	
+	<!-- enable cache annotation -->
 	<cache:annotation-driven />
 	
 	<context:property-placeholder location="classpath:redis.properties" />
@@ -33,5 +34,16 @@
 
 
 	<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
-		c:redisOperations-ref="redisTemplate" />
+		c:redisOperations-ref="redisTemplate">
+		<!-- 0: never expired -->
+		<property name="defaultExpiration" value="0" />	
+		<!-- particular expire settings -->
+		<property name="expires">
+			<map>
+				<entry key="" value="" />
+				<entry key="" value="" />
+				<entry key="" value="" />
+			</map>
+		</property>
+	</bean>
 </beans>
