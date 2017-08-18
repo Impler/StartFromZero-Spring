@@ -37,12 +37,10 @@
 		c:redisOperations-ref="redisTemplate">
 		<!-- 0: never expired -->
 		<property name="defaultExpiration" value="0" />	
-		<!-- particular expire settings -->
+		<!-- particular expire time(seconds) settings -->
 		<property name="expires">
 			<map>
-				<entry key="a" value="1" />
-				<entry key="b" value="1" />
-				<entry key="c" value="1" />
+				<entry key="fooService-1" value="5" />
 			</map>
 		</property>
 	</bean>

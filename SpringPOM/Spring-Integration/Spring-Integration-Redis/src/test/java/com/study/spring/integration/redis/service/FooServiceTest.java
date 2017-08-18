@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.study.spring.integration.redis.domain.Foo;
 
+import junit.framework.Assert;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/applicationContext.xml")
 public class FooServiceTest {
@@ -58,6 +60,17 @@ public class FooServiceTest {
 		RedisCache redisCache = (RedisCache) cache.getNativeCache();
 		Date date4 = redisCache.get(cacheKey, Date.class);
 		System.out.println("4 testCurrentDate() -->" + date4.getTime());
+	}
+	
+	
+	@Test
+	public void testExpire() throws InterruptedException{
+		Date date1 = fooService.currentDate();
+		System.out.println("1 testExpire() -->" + date1.getTime());
+		Thread.sleep(5000);
+		Date date2 = fooService.currentDate();
+		System.out.println("2 testExpire() -->" + date2.getTime());
+		Assert.assertEquals(true, date1.getTime() < date2.getTime());
 	}
 	
 	@Test
