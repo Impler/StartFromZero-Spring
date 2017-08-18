@@ -8,6 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,6 +23,9 @@ public class FooServiceTest {
 	@Autowired
 	private FooService fooService;
 	
+	@Autowired
+	private CacheManager cacheManager;
+	
 	@Before
 	public void before(){
 		System.out.println("FooServiceTest s");
@@ -31,15 +37,31 @@ public class FooServiceTest {
 	}
 	
 	@Test
-	public void testCurrentDate() throws InterruptedException {
+	public void testCurrentDate() {
+		String cacheName = "fooService-1";
+		String cacheKey = "currentDate";
+		
 		Date date = fooService.currentDate();
 		System.out.println("1 testCurrentDate() -->" + date.getTime());
-		date = fooService.currentDate();
-		System.out.println("2 testCurrentDate() -->" + date.getTime());
+		Date date2 = fooService.currentDate();
+		System.out.println("2 testCurrentDate() -->" + date2.getTime());
+		
+		// redis 中存储于获取需要进行序列化和反序列化，所以此处的对象不是同一个对象
+//		Assert.assertEquals(true, date == date2);
+		
+		// use spring cache api
+		Cache cache = cacheManager.getCache(cacheName);
+		Date date3 = cache.get(cacheKey, Date.class);
+		System.out.println("3 testCurrentDate() -->" + date3.getTime());
+		
+		// use native -- redis cache api
+		RedisCache redisCache = (RedisCache) cache.getNativeCache();
+		Date date4 = redisCache.get(cacheKey, Date.class);
+		System.out.println("4 testCurrentDate() -->" + date4.getTime());
 	}
 	
 	@Test
-	public void testCacheEvict(){
+	public void testCacheEvict() {
 		List<Foo> foos = fooService.getFoos();
 		System.out.println("1 testCacheEvict() -->" + foos);
 		foos = fooService.getFoos();
@@ -67,4 +89,5 @@ public class FooServiceTest {
 		System.out.println("5 testCachePut() -->" + date.getTime());
 	}
 
+	
 }

@@ -71,12 +71,15 @@
             diskPersistent="false"
             diskExpiryThreadIntervalSeconds="120" />
 
-	<cache name="currentDate" 
+	<cache name="fooService-1" 
 			maxEntriesLocalHeap="10000"
 			timeToIdleSeconds="5"
             timeToLiveSeconds="5" />
 
-	<cache name="foos" 
+	<cache name="fooService-2" 
+			maxEntriesLocalHeap="10000" />
+
+	<cache name="fooService-3" 
 			maxEntriesLocalHeap="10000" />
 
 </ehcache>

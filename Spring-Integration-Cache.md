@@ -25,3 +25,4 @@ Spring提供了抽象的缓存机制，能够针对不同的缓存解决方案�
 	- condition: 条件判断
 
 @Cacheable与@CachePut的区别在于使用相同的key调用该方法时，@Cacheable会忽略方法执行，而@CachePut每次都会调用方法，然后将结果缓存。@Cacheable从缓存中读取数据，因此，如果使用相同的key，@Cacheable可以读取到@CachePut更新后的缓存的值。  
+另外，上述注解key的值为EL表达式，如需使用字符串字面值，应用''括起来，如`key="'test'"`，否则将找不到值。  

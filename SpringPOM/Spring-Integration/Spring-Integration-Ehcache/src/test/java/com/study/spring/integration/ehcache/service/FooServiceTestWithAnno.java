@@ -8,10 +8,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.study.spring.integration.ehcache.domain.Foo;
+
+import junit.framework.Assert;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/applicationContext-anno.xml")
@@ -19,6 +23,9 @@ public class FooServiceTestWithAnno {
 	
 	@Autowired
 	private FooService fooService;
+	
+	@Autowired
+	private CacheManager cacheManager;
 	
 	@Before
 	public void before(){
@@ -31,25 +38,43 @@ public class FooServiceTestWithAnno {
 	
 	@Test
 	public void testCurrentDate() throws InterruptedException {
-		Date date = fooService.currentDate();
-		System.out.println("1 testCurrentDate() -->" + date.getTime());
-		date = fooService.currentDate();
-		System.out.println("2 testCurrentDate() -->" + date.getTime());
+		String cacheName = "fooService-1";
+		String cacheKey = "currentDate";
+		Date date1 = fooService.currentDate();
+		System.out.println("1 testCurrentDate() -->" + date1.getTime());
+		
+		// read from cache by spring cache api
+		Cache cache = cacheManager.getCache(cacheName);
+		Date springCacheDate = cache.get(cacheKey, Date.class);
+		// read from cache by native cache api
+		net.sf.ehcache.Cache c = (net.sf.ehcache.Cache) cache.getNativeCache();
+		Date nativeCacheDate = (Date) c.get(cacheKey).getObjectValue();
+		Assert.assertEquals(true, springCacheDate == nativeCacheDate);
+		
+		Date date2 = fooService.currentDate();
+		System.out.println("2 testCurrentDate() -->" + date2.getTime());
+		Assert.assertEquals(true, date1 == date2);
+		
 		// wait for cache expired
 		Thread.sleep(5000);
-		date = fooService.currentDate();
-		System.out.println("3 testCurrentDate() -->" + date.getTime());
+		Date date3 = fooService.currentDate();
+		System.out.println("3 testCurrentDate() -->" + date3.getTime());
+		Assert.assertEquals(true, date1 != date3);
 	}
 
 	@Test
 	public void testCacheEvict(){
 		List<Foo> foos = fooService.getFoos();
 		System.out.println("1 testCacheEvict() -->" + foos);
-		foos = fooService.getFoos();
-		System.out.println("2 testCacheEvict() -->" + foos);
+		List<Foo> foos1 = fooService.getFoos();
+		System.out.println("2 testCacheEvict() -->" + foos1);
+		Assert.assertEquals(true, foos == foos1);
+		
 		fooService.addFoo();
-		foos = fooService.getFoos();
-		System.out.println("3 testCacheEvict() -->" + foos);
+		
+		List<Foo> foos2 = fooService.getFoos();
+		System.out.println("3 testCacheEvict() -->" + foos2);
+		Assert.assertEquals(false, foos == foos2);
 	}
 	
 	@Test

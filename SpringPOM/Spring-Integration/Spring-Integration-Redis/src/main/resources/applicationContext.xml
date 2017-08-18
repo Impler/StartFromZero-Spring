@@ -40,9 +40,9 @@
 		<!-- particular expire settings -->
 		<property name="expires">
 			<map>
-				<entry key="" value="" />
-				<entry key="" value="" />
-				<entry key="" value="" />
+				<entry key="a" value="1" />
+				<entry key="b" value="1" />
+				<entry key="c" value="1" />
 			</map>
 		</property>
 	</bean>
