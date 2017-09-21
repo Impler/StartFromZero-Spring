@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bean:beans xmlns="http://www.springframework.org/schema/batch"
+	xmlns:bean="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd  
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd  
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd  
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<job id="cos">
+		<step id="start" next="init">
+			<tasklet ref="startMethod"></tasklet>
+		</step>
+		<step id="init" next="processData">
+			<tasklet ref="initMethod"></tasklet>
+		</step>
+		<step id="processData" next="compress">
+			<tasklet>
+			    <chunk reader="cosReader" processor="cosProcessor" writer="cosWriter" commit-interval="10"></chunk>
+			</tasklet>
+		</step>
+		<step id="compress" next="upload">
+			<tasklet ref="compressMethod"></tasklet>
+		</step>
+		<step id="upload" next="finish">
+			<tasklet ref="uploadMethod"></tasklet>
+		</step>
+		<step id="finish">
+			<tasklet ref="finishMethod"></tasklet>
+		</step>
+	</job>
+	
+</bean:beans>

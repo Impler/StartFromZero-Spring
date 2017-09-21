@@ -1,4 +1,4 @@
-package com.study.spring.batch;
+package com.study.spring.batch.helloworld;
 
 import org.junit.Test;
 import org.springframework.batch.core.Job;
