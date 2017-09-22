@@ -15,11 +15,18 @@
 		http://www.springframework.org/schema/batch/spring-batch.xsd">
 
 	<job id="cos">
-		<step id="start" next="init">
+	    <listeners>
+	        <listener ref="cosJobListener" />
+	    </listeners>
+	    <
+		<step id="start">
 			<tasklet ref="startMethod"></tasklet>
+			<next on="NOOP" to="finish"></next>
+			<next on="FAIL" to="finish"></next>
+			<next on="*" to="init"/>
 		</step>
 		<step id="init" next="processData">
-			<tasklet ref="initMethod"></tasklet>
+			<tasklet ref="initMethod" ></tasklet>
 		</step>
 		<step id="processData" next="compress">
 			<tasklet>

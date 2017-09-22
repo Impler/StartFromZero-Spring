@@ -29,7 +29,7 @@ public class TestCos {
     private Job cos;
     
     @Test
-    public void test() {
+    public void test() throws InterruptedException {
         try {
             Map<String, JobParameter> params = new HashMap<String, JobParameter>();
             params.put("key1", new JobParameter("value1"));
