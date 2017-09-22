@@ -18,7 +18,6 @@
 	    <listeners>
 	        <listener ref="cosJobListener" />
 	    </listeners>
-	    <
 		<step id="start">
 			<tasklet ref="startMethod"></tasklet>
 			<next on="NOOP" to="finish"></next>
