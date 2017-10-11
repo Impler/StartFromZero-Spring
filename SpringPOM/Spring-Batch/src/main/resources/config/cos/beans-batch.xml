@@ -21,7 +21,7 @@
 		<step id="start">
 			<tasklet ref="startMethod"></tasklet>
 			<next on="NOOP" to="finish"></next>
-			<next on="FAIL" to="finish"></next>
+			<next on="FAILED" to="finish"></next>
 			<next on="*" to="init"/>
 		</step>
 		<step id="init" next="processData">
@@ -29,7 +29,11 @@
 		</step>
 		<step id="processData" next="compress">
 			<tasklet>
-			    <chunk reader="cosReader" processor="cosProcessor" writer="cosWriter" commit-interval="10"></chunk>
+			    <chunk reader="cosReader" processor="cosProcessor" writer="cosWriter" commit-interval="1" retry-limit="3">
+			        <retryable-exception-classes>
+			            <include class="java.lang.Exception"/>
+			        </retryable-exception-classes>
+			    </chunk>
 			</tasklet>
 		</step>
 		<step id="compress" next="upload">

@@ -16,8 +16,13 @@ public class CosReader implements ItemReader<CosData> {
     private Random random = new Random();
     @Override
     public CosData read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-        if(random.nextInt(10)%5 == 0){
+        int r = random.nextInt(10);
+        if(r % 5 == 0){
             return null;
+        }
+        r = random.nextInt(10);
+        if(r % 7 == 0){
+            throw new Exception("read excepiton");
         }
         int id = random.nextInt(1000);
         String name = "a" + random.nextInt(10) + "b" + random.nextInt(20) + "c" + random.nextInt(5);
