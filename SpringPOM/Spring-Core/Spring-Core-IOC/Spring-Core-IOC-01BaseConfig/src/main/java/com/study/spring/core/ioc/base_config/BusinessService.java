@@ -1,4 +1,4 @@
-package com.study.spring._01core._01ioc._01base_config;
+package com.study.spring.core.ioc.base_config;
 
 /**
  * a pojo in service layer which depends on a BusinessDao instance
