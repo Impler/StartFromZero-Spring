@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="dataSource" name="ds mysqlDS" class="com.study.spring.core.ioc.bean_naming.DataSource"></bean>
+	<alias name="dataSource" alias="ModuleA-dataSource"/>
+	<alias name="dataSource" alias="ModuleB-dataSource"/>
+
+	<import resource="beans-naming-moudule*.xml"/>
+</beans>
