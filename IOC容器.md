@@ -35,10 +35,37 @@ Bean的任何一种配置方式，最终都会被Spring解析成`BeanDefinition`
 ```
 意为一个名为dataSource的bean取了两个别名ModuleA-dataSource、ModuleA-dataSource。这样在模块A和B中可以通过不同的别名引用依赖同一个Bean dataSource。  
 
-### Bean的实例化
+### 2.2 Bean的实例化
 Bean Definition就像是用来创建对象的模板，Spring容器通过该模板创建一个个具体的实例对象。  
 在xml配置中，bean元素的class属性通常表示待实例化的全限定类名，其对应BeanDefinition中的Class属性，Spring通过反射机制，创建该类型的实例。另外，class属性也可以表示包含静态工厂方法的静态工厂类的全限定类名，Spring通过调用该工厂类的指定工厂方法创建对象实例，该实例可以是任意类型。  
 注意，一个静态内部类的xml配置，bean元素的class属性应为外部类的全限定类名+$+内部类名的形式，如com.example.Foo$Bar。即为该静态内部类编译后的class文件的文件名。  
+综上，可以通过三种方式实例化Bean:  
+- 通过构造方法实例化，相当于new一个对象
+- 通过静态工厂方法实例化
+- 通过普通工厂Bean的工厂方法实例化
+
+#### 2.2.1 通过构造方法实例化
+```xml
+<!-- 构造方法实例化，相当于new一个对象 -->
+<!-- 调用默认构造方法-->
+<bean id="xxx" class="examples.ExampleBean"/>
+<!-- 调用带参构造方法 -->
+<bean id="xxx" class="examples.ExampleBean">
+	   <constructor-arg name="xxx" value="xxx" />
+</bean>
+
+<!-- 实例化一个静态内部类，使用$连接外部类名 -->
+<bean id="xxx" class="examples.ExampleBean$StaticBean"/>
+```
+#### 2.2.2 通过静态工厂方法实例化
+```xml
+<bean id="xxx" class="examples.ExampleBeanStaticFactory" factory-method="createFoo" />
+```
+#### 2.2.3 通过普通静态方法实例化
+```xml
+<bean id="factory" class="examples.ExampleBeanFactory" />
+<bean id="xxx" factory-bean="factory" factory-method="createFoo" />
+```
 
 ## 依赖注入的三种方式
 1. 构造方法注入  
