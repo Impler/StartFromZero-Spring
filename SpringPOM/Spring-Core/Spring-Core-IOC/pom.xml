@@ -12,5 +12,6 @@
   	<module>Spring-Core-IOC-01BaseConfig</module>
   	<module>Spring-Core-IOC-02BeanNaming</module>
   	<module>Spring-Core-IOC-03BeanInstantiating</module>
+	<module>Spring-Core-IOC-04DI</module>
   </modules>
 </project>
