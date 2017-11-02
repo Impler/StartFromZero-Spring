@@ -38,7 +38,7 @@
  <!-- Constructor-based Dependency injection e-->
  
  <!-- Setter-based Dependency injection s -->
-    <!-- the bean mast have corresponding setter method -->
+    <!-- the bean must have corresponding setter method -->
     <bean id="fooSetter" class="com.study.spring.core.ioc.di.domain.Foo">
         <property name="bar" ref="bar" />
         <property name="baz" ref="baz" />
