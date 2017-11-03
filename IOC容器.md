@@ -255,3 +255,37 @@ Spring支持类似于OGNL形式的属性注入，例如为A类的B属性的C属�
 ```
 
 ##### 2.3.3.10 自动装配
+Spring支持自动注入依赖。可以有效减少配置的复杂度，同时也可以减少项目后续更新迭代时改动。  
+`<bean />`节点的`autowire`属性用来配置自动装配，默认值为`no`，即不使用自动装配，依赖必须手动指定。  
+自动装配可分为：  
+- no: 不使用自动装配
+- default: 采用父级配置，即使用`<beans />`的`default-autowire`属性。
+- byName: 按参数名称自动装配，即Spring会自动将与属性名相同的Bean自动注入进来。
+- byType: 按参数类型自动装配，即Spring会自动将与属性类型相同的Bean自动注入进来。
+- constructor: 构造器自动注入，类似于byType，即Spring会自动将于构造函数参数类型相同的Bean自动注入进来。
+构造器自动注入方式有异于其他两种自动注入方式的地方是，如果匹配的Bean不存在，构造器自动注入方式将会抛出异常，而其他两者不会。  
+对于按类型自动注入方式，包括构造器自动注入方式，如果存在多个依赖类型的Bean，Spring会将他们全部注入进来，但前提是，该属性应为集合类型或key为String类型的Map类型，否则也将抛出异常。  
+值得注意的是，基本数据类型、String类型和Class类型是不支持自动注入的。显示使用`<property />`或`<constructor />`的配置会覆盖自动注入的行为。  
+如果一个Bean不希望被其他Bean自动注入，可以配置`autowire-candidate="false"`。  
+
+##### 2.3.4 方法注入
+Spring容器中的大部分都是单例的。单例Bean依赖单例Bean、非单例Bean依赖非单例Bean，生命周期相同的Bean之间的依赖关系，可以通过将一个Bean作为另一个Bean的成员属性来解决。但是当两个Bean的生命周期不一致时，例如：单例Bean A 需要在每次调用时，使用非单例Bean B，上面的方法就行不通了。  
+一个可行的办法是放弃依赖注入，在单例Bean上实现ApplicationContextAware 接口，每次调用时，直接让容器创建一个非单例Bean出来。  
+```java
+public class SingletonBeanOfAppAware implements ApplicationContextAware {
+	private ApplicationContext applicationContext;
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+	public void call(){
+		// return a prototype bean at every invoke call() method
+		PrototypeBean pro = this.applicationContext.getBean(PrototypeBean.class);
+		// do other business...
+	}
+}
+```
+上述虽能解决问题，但背弃了依赖注入的原则，使代码与Spring耦合更深。Spring提供了一种更高级的方式，解决此类问题，叫做方法注入。  
+方法注入是Spring提供的重写Bean的方法，返回另一个Bean的能力。Spring通过CGLIB产生单例Bean子类的字节码，然后重写单例Bean的方法。因此，该单例Bean应为非final修饰的，返回单例Bean的方法也应为非final修饰的，其一般格式为：  
+`<public|protected> [abstract] <返回类型> 方法名(无参);`。  

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- use lazy init here for test -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- prototype bean -->
+    <bean id="pro" scope="prototype" class="com.study.spring.core.ioc.di.method_injection.PrototypeBean" />
+    
+    <!-- 1. by Aware s -->
+    <!-- singleton bean -->
+    <bean id="sigAware" class="com.study.spring.core.ioc.di.method_injection.application_aware.SingletonBeanOfAppAware"></bean>
+    <!-- 1. by Aware e -->
+
+    <!-- 2. by lookup s -->
+    <!-- singleton bean -->
+    <bean id="sigLookup" class="com.study.spring.core.ioc.di.method_injection.look_up.SingletonBeanOfLookup">
+        <!-- name为方法名，bean为依赖的非单例Bean -->
+        <lookup-method name="getPrototypeBean" bean="pro"/>
+    </bean>
+    <!-- 2. by lookup e -->
+</beans>
