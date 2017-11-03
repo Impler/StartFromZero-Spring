@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd" default-lazy-init="true">
+
+    <!-- 启用注解扫描 ，扫描@PostConstruct注解-->
+    <context:annotation-config/>
+    
+    <!-- 初始化生命周期回调方法的调用顺序为：@PostConstruct--afterPropertiesSet--init-method -->
+    <bean id="initLifecycle" class="com.study.spring.core.ioc.bean_nature.init.FooInitializingBean"
+        init-method="initMethod">
+        <property name="name" value="fooName" />
+    </bean>
+</beans>

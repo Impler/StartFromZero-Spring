@@ -13,5 +13,6 @@
   	<module>Spring-Core-IOC-02BeanNaming</module>
   	<module>Spring-Core-IOC-03BeanInstantiating</module>
 	<module>Spring-Core-IOC-04DI</module>
+	<module>Spring-Core-IOC-05BeanNature</module>
   </modules>
 </project>

@@ -268,8 +268,8 @@ Spring支持自动注入依赖。可以有效减少配置的复杂度，同时�
 值得注意的是，基本数据类型、String类型和Class类型是不支持自动注入的。显示使用`<property />`或`<constructor />`的配置会覆盖自动注入的行为。  
 如果一个Bean不希望被其他Bean自动注入，可以配置`autowire-candidate="false"`。  
 
-##### 2.3.4 方法注入
-Spring容器中的大部分都是单例的。单例Bean依赖单例Bean、非单例Bean依赖非单例Bean，生命周期相同的Bean之间的依赖关系，可以通过将一个Bean作为另一个Bean的成员属性来解决。但是当两个Bean的生命周期不一致时，例如：单例Bean A 需要在每次调用时，使用非单例Bean B，上面的方法就行不通了。  
+#### 2.3.4 方法注入
+Spring容器中的大部分都是单例的。单例Bean依赖单例Bean、非单例Bean依赖非单例Bean，作用域相同的Bean之间的依赖关系，可以通过将一个Bean作为另一个Bean的成员属性来解决。但是当两个Bean的生命周期不一致时，例如：单例Bean A 需要在每次调用时，使用非单例Bean B，上面的方法就行不通了。  
 一个可行的办法是放弃依赖注入，在单例Bean上实现ApplicationContextAware 接口，每次调用时，直接让容器创建一个非单例Bean出来。  
 ```java
 public class SingletonBeanOfAppAware implements ApplicationContextAware {
@@ -289,3 +289,73 @@ public class SingletonBeanOfAppAware implements ApplicationContextAware {
 上述虽能解决问题，但背弃了依赖注入的原则，使代码与Spring耦合更深。Spring提供了一种更高级的方式，解决此类问题，叫做方法注入。  
 方法注入是Spring提供的重写Bean的方法，返回另一个Bean的能力。Spring通过CGLIB产生单例Bean子类的字节码，然后重写单例Bean的方法。因此，该单例Bean应为非final修饰的，返回单例Bean的方法也应为非final修饰的，其一般格式为：  
 `<public|protected> [abstract] <返回类型> 方法名(无参);`。  
+
+#### 2.3.5 Bean的作用域
+Spring支持的生命周期类型为：  
+- singleton: 同一个ApplicationContext共享一个单实例Bean。
+- prototype: 每次调用返回一个新的实例Bean。
+- request: 每次Http请求创建一个新的实例。
+- session: 同一个HttpSession，共享一个Bean。
+- global session: 同一个全局Session共享一个Bean。
+- application: 同一个ServletContext共享一个Bean。
+request、session、global session、application作用域均需要在Web Application容器中使用。  
+
+### 2.4 Bean的本质
+
+#### 2.4.1 生命周期回调方法
+Bean的生命周期是以对象的创建开始，以对象的销毁结束，分别对应`InitializingBean`和`DisposableBean`接口。Spring支持在Bean的生命周期过程中通过生命周期回调方法加入自定义的交互行为。  
+
+##### 2.4.1.1 初始化回调方法
+`InitializingBean`接口允许在Spring容器实例化Bean并将所有必要的属性设置完毕后执行特定的初始化操作。  
+```java
+public interface InitializingBean {
+	void afterPropertiesSet() throws Exception;
+
+}
+```
+但这种方式需要代码与Spring高度耦合，不推荐使用。  
+在`<bean />`节点上使用`init-method`属性也可以配置初始化回调方法:  
+```xml
+<bean id="xxx" class="xxx"
+    init-method="initMethod">
+</bean>
+```
+此外，Spring支持JSR-250标准的初始化回调注解`@PostConstruct`也能达到同样的效果:  
+```xml
+<!-- 启用注解扫描 ，扫描@PostConstruct注解-->
+<context:annotation-config/>
+```
+```java
+@PostConstruct
+public void postConstruct(){
+    System.out.println("call @PostConstruct");
+}
+```
+综上三种方式，Bean初始化过程的执行顺序为：构造方法-->Setter方法-->@PostConstruct方法-->InitializingBean接口方法-->init-method方法。  
+
+##### 2.4.1.2 销毁回调方法
+`DisposableBean`接口允许Bean在销毁前执行自定义操作。  
+```java
+public interface DisposableBean {
+	void destroy() throws Exception;
+}
+```
+同样的，这种方式因为耦合度高，不推荐使用。  
+在`<bean />`节点上使用`destroy-method`属性也可以配置销毁回调方法:  
+```xml
+<bean id="xxx" class="xxx"
+    destroy-method="destroyMethod">
+</bean>
+```
+此外，Spring支持JSR-250标准的销毁回调注解`@PreDestroy`也能达到同样的效果:  
+```xml
+<!-- 启用注解扫描 ，扫描@PreDestroy注解-->
+<context:annotation-config/>
+```
+```java
+@PreDestroy
+public void preDestroy(){
+    System.out.println("call @PreDestroy");
+}
+```
+综上三种方式，Bean销毁执行顺序为：@PreDestroy-->DisposableBean接口方法-->destryo-method方法。  
