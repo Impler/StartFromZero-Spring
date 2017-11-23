@@ -386,6 +386,24 @@ public interface BeanPostProcessor {
 	Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException;
 }
 ```
-BeanPostProcessor的作用于仅在当前Spring容器中起效。BeanPostProcessor Bean是区别于其他普通的Spring Bean的，其配置方式不需要指定id、name等属性，Spring容器会自动扫描所有的BeanPostProcessors。由于其在其他普通Bean实例化前就开始工作，所以BeanPostProcessors 需要在Spring容器启动后就会立刻实例化。多个BeanPostProcessor之间的执行顺序依照各自的order属性或实现Order接口方法。  
-结合上述生命周期的初始化方法，postProcessBeforeInitialization()先于@PostConstruct，postProcessAfterInitialization后于init-method。  
+BeanPostProcessor的作用域仅在当前Spring容器中起效。BeanPostProcessor Bean是区别于其他普通的Spring Bean的，其配置方式不需要指定id、name等属性，Spring容器会自动扫描所有的BeanPostProcessors。由于其在其他普通Bean实例化前就开始工作，所以BeanPostProcessors 需要在Spring容器启动后就会立刻实例化。多个BeanPostProcessor之间的执行顺序依照各自的order属性或实现Order接口方法。  
+结合上述生命周期的初始化方法，postProcessBeforeInitialization()先于@PostConstruct，postProcessAfterInitialization后于init-method。 
 
+#### 2.5.2 BeanFactoryPostProcessor接口 
+BeanFactoryPostProcessor接口允许在Spring容器初始化所有Bean之前修改bean的配置信息。在语义上与BeanPostProcessor类似，区别在于BeanPostProcessor作用于单个bean的初始化过程，而BeanFactoryPostProcessor作用于所有bean初始化前，它能够获取bean的配置信息，并能够在其初始化前修改这些配置。  
+```java
+public interface BeanFactoryPostProcessor {
+	void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException;
+}
+```
+BeanFactoryPostProcessor的作用域以及多个之间的执行顺序同BeanPostProcessor。  
+
+#### 2.5.3 FactoryBean接口
+FactoryBean接口用于创建对象自身的工厂Bean。如果一个对象的实例化过程很复杂，配置起来很繁琐，就可以通过FactoryBean来实现。像大家熟知的Mybatis SqlSessionFactory就是一个FactoryBean。
+```java
+public interface FactoryBean<T> {
+	T getObject() throws Exception;
+	Class<?> getObjectType();
+	boolean isSingleton();
+}
+```
