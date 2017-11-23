@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.study</groupId>
     <artifactId>Spring-Core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <artifactId>Spring-Core-IOC</artifactId>
   <packaging>pom</packaging>
@@ -14,5 +14,6 @@
   	<module>Spring-Core-IOC-03BeanInstantiating</module>
 	<module>Spring-Core-IOC-04DI</module>
 	<module>Spring-Core-IOC-05BeanNature</module>
+    <module>Spring-Core-IOC-06ExtensionPoints</module>
   </modules>
 </project>

@@ -5,22 +5,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.study</groupId>
-		<artifactId>Spring-Integration</artifactId>
+		<artifactId>Spring-Core-IOC</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>Spring-Integration-Ehcache</artifactId>
-	<name>Spring-Integration-Ehcache</name>
+	<artifactId>Spring-Core-IOC-06ExtensionPoints</artifactId>
+	<name>Spring-Core-IOC-06ExtensionPoints</name>
 	<url>http://maven.apache.org</url>
-
-	<properties>
-		<version.ehcache>2.6.11</version.ehcache>
-	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-			<version>${version.ehcache}</version>
+			<groupId>com.study</groupId>
+			<artifactId>Spring-Core-IOC-05BeanNature</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 </project>

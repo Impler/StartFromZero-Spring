@@ -268,6 +268,10 @@ Spring支持自动注入依赖。可以有效减少配置的复杂度，同时�
 值得注意的是，基本数据类型、String类型和Class类型是不支持自动注入的。显示使用`<property />`或`<constructor />`的配置会覆盖自动注入的行为。  
 如果一个Bean不希望被其他Bean自动注入，可以配置`autowire-candidate="false"`。  
 
+##### 2.3.3.11 Bean配置的继承性
+一个Bean的配置可以继承另一个Bean，包括 class, scope, constructor, property，工厂方法等属性，子bean可以重写继承来的属性。但 depend-on, autowire mode, 依赖检查, singleton, lazy-init将不参与继承。abstract bean只作为模板，不会被容器实例化。  
+
+
 #### 2.3.4 方法注入
 Spring容器中的大部分都是单例的。单例Bean依赖单例Bean、非单例Bean依赖非单例Bean，作用域相同的Bean之间的依赖关系，可以通过将一个Bean作为另一个Bean的成员属性来解决。但是当两个Bean的生命周期不一致时，例如：单例Bean A 需要在每次调用时，使用非单例Bean B，上面的方法就行不通了。  
 一个可行的办法是放弃依赖注入，在单例Bean上实现ApplicationContextAware 接口，每次调用时，直接让容器创建一个非单例Bean出来。  
@@ -368,4 +372,20 @@ public interface ApplicationContextAware extends Aware {
 	void setApplicationContext(ApplicationContext applicationContext) throws BeansException;
 }
 ```
+
+### 2.5 Bean的扩展
+Spring IOC容器提供了特殊的集成接口便于开发者添加自定义的插件。例如`BeanPostProcessor`、`BeanFactoryPostProcessor`、`FactoryBean`。  
+
+#### 2.5.1 BeanPostProcessor接口
+BeanPostProcessor接口提供了两个回调方法，分别在Spring容器初始化Bean之前和之后被调用。这样我们就可以通过实现该接口来添加自定义的处理逻辑。  
+```java
+public interface BeanPostProcessor {
+	// 初始化前置回调
+	Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException;
+	// 初始化后置回调
+	Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException;
+}
+```
+BeanPostProcessor的作用于仅在当前Spring容器中起效。BeanPostProcessor Bean是区别于其他普通的Spring Bean的，其配置方式不需要指定id、name等属性，Spring容器会自动扫描所有的BeanPostProcessors。由于其在其他普通Bean实例化前就开始工作，所以BeanPostProcessors 需要在Spring容器启动后就会立刻实例化。多个BeanPostProcessor之间的执行顺序依照各自的order属性或实现Order接口方法。  
+结合上述生命周期的初始化方法，postProcessBeforeInitialization()先于@PostConstruct，postProcessAfterInitialization后于init-method。  
 
