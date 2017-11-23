@@ -1,4 +1,4 @@
-package com.study.spring.core.ioc.bean_nature.init;
+package com.study.spring.core.ioc.bean_nature.lifecycle.init;
 
 import javax.annotation.PostConstruct;
 

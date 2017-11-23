@@ -359,3 +359,13 @@ public void preDestroy(){
 }
 ```
 综上三种方式，Bean销毁执行顺序为：@PreDestroy-->DisposableBean接口方法-->destryo-method方法。  
+
+#### 2.4.2 Aware接口
+Aware意为知道的，有某方面知识的。Spring提供了大量的Aware接口，能够让其实现者很容易获得对应的内置组件对象。例如`ApplicationContextAware`、`BeanFactoryAware`等。  
+`ApplicationContextAware`接口如下，:  
+```java
+public interface ApplicationContextAware extends Aware {
+	void setApplicationContext(ApplicationContext applicationContext) throws BeansException;
+}
+```
+

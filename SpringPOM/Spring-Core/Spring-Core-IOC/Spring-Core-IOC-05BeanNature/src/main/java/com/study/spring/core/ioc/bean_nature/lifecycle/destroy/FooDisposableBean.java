@@ -1,4 +1,4 @@
-package com.study.spring.core.ioc.bean_nature.destroy;
+package com.study.spring.core.ioc.bean_nature.lifecycle.destroy;
 
 import javax.annotation.PreDestroy;
 

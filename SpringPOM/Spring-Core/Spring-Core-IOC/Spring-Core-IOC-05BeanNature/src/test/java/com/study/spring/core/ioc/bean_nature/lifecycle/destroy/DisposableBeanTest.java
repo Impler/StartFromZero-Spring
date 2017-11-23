@@ -1,17 +1,17 @@
-package com.study.spring.core.ioc.bean_nature.init;
+package com.study.spring.core.ioc.bean_nature.lifecycle.destroy;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class InitializingBeanTest {
+public class DisposableBeanTest {
 
     private ClassPathXmlApplicationContext context;
 
     @Before
     public void before() {
-        context = new ClassPathXmlApplicationContext("beans-nature-lifecycle-init.xml");
+        context = new ClassPathXmlApplicationContext("beans-nature-lifecycle-destroy.xml");
     }
 
     @After
@@ -23,7 +23,7 @@ public class InitializingBeanTest {
 
     @Test
     public void test() {
-        context.getBean("initLifecycle");
+        context.destroy();
     }
 
 }
