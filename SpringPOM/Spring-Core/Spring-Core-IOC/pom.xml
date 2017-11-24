@@ -15,5 +15,6 @@
 	<module>Spring-Core-IOC-04DI</module>
 	<module>Spring-Core-IOC-05BeanNature</module>
     <module>Spring-Core-IOC-06ExtensionPoints</module>
+    <module>Spring-Core-IOC-07AnnotationConfig</module>
   </modules>
 </project>

@@ -407,3 +407,18 @@ public interface FactoryBean<T> {
 	boolean isSingleton();
 }
 ```
+直接通过FactoryBean的id或name调用context.getBean()方法，返回的是工厂创建的对象。如果需要获取工厂对象本身，需要在id或name前拼接一个`$`。  
+
+### 2.6 基于注解的配置
+基于注解的配置相较于冗长的xml配置来说显得更加简洁。但是xml的配置方式对于代码来说是无侵入的，而注解需要修改源代码，并重新编译。二者可以单独使用也可以一起使用。通过注解实现的注入早于基于xml的配置，因此，如果两种方式作用在同一个Bean上，xml会覆盖注解的配置。  
+使用注解的方式配置Bean，需要在xml中添加annotation-config的配置：  
+```xml
+<context:annotation-config/>
+```
+该标签默认注册了4个BeanPostProcessor：AutowiredAnnotationBeanPostProcessor、CommonAnnotationBeanPostProcessor、PersistenceAnnotationBeanPostProcessor以及RequiredAnnotationBeanPostProcessor，用于扫描并注册被指定注解标识的Bean。  
+注意`<context:annotation-config/>`只在当前Context中生效。  
+
+#### 2.6.1 @Required注解
+@Required注解标识在属性的setter方法上，表示该Bean在初始化时必须依赖该属性，否则将会抛出BeanCreationException异常。  
+
+#### 2.6.2 @Autowired和@Qualifier注解
