@@ -13,7 +13,7 @@ public class RequiredTest {
 
     @Before
     public void before() {
-        context = new ClassPathXmlApplicationContext("classpath:beans-annotation-required.xml");
+        context = new ClassPathXmlApplicationContext("classpath:required/beans-annotation-required.xml");
     }
 
     @After

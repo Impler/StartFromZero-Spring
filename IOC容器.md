@@ -422,3 +422,52 @@ public interface FactoryBean<T> {
 @Required注解标识在属性的setter方法上，表示该Bean在初始化时必须依赖该属性，否则将会抛出BeanCreationException异常。  
 
 #### 2.6.2 @Autowired和@Qualifier注解
+@Autowired注解按类型自动完成依赖注入，可以标识在构造方法、普通方法、属性等元素上。除一般类型对象的注入外，也可以实现集合类型和Map类型对象的依赖注入。  
+```java
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Autowired {
+	boolean required() default true;
+}
+```
+注意：@Autowired, @Inject, @Resource和@Value注解功能均通过BeanPostProcessor的方式实现，因此在BeanPostProcessor和BeanFactoryPostProcessor实现中不能使用上述注解，必须通过XML或@Bean的方式配置依赖。  
+
+##### 2.6.2.1 @Autowired普通注入
+@Autowired注解默认情况下要求必须有且仅有一个候选Bean进行依赖注入，否则将抛出UnsatisfiedDependencyException异常，相当于@Required注解。可以调整@Autowired(required=false)兼容没有候选Bean存在的情况。    
+
+##### 2.6.2.2 @Autowired注入集合
+当对集合或数组类型对象进行依赖注入时，Spring会将所有满足类型条件的Bean全部注入进来，如果希望依赖的多个Bean是顺序的，这些Bean可以通过实现org.springframework.core.Ordered接口实现。  
+
+##### 2.6.2.3 @Autowired注入Map
+Spring同样支持以String类型为key的Map对象注入，其中key为Bean的名称，value为Bean对象。  
+
+##### 2.6.2.4 @Qualifier注解精确匹配
+上面提到@Autowired是按类型注入的，所以经常会匹配多个同类型的候选Bean。这时候就可以搭配@Qualifier精确匹配依赖。@Qualifier注解包含一个value参数，表示Bean的名称。默认情况下，Bean的name或id作为该Bean的qualifier，也可以在`<bean />`中使用`<qualifier />`指定，多个Bean可以拥有相同的qualifier，这样就可以将他们注入到集合中去。  
+
+```java
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+public @interface Qualifier {
+	String value() default "";
+}
+```
+
+#### 2.6.3 JSR-250注解
+Spring同样支持Java标准注解，例如@Resource，@PostConstruct，@PreDestroy等。  
+##### 2.6.3.1 @Resource注解
+类似Spring的@Autowired注解，用于自动注入依赖。不同的是@Autowired默认按类型匹配依赖，而@Resource按Bean名称匹配依赖。  
+- 当标识在属性上时，默认匹配与该属性相同的Bean
+- 当标识在setter方法时，默认匹配与该方法对应属性名相同的Bean
+
+@Resource装配顺序如下：
+- 如果同时指定了name和type，则从Spring Context中找到唯一匹配的Bean进行装配，找不到则抛出异常；
+- 如果指定了name，则从Spring Context中找到名称或id与之匹配的Bean进行装配，找不到则抛出异常；
+- 如果指定了type，则从Spring Context中找到类型匹配的唯一Bean进行装配，找不到或找到多个，都会抛出异常；
+- 如果既没有指定name，也没有指定type，则自动按照byName的方式进行装配，如果没有匹配，则回退为一个原始类型进行匹配。
+
+##### @PostConstruct和@PreDestroy
+见2.4.1 生命周期回调方法。  
+
