@@ -97,5 +97,6 @@
 		<module>Spring-Core</module>
 		<module>Spring-Integration</module>
 		<module>Spring-Batch</module>
+		<module>Spring-MVC</module>
 	</modules>
 </project>
