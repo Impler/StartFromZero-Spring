@@ -272,7 +272,7 @@ Spring支持自动注入依赖。可以有效减少配置的复杂度，同时�
 一个Bean的配置可以继承另一个Bean，包括 class, scope, constructor, property，工厂方法等属性，子bean可以重写继承来的属性。但 depend-on, autowire mode, 依赖检查, singleton, lazy-init将不参与继承。abstract bean只作为模板，不会被容器实例化。  
 
 
-#### 2.3.4 方法注入
+#### 2.3.4 Lookup方法注入
 Spring容器中的大部分都是单例的。单例Bean依赖单例Bean、非单例Bean依赖非单例Bean，作用域相同的Bean之间的依赖关系，可以通过将一个Bean作为另一个Bean的成员属性来解决。但是当两个Bean的生命周期不一致时，例如：单例Bean A 需要在每次调用时，使用非单例Bean B，上面的方法就行不通了。  
 一个可行的办法是放弃依赖注入，在单例Bean上实现ApplicationContextAware 接口，每次调用时，直接让容器创建一个非单例Bean出来。  
 ```java
@@ -290,9 +290,9 @@ public class SingletonBeanOfAppAware implements ApplicationContextAware {
 	}
 }
 ```
-上述虽能解决问题，但背弃了依赖注入的原则，使代码与Spring耦合更深。Spring提供了一种更高级的方式，解决此类问题，叫做方法注入。  
+上述虽能解决问题，但背弃了依赖注入的原则，使代码与Spring耦合更深。Spring提供了一种更高级的方式，解决此类问题，叫做Lookup方法注入。  
 方法注入是Spring提供的重写Bean的方法，返回另一个Bean的能力。Spring通过CGLIB产生单例Bean子类的字节码，然后重写单例Bean的方法。因此，该单例Bean应为非final修饰的，返回单例Bean的方法也应为非final修饰的，其一般格式为：  
-`<public|protected> [abstract] <返回类型> 方法名(无参);`。  
+`<public|protected> [abstract] <返回类型> 方法名(无参);`  
 
 #### 2.3.5 Bean的作用域
 Spring支持的生命周期类型为：  
@@ -471,3 +471,466 @@ Spring同样支持Java标准注解，例如@Resource，@PostConstruct，@PreDest
 ##### @PostConstruct和@PreDestroy
 见2.4.1 生命周期回调方法。  
 
+### 2.7 类路径扫描和组件注解
+上述的例子中多数还是使用XML的形式定义Bean，虽然引入了注解，例如：@Autowired、@Resource等，但注解也只是用于完成依赖注入的工作。  
+
+#### 2.7.1 组件注解
+Spring提供了类路径扫描的功能，查找被组件注解标识的Class，并自动完成Bean的注册。  这些组件注解包括@Component、@Repository、@Service、@Controller等。其中@Component是一个通用的注解，被标识的类将会作为SpringBean被Spring探查到。从功能上来说，@Repository、@Service、@Controller注解与@Component注解一样，但是前者体现了更多的语义信息：  
+- @Repository: 用来标识DAO层的Bean
+- @Service: 用来标识Service层的Bean
+- @Controller: 用来标识Controller层的Bean
+因此，推荐使用语义组件注解。  
+
+#### 2.7.2 类路径扫描
+类路径扫描的功能可以通过注解和XML配置的方式实现：  
+注解方式使用@Configuration配合@ComponentScan注解实现：
+```java
+@Configuration
+/**
+ * 扫描并注册com.study.spring.core.ioc.classpath_scan及其子包中的组件类
+ * 多个之间使用逗号、空格、分号等间隔
+ */
+@ComponentScan("com.study.spring.core.ioc.classpath_scan")
+public class SpringConfig {
+}
+```
+
+XML配置使用`<context:component-scan base-package="" />`标签扫描：  
+```xml
+<!-- 扫描com.study.spring.core.ioc.classpath_scan包及其子包下的组件类，多个之间用逗号、空格或分号间隔 -->
+	<context:component-scan base-package="com.study.spring.core.ioc.classpath_scan" />
+```
+`<context:component-scan />`标签自动扫描和注册的功能是依赖`AutowiredAnnotationBeanPostProcessor`和`AutowiredAnnotationBeanPostProcessor`两个处理器实现的。此外，该标签的功能涵盖了上面用的到`<context:annotation-config/>`，只要使用`<context:component-scan />`就够了  
+
+
+#### 2.7.3 扫描过滤
+默认情况下，标识了@Component、@Repository、@Service、@Controller注解的类都会被扫描并注册为SpringBean。Spring提供了额外的过滤功能满足扫描特定组件的需要。  
+过滤器类型分类：  
+
+|过滤器类型|示例|注释|
+|:-|:-|:-|
+|annotation|org.example.SomeAnnotation|基于注解的匹配规则（默认）|
+|assignable|org.example.SomeClass|基于类之间继承关系的匹配规则|
+|aspectj|org.example..*Service+|基于切面的匹配规则|
+|regex|org\.example\.Default.*|基于正则表达式的匹配规则|
+|custom|org.example.MyTypeFilter|自定义匹配规则，实现org.springframework.core.type.TypeFilter接口|
+
+使用注解的配置:  
+```java
+@Configuration
+/**
+ * 扫描org.example包及其子包下，类名满足.*Stub.*Repository正则匹配且非@标识的类
+ */
+@ComponentScan(basePackages = "org.example",
+        includeFilters = @Filter(type = FilterType.REGEX, pattern = ".*Stub.*Repository"),
+        excludeFilters = @Filter(Repository.class))
+public class AppConfig {
+    ...
+}
+```
+使用xml的配置:  
+```xml
+<beans>
+    <context:component-scan base-package="org.example">
+        <context:include-filter type="regex"
+                expression=".*Stub.*Repository"/>
+        <context:exclude-filter type="annotation"
+                expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+</beans>
+```
+
+#### 2.7.4 其他功能注解
+Spring支持在组件Bean中定义其他Bean。例如：  
+```java
+@Component
+public class FactoryMethodComponent {
+    
+	@Bean
+    @Qualifier("public")
+    public TestBean publicInstance() {
+        return new TestBean("publicInstance");
+    }
+}
+```
+上面的组件注解中均包含name属性，用于配置当前类被Spring容器实例化后的Bean 名称，如果不配置，默认情况下，以类名首字母小写的形式表示。例如，该Bean的名称为movieFinderImpl：  
+```java
+@Component
+public class MovieFinderImpl {
+}
+```
+此外，组件注解还可以和@Scope、@Qualifiter注解搭配使用，分别用于配置Bean的作用域和检索名。  
+
+#### 2.7.5 支持JSR330标准依赖注入注解
+Spring3.0后支持JSR 330标准的依赖注入注解。首先需要引入依赖：  
+```xml
+<dependency>
+    <groupId>javax.inject</groupId>
+    <artifactId>javax.inject</artifactId>
+    <version>1</version>
+</dependency>
+```
+Spring注解与JSR330标准注解比较
+|Spring注解|JSR330注解|区别与限制|
+|:-|:-|:-|
+|@Autowired|@Inject|@Inject没有required属性|
+|@Component|@Named|-|
+|@Scope("singleton")|@Singleton|JSR330默认作用域类似于Spring的prototype|
+|@Qualifier|@Named|-|
+|@Value|-|没有对应的注解|
+|@Required|-|没有对应的注解|
+|@Lazy|-|没有对应的注解|
+
+### 2.8 基于JAVA的配置
+#### 2.8.1 基本概念
+Spring Java配置的核心在于两点，使用@Configuration标识类和使用@Bean标识方法。  
+被@Bean注解标识的方法返回的对象将会被Spring IOC容器管理，即作为Spring Bean。其功能上类似于`<bean />`标签。@Bean注解可以放在任意@Component修饰的类中，但一般和@Configuration搭配使用。  
+被@Configuration注解标识的类是Spring Bean定义的地方。其功能上类似于`<beans />`标签。  
+例如：  
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public MyService myService() {
+        return new MyServiceImpl();
+    }
+}
+```
+#### 2.8.2 AnnotationConfigApplicationContext
+AnnotationConfigApplicationContext用于创建基于Java配置的Spring容器。它可以接收@Configuration标识的class对象，则配置类本身及其内部的@Bean标识的方法都将被注册为Spring Bean。此外，它还可以接收Spring组件注解，以及JSR330标准注解，在创建Spring Bean的同时，还会自动完成依赖注入。  
+使用@ComponentScan开启组件自动扫描：  
+```java
+@Configuration
+@ComponentScan(basePackages = "com.acme")
+public class AppConfig  {
+}
+```
+等同于：  
+```xml
+<beans>
+    <context:component-scan base-package="com.acme"/>
+</beans>
+```
+#### 2.8.3 @Bean注解
+@Bean注解是一个方法级别的注解，等同于xml配置中的`<bean />`标签，用于配置Bean的定义。  
+##### 2.8.3.1 声明一个Bean
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public Foo createFoo() {
+        return new Foo();
+    }
+}
+```
+##### 2.8.3.2 配置Bean的声明周期回调方法
+```java
+@Configuration
+public class AppConfig {
+    @Bean(initMethod = "init")
+    public Foo foo() {
+        return new Foo();
+    }
+    @Bean(destroyMethod = "destroy")
+    public Bar bar() {
+        return new Bar();
+    }
+}
+```
+##### 2.8.3.3 结合@Scope注解配置Bean的作用域
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+	@Scope("prototype")
+    public Foo foo() {
+        return new Foo();
+    }
+}
+```
+##### 2.8.3.4 配置Bean的别名
+```java
+@Configuration
+public class AppConfig {
+    @Bean(name = { "dataSource", "subsystemA-dataSource", "subsystemB-dataSource" })
+    public DataSource dataSource() {
+        // instantiate, configure and return DataSource bean...
+    }
+}
+```
+#### 2.8.4 @Configuration注解
+@Configuration注解是一个类级别注解，是定义Bean的地方，等同于xml中的`<beans />`标签。在类的内部可以定义多个公有的被@Bean注解修饰的方法。此外，还可以定义内部bean的依赖。  
+##### 2.8.4.1 内部Bean的依赖注入
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public Bar bar() {
+        return new Bar();
+    }
+    @Bean
+    public Foo foo() {
+        // 此处并非直接方法调用，而是在已注册的Bean中查找Bar
+        return new Foo(bar());
+    }
+}
+```
+#### 2.8.5 Lookup方法注入
+Lookup方法注入上面使用Xml的配置中已经提到过，适用于单例Bean依赖prototype Bean的场景。  
+方法注入的核心是将对prototype的依赖放在方法中，Spring通过CGLIB创建的代理对象，在方法调用时，注入prototype依赖。  
+```java
+/**
+* prototype bean
+*/
+public class PrototypeBean {
+}
+
+/**
+* 单例bean
+*/
+public class SingletonBean {
+    /**
+     * 获取依赖的prototype bean方法
+     * 该方法可以为抽象方法，不必实现它，后面会重写该方法
+     * @return
+     */
+    public PrototypeBean getPrototypeBean() {
+        // 此处永不会被调用
+        System.out.println("call getPrototypeBean()");
+        return null;
+    }
+}
+
+@Configuration
+public class LookupMethodAnnoConfig {
+
+    @Bean
+    @Scope("prototype")
+    public PrototypeBean createPrototypeBean() {
+        System.out.println("create a PrototypeBean");
+        return new PrototypeBean();
+    }
+    
+    
+    @Bean
+    public SingletonBean createSingletonBean() {
+        return new SingletonBean() {
+            @Override
+            /**
+             * 重写对prototype bean依赖的方法
+             */
+            public PrototypeBean getPrototypeBean() {
+                // 此处并非直接方法调用，而是从IOC容器中获取Bean
+                System.out.println("get prototypeBean");
+                return createPrototypeBean();
+            }
+        };
+    }
+}
+```
+#### 2.8.6 混合使用Java和Xml配置
+Spring提供了@Import注解用于多个配置类之间的引用，功能上类似于`<import />`标签。此外，还支持Java和Xml两种配置方式的混合使用。  
+在xml中引入Java的配置可以使用`<context:annotation-config/>`搭配`<bean />`或`<context:component-scan/>`标签;在Java配置中引用Xml的配置使用@ImportResource注解。  
+```xml
+<beans>
+    <!-- 识别@Configuration注解 -->
+    <context:annotation-config/>
+	<!--注册配置Bean-->
+	<bean class="xxx.xxx.ConfigurationClass">
+</beans>
+<!--或者使用包扫描注册配置Bean-->
+<beans>
+    <!--自动扫描并注册配置Bean-->
+    <context:component-scan base-package="xxx.xxx"/>
+</beans>
+```
+```java
+@Configuration
+// 引入xml配置文件
+@ImportResource("xxx.xml")
+public class AppConfig {
+}
+```
+#### 2.8.7 环境抽象
+Spring集成了抽象的环境信息，主要包括profiles和properties两部分。profile是一组Bean定义的逻辑集合，适用于根据不同环境配置不同Beans的需要。properties主要是提供处理资源文件的能力。  
+
+##### 2.8.7.1 Profiles
+例如我们需要在不同的环境使用不用的数据源，那么就可以定义不同的Profiles来适应这种需求。  
+```java
+// 此处简单模拟数据源接口
+public interface DataSource {
+    /**
+     * 获取数据源名称
+     * @return
+     */
+    String getName();
+}
+// 不同环境下的实现
+public class DevDataSource implements DataSource {
+    @Override
+    public String getName() {
+        return "DevDS";
+    }
+}
+public class PrdDataSource implements DataSource {
+    @Override
+    public String getName() {
+        return "PrdDS";
+    }
+}
+public class EmbedDataSource implements DataSource {
+    @Override
+    public String getName() {
+        return "EmbedDS";
+    }
+}
+```
+使用Java方式的配置
+```java
+@Configuration
+/**
+* 配置默认环境
+*/
+@Profile("default")
+public class DefaultAnnoJavaConfig {
+    @Bean
+    public DataSource getEmbedDataSource() {
+        return new EmbedDataSource();
+    }
+}
+@Configuration
+@Import(DefaultAnnoJavaConfig.class)
+public class AnnoJavaConfig {
+    @Bean
+	/**
+	* dev 环境
+	*/
+    @Profile("dev")
+    public DataSource getDevDataSource() {
+        return new DevDataSource();
+    }
+    @Bean
+	/**
+	* prd 生产环境
+	*/
+    @Profile("prd")
+    public DataSource getProductionDataSource() {
+        return new PrdDataSource();
+    }
+}
+
+/**
+* 激活Profile
+*/
+    @Test
+    /**
+     * DEV 环境的数据源
+     */
+public void testDevDataSource() {
+	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+	// 激活dev环境
+	context.getEnvironment().setActiveProfiles("dev");
+	context.register(AnnoJavaConfig.class);
+	context.refresh();
+	DataSource ds = context.getBean(DataSource.class);
+	Assert.assertNotNull(ds);
+	Assert.assertTrue(ds instanceof DevDataSource);
+	Assert.assertEquals("DevDS", ds.getName());
+	context.close();
+}
+```
+使用XML方式的配置
+```xml
+<!-- 默认profile -->
+<beans profile="default">
+	<bean id="dataSource"
+		class="com.study.spring.core.ioc.javaconfig.environment.profile.EmbedDataSource" />
+</beans>
+<!-- dev 环境 -->
+<beans profile="dev">
+	<bean id="dataSource"
+		class="com.study.spring.core.ioc.javaconfig.environment.profile.DevDataSource" />
+</beans>
+<!-- prd 环境 -->
+<beans profile="prd">
+	<bean id="dataSource"
+		class="com.study.spring.core.ioc.javaconfig.environment.profile.PrdDataSource" />
+</beans>
+```
+```java
+/**
+* 激活Profile
+*/
+/**
+     * DEV 环境的数据源
+     */
+public void testDevDataSource() {
+	ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("beans-profile.xml");
+	context.getEnvironment().setActiveProfiles("dev");
+	context.refresh();
+	DataSource ds = context.getBean(DataSource.class);
+	Assert.assertNotNull(ds);
+	Assert.assertTrue(ds instanceof DevDataSource);
+	Assert.assertEquals("DevDS", ds.getName());
+	context.close();
+}
+```
+除了使用代码激活Profile外，还可以通过环境变量或ServletContext参数`spring.profiles.active`激活指定的Profile，默认的profile配置使用参数`spring.profiles.default`。  
+
+##### 2.8.7.2 PropertySource
+Spring针对key-value形式的资源使用统一的PropertySource接口来处理，主要用于获取JVM环境变量、系统变量以及自定义properties资源文件等。例如在StandardEnvironment中，资源属性的获取主要从JVM参数`System.getProperties()`和系统环境变量`System.getenv()`中获取，重复的键值，后置会覆盖前者。当然也可以使用`MutablePropertySources.addFirst()`方法配置优先级。  
+
+##### 2.8.7.2.1 @PropertySource注解
+@PropertySource注解提供了一种便利的、可声明式的方式配置Spring的Environment信息。  
+```java
+@Configuration
+@PropertySource("/spring.env.propertysource.properties")
+public class JavaAppConfig {
+    @Autowired
+    Environment env;
+    @Bean
+    public Foo getFoo() {
+        Foo foo = new Foo();
+        foo.setName(env.getProperty("env.propertysource.name"));
+        return foo;
+    }
+}
+```
+也可以和@Value注解配合使用，完成自动注入
+```java
+@Configuration
+@PropertySource("/spring.env.propertysource.properties")
+@ComponentScan("com.study.spring.core.ioc.javaconfig.environment.propertysource")
+public class JavaAppConfig {
+}
+
+@Component
+public class Bar {
+
+    @Value("${env.propertysource.address}")
+    private String address;
+}
+```
+等效的xml配置：  
+```xml
+<context:property-placeholder
+    location="classpath:spring.env.propertysource.properties" />
+
+<!-- 或者 -->
+<!-- 
+<bean
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations" value="classpath:spring.env.propertysource.properties" />
+</bean>
+-->
+```
+此外，任何`${xxx}`格式的变量不管在哪定义，只要在Environment对象中能找到对应的值，都会生效。例如：  
+```java
+@PropertySource("classpath:/com/${my.placeholder:default/path}/app.properties")
+```
+```xml
+<import resource="com/bank/service/${customer}-config.xml"/>
+```
+
+#### 2.8.8 ApplicationContext扩展
+##### 2.8.8.1 MessageSource
