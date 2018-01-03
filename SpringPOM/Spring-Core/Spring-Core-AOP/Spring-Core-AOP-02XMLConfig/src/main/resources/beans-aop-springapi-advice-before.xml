@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="myBeforeAdvice"
+		class="com.study.spring.core.aop.springapi.advice.before.MyMethodBeforeAdvice" />
+
+	<bean id="fooTarget" class="com.study.spring.core.aop.springapi.advice.before.FooService" />
+	<bean id="fooProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<!-- 配置增强Bean的名称 -->
+		<property name="interceptorNames" value="myBeforeAdvice" />
+		<!-- 设置目标类 -->
+		<property name="target" ref="fooTarget" />
+		<property name="proxyTargetClass" value="true" />
+		<property name="optimize" value="true" />
+	</bean>
+
+
+	<bean id="barTarget" class="com.study.spring.core.aop.springapi.advice.before.BarServiceImpl" />
+	<bean id="barProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<!-- 配置增强Bean的名称 -->
+		<property name="interceptorNames" value="myBeforeAdvice" />
+		<!-- 配置目标类 -->
+		<property name="target" ref="barTarget" />
+		<!-- 配置接口类，默认使用JDK动态代理 -->
+		<property name="proxyInterfaces" value="com.study.spring.core.aop.springapi.advice.before.IBarService" />
+		<!-- 强制使用cglib动态代理，下面配置二选一 -->
+		<property name="proxyTargetClass" value="true" />
+		<property name="optimize" value="true" />
+	</bean>
+</beans>

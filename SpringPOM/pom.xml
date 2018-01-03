@@ -83,18 +83,18 @@
 	</dependencies>
 	<build>
 		<finalName>Spring</finalName>
-		<plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${version.maven-compiler-plugin}</version>
-            <configuration>
-                <source>${version.jdk}</source>
-                <target>${version.jdk}</target>
-                <encoding>UTF-8</encoding>
-                <showWarnings>true</showWarnings>
-            </configuration>
-        </plugin>
 		<plugins>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <version>${version.maven-compiler-plugin}</version>
+	            <configuration>
+	                <source>${version.jdk}</source>
+	                <target>${version.jdk}</target>
+	                <encoding>UTF-8</encoding>
+	                <showWarnings>true</showWarnings>
+	            </configuration>
+	        </plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
