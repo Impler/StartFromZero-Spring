@@ -19,8 +19,6 @@
     <bean id="advisor" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
         <property name="beanNames" value="foo,bar" />
         <!-- 织入增强 -->
-        <property name="interceptorNames" ref="beforeAdvice" />
-        
+        <property name="interceptorNames" value="beforeAdvice" />
     </bean>
-    
 </beans>

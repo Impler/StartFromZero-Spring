@@ -10,7 +10,11 @@ public class AdvisorAutoProxyCreatorTest {
     @Test
     public void testBeanNameAutoProxyCreator() {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/beans-aop-springapi-advisor-autoproxycreator-beanname.xml");
-        
+        Foo foo = (Foo) context.getBean("foo");
+        String name = "jack";
+        // 该方法下的所有方法都被织入了增强
+        foo.sayHi(name);
+        foo.sayGoodBye(name);
         context.close();
     }
 

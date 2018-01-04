@@ -27,6 +27,6 @@
         </property>
     </bean>
     
-    <!--  -->
+    <!-- 自动识别容器中的Advisor，并将其织入到目标对象中，及为匹配的目标对象创建代理对象 -->
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 </beans>

@@ -172,6 +172,64 @@ DefaultIntroductionAdvisor拥有三个构造函数：
 - DefaultIntroductionAdvisor(DynamicIntroductionAdvice advice, Class clazz)：通过一个引介增强和一个指定的接口类创建引介切面，仅为目标对象新增clazz接口的实现。
 - DefaultIntroductionAdvisor(Advice advice, IntroductionInfo introductionInfo)：通过一个引介增强和一个IntroductionInfo创建一个引介切面，目标对象需要实现哪些接口，由introductionInfo对象的getInterfaces()表示。
 
+## 1.4 Spring AOP
+Spring AOP包括基于XML配置的AOP和基于@AspectJ注解的AOP。这两种方法虽然在配置切面时的表现方式不同，但底层都是采用动态代理技术。Spring可以集成AspectJ，由于Spring只支持方法级别的切点，所以仅对@AspectJ提供了有限的支持。  
+
+### 1.4.1 基于@AspectJ的AOP配置
+#### 1.4.1.1 @AspectJ语法基础
+Spring支持9个@AspectJ切点表达式函数，他们用不同的方式描述目标类的连接点，根据描述对象的不同，可以大致分为4种类型：  
+- 方法切点函数：通过描述目标类方法信息定义连接点
+- 方法入参切点函数：通过描述目标类方法入参的信息定义连接点
+- 目标类切点函数：通过描述目标类类型信息定义连接点
+- 代理类切点函数：通过描述目标类的代理类的信息定义连接点
+
+方法切点函数：  
+- execution()：入参：方法匹配模式串，表示满足某一匹配模式的所有目标类方法连接点。
+- @annotation()：入参：方法注解类名，表示标注了特定注解的目标方法连接点。
+
+方法入参切点函数：  
+- args()：入参：类名，通过判别目标类方法运行时入参对象的类型定义指定连接点。
+- @args()：入参：注解类名，通过判别目标类方法运行时入参对象的类是否标注特定注解来指定连接点。
+
+目标类切点函数：  
+- within()：入参：类名匹配串，表示特定域下的所有连接点。
+- target()：入参：类名，匹配指定类及其子类的所有连接点。
+- @within()：入参：注解类名，匹配标注了指定注解的类及其子类的所有连接点。
+- @target()：入参：注解类名，匹配标注了指定注解的类的所有连接点。
+
+代理类切点函数：  
+- this()：入参：类名，代理类按类型匹配于指定类，则被代理的目标类所有连接点匹配切点。
+
+函数入参中可以使用通配符，@AspectJ支持3种通配符：  
+- *：匹配任意字符，但只能匹配上下文中的一个元素
+- ..：匹配任意字符，可以匹配上下文中的多个元素，但在表示类时，必须和*联合使用，而在表示入参时则单独使用
+- +：表示按类型匹配指定类的所有类，必须跟在类名后面。包含自身及其扩展类。
+
+@Aspectj函数支持通配符的程度：  
+- 支持所有通配符：execution()、within()
+- 仅支持+通配符：args()、this()、target()
+- 不支持通配符：@args()、@within()、@target、@annotation()
+
+切点表达式由切点函数组成，切点函数之间还可以进行逻辑运算，组成复合切点，Spring支持以下切点运算符：  
+- && 与操作符，相当于切点的交集运算，等效于Spring提供的and
+- || 或操作符，相当于切点的并集运算，等效于Spring提供的or
+- ! 非操作符，相当于切点的反集运算，等效于Spring提供的not
+
+#### 1.4.1.2
+
+
+### 1.4.2 基于XML的AOP配置
+
+
+
+
+
+
+
+
+
+
+
 ## 1.3 Spring切点表达式
 ## 1.3 基于XML配置的AOP
 使用XML配置AOP需要将AOP相关的配置放在`<aop:config></aop:config>`标签内，包括切点、增强、切面等。可以配置多个`<aop:config />`。  
@@ -189,6 +247,3 @@ DefaultIntroductionAdvisor拥有三个构造函数：
 
 ## 1.3.3 配置增强
 
-
-
-## 1.4 基于@AspectJ配置的AOP
