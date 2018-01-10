@@ -176,7 +176,54 @@ DefaultIntroductionAdvisor拥有三个构造函数：
 Spring AOP包括基于XML配置的AOP和基于@AspectJ注解的AOP。这两种方法虽然在配置切面时的表现方式不同，但底层都是采用动态代理技术。Spring可以集成AspectJ，由于Spring只支持方法级别的切点，所以仅对@AspectJ提供了有限的支持。  
 
 ### 1.4.1 基于@AspectJ的AOP配置
-#### 1.4.1.1 @AspectJ语法基础
+#### 1.4.1.1 启用AspectJ
+Spring中可以通过注解或xml配置启用AspectJ：  
+使用@EnableAspectJAutoProxy配合@Configuration注解启用@AspectJ支持
+```java
+@Configuration
+@EnableAspectJAutoProxy
+public class AppConfig {
+}
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 启用@AspectJ支持 -->
+    <aop:aspectj-autoproxy />
+</beans>
+```
+上述两种方式，内部均使用AnnotationAwareAspectJAutoProxyCreator Bean自动将@AspectJ注解切面类注入到目标对象中去。  
+
+#### 1.4.1.2 定义切面
+使用@Aspect标识的类代表一个切面，该类可以是一个POJO，可以在其中定义切点、增强等内容。  
+```java
+@Aspect
+public class MyAspect {
+}
+```
+@Aspect注解仅仅是标识该类为一个切面类，如果需要将该类注册为Spring Bean，还需要额外配合@Component注解或XML的配置。  
+
+#### 1.4.1.3 定义命名切点
+使用@Pointcut注解标识在方法上用于定义包含名称的切点。 `@Pointcut(value="切点表达式", argNames="指定注解标注的增强方法的参数名")`  
+```java
+    @Pointcut("execution(* ..*.*service(..))")
+    private void showCurrentTime() {}
+    
+    @Pointcut("execution(* ..*.*Dao.*()")
+    public void transaction() {}
+    // 引用命名切点
+    @Pointcut("showCurrentTime()")
+    public void showlog() {}
+```
+该方法的方法名将用作切点的名称，方法的访问修饰符用来控制切点的可引用性，这种引用性与类方法的可访问性一致，例如private切点只能在同一个类中引用。命名切点仅会用到方法名和访问修饰符，所以习惯上该方法的返回值为void，方法体为空。  
+
+#### 1.4.1.4 @AspectJ语法基础
 Spring支持9个@AspectJ切点表达式函数，他们用不同的方式描述目标类的连接点，根据描述对象的不同，可以大致分为4种类型：  
 - 方法切点函数：通过描述目标类方法信息定义连接点
 - 方法入参切点函数：通过描述目标类方法入参的信息定义连接点
@@ -185,11 +232,27 @@ Spring支持9个@AspectJ切点表达式函数，他们用不同的方式描述�
 
 方法切点函数：  
 - execution()：入参：方法匹配模式串，表示满足某一匹配模式的所有目标类方法连接点。
+    - execution()是最常用的切点函数，其语法为：  `execution(<修饰符模式>? <返回类型模式> <方法名模式>(<参数模式>) <异常模式>?)`  
+    除了返回类型模式、方法名模式和参数模式外，其他项都是可选项的。示例：  
+        - execution(public * *(..))：匹配目标类的所有public方法
+        - execution(* *To(..))：匹配目标类的任意方法名以To结尾的方法
+        - execution(* com.foo.bar.Foo.*(..))：匹配Foo接口中的所有方法
+        - execution(* com.foo.bar.Foo+.*(..))：匹配Foo接口及其所有实现类的方法，不但包括接口方法，还包括扩展类自定义方法
+        - execution(* com.foo.*(..))：匹配com.foo包下所有类的所有方法
+        - execution(* com.foo..*(..))：匹配com.foo包及其子包下的所有类的所有方法
+        - execution(* com..*.*Dao.find*(..))：匹配包名前缀为com的任何包下类名后缀为Dao的任意以find开头的方法
+        - execution(* joke(java.util.List,int))：匹配joke(java.util.List,int)方法，且参数类型和顺序必须完全一致
+        - execution(* joke(String,*))：匹配第一个入参为String类型，第二个入参为任意类型的joke方法
+        - execution(* joke(String,..))：匹配第一个入参为String类型，后面可以以任意个入参且类型不限
+        - execution(* joke(Object+))：匹配拥有一个入参，且入参类型为Object及其子类的joke方法
+
 - @annotation()：入参：方法注解类名，表示标注了特定注解的目标方法连接点。
 
 方法入参切点函数：  
 - args()：入参：类名，通过判别目标类方法运行时入参对象的类型定义指定连接点。
+    - 例如：args(com.foo.Foo)匹配运行时入参为Foo及其子类的方法。相较于execution(*(com.foo.Foo))而言，后者只能匹配方法签名
 - @args()：入参：注解类名，通过判别目标类方法运行时入参对象的类是否标注特定注解来指定连接点。
+    - @args(com.anno.A)：如果运行时入参是标识了@A的类及其子类，匹配切点。如果运行时入参是标识了@A的类的祖先类，则无法匹配切点。
 
 目标类切点函数：  
 - within()：入参：类名匹配串，表示特定域下的所有连接点。
@@ -202,7 +265,7 @@ Spring支持9个@AspectJ切点表达式函数，他们用不同的方式描述�
 
 函数入参中可以使用通配符，@AspectJ支持3种通配符：  
 - *：匹配任意字符，但只能匹配上下文中的一个元素
-- ..：匹配任意字符，可以匹配上下文中的多个元素，但在表示类时，必须和*联合使用，而在表示入参时则单独使用
+- .：匹配任意字符，可以匹配上下文中的多个元素，但在表示类时，必须和*联合使用，而在表示入参时则单独使用
 - +：表示按类型匹配指定类的所有类，必须跟在类名后面。包含自身及其扩展类。
 
 @Aspectj函数支持通配符的程度：  
@@ -215,35 +278,222 @@ Spring支持9个@AspectJ切点表达式函数，他们用不同的方式描述�
 - || 或操作符，相当于切点的并集运算，等效于Spring提供的or
 - ! 非操作符，相当于切点的反集运算，等效于Spring提供的not
 
-#### 1.4.1.2
+#### 1.4.1.5 定义增强
+@AspectJ为各种增强类型提供了不同的注解类。这些注解类可以用来定义切点信息、绑定连接点参数等。  
+- @Before：前置增强，相当于BeforeAdvice的功能。
+    - value：切点表达式
+    - argNames：指定该注解标注的增强方法的参数名称
+- @AfterReturning：后置增强，相当于AfterReturningAdvice
+    - value：同上
+    - argNames：同上
+    - pointcut：同value，显式指定的话会覆盖value的值
+    - returning：将目标方法的返回值绑定到增强方法入参，无返回值的目标方法绑定null
+- @Around：环绕增强，相当于MethodInterceptor。增强方法的第一个入参必须为ProceedingJoinPoint类型，在增强方法体中手动调用ProceedingJoinPoint对象的proceed()方法
+    - value：同上
+    - argNames：同上
+- @AfterThrowing：异常抛出增强，相当于ThrowsAdvice
+    - value：同上
+    - argNames：同上
+    - pointcut：同上
+    - throwing：将抛出的异常绑定到增强方法中
+- @After：final增强，不管目标方法正常返回还是抛出异常，该增强都会得到执行。该增强没有对应的增强接口。可以看做AfterReturningAdvice和ThrowsAdvice的结合物
+    - value：同上
+    - argNames：同上
+- @DeclareParents：引介增强，相当于IntroductionInterceptor
+    - value：同上，表示在哪个目标类上添加引介增强
+    - defaultImpl：默认的接口实现类
 
+上述增强注解中可以直接定义切点，这种切点声明方式称为匿名切点，匿名切点只能在声明处使用，如果希望在其他地方重用切点，只能使用@Pointcut定义命名切点。  
 
-### 1.4.2 基于XML的AOP配置
+#### 1.4.1.6 增强织入的顺序
+增强在连接点上的织入顺序如下：  
+- 如果增强在同一个切面类中定义，在按照在类中定义的顺序织入
+- 如果增强在不同切面类中定义，且这些切面类都实现了org.springframework.core.Ordered接口，则序号小的类先织入
+- 如果增强在不同切面类中定义，且这些切面类没有实现org.springframework.core.Ordered接口，那么织入顺序是不确定的
 
+#### 1.4.1.7 增强方法入参
+AspectJ使用 org.aspectj.lang.JoinPoint接口表示目标类连接点对象，如果是环绕增强，则使用org.aspectj.lang.ProceedingJoinPoint表示连接点对象。  
+![JoinPoint.png](resources/images/aop/JoinPoint.png)
 
+##### 1.4.1.7.1 绑定连接点方法入参
+args()、this()、target()、@args()、@within()、@target()和@annotation()这7个函数除了可以指定类名外，还可以指定参数名，将目标对象连接点上方法入参绑定到增强的方法中：  
+- args()：用于绑定连接点方法的入参
+- annotation()：用于绑定连接点方法的注解对象
+- @args()：用于绑定连接点方法入参的注解
+当上述函数入参为参数名时，共包括两方面的信息：
+    - 连接点匹配规则信息
+    - 连接点方法入参和增强方法入参的绑定信息
 
+切点匹配和参数绑定的过程是args()根据参数名称在增强方法中查到名称相同的入参并获取对应的类型，然后就知道匹配的连接点方法的入参类型。其次连接点方法入参类型所在的位置则有参数名在函数中声明的位置决定。  
+```java
+/**
+* 切面类
+*/
+@Aspect
+public class ParameterBindingAspect {
+    @Before("target(com.foo.Foo) && args(name, age)")
+    public void bindingParams(String name, int age) {
+        // 增强逻辑
+    }
+}
 
+/**
+* 目标类
+*/
+package com.foo;
+public class Foo{
+    public void addStudent(String stuName, int stuAge){
+        // 目标方法
+    }
+}
+```
 
+##### 1.4.1.7.2 绑定代理对象
+this()和target()函数可绑定被代理对象示例，在通过类实例名绑定对象时，类型是由增强方法中的同名入参的类型间接决定。  
+```java
+@Aspect
+public class ParameterBindingAspect {
+    /**
+     * 绑定代理对象
+     */
+    @Before("this(foo)")
+    public void bindProxyObject(Foo foo) {
+        // 增强逻辑
+    } 
+}
+```
+##### 1.4.1.7.3 绑定类注解对象
+@within和@target()函数可以将目标类的注解对象绑定到增强方法中。  
+```java
+@Aspect
+public class ParameterBindingAspect {
+    /**
+     * 绑定类注解对象
+     * @param controller
+     */
+    @Before("@within(controller)")
+    public void bindAnnotation(org.springframework.stereotype.Controller controller) {
+        // 增强逻辑
+    }
+}
 
+```
+##### 1.4.1.7.4 绑定返回值
+在后置增强中，可以通过returning绑定连接点方法的返回值。  
+```java
+@Aspect
+public class ParameterBindingAspect {
+    /**
+     * 绑定目标方法返回值
+     * @param returnVal
+     */
+    @AfterReturning(value="execution(com.foo.Foo)", returning="returnVal")
+    public void bindReturnValue(Object returnVal) {
+        // 逻辑增强
+    }
+}
+```
+##### 1.4.1.7.5 绑定抛出的异常
+在异常抛出增强中使用throwing绑定异常对象。  
+```java
+@Aspect
+public class ParameterBindingAspect {
+    /**
+     * 绑定异常对象
+     * @param exp
+     */
+    @AfterThrowing(value="execution(com.foo.Foo)", throwing="exp")
+    public void bindThrowException(Throwable exp) {
+        // 增强逻辑
+    }
+}
+```
 
+### 1.4.2 基于Schema的AOP配置
+基于Schema配置的AOP，首先需要引入AOP Schema:  
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+```
+切点、切面、增强等元素配置全部放在`<aop:config></aop:config>`元素中。其proxy-target-class属性用来配置使用的代理技术，默认为false，即使用JDK动态代理，true为使用CGLIB动态代理。可以配置多个`<aop:config />`元素。`<aop:config />`元素下可以按顺序配置`<aop:pointcut />`、`<aop:aspect />`和`<aop:advisor />`元素。  
 
-
-
-
-## 1.3 Spring切点表达式
-## 1.3 基于XML配置的AOP
-使用XML配置AOP需要将AOP相关的配置放在`<aop:config></aop:config>`标签内，包括切点、增强、切面等。可以配置多个`<aop:config />`。  
-## 1.3.1 配置切面
-使用`<aop:aspect />`标签配置切面。  
+#### 1.4.2.1 配置切点
+使用`<aop:pointcut id="" expression="" />`元素配置切点，类似于@AspectJ中的命名切点和匿名切点，`<aop:pointcut />`直接放在`<aop:config />`元素下标识命名切点，可被其他`<aop:aspect />`内的增强引用；放在`<aop:aspect />`下的切点，只能在当前`<aop:aspect />`下使用。此外还可以在增强中隐式定义切点。  
 ```xml
 <aop:config>
-    <aop:aspect id="myAspect" ref="aBean">
-        ...
+    <!-- 切面外部定义的切点可被多个切面引用 -->
+    <aop:pointcut id="pointCut1" expression="execution(* com.foo.*.*(..))" />
+    <!--定义切面 -->
+    <aop:aspect id="aspect1" ref="aspectBean1">
+        <!-- 切面内部定义切点，只能在当前切面内使用 -->
+        <aop:pointcut id="pointCut2" expression="execution(* com.foo.*.*(..))" />
+        <!-- 引用外部命名切点 -->
+        <aop:before method="beforeMethod1" pointcut-ref="pointCut1" />
+        <!-- 引用切面内部定义的切点 -->
+        <aop:before method="beforeMethod2" pointcut-ref="pointCut2" />
+        <!-- 在增强中使用隐式切点定义 -->
+        <aop:before method="beforeMethod3" pointcut="execution(* com.foo.*.*(..))"/>
     </aop:aspect>
 </aop:config>
 ```
-## 1.3.2 配置切点
-使用`<aop:pointcut />`标签配置切点。可以直接放在`<aop:config />`下，可供所有切面使用，也可以放在`<aop:aspect />`元素下，只为该切面服务。  
 
-## 1.3.3 配置增强
+#### 1.4.2.2 配置切面
+在`<aop:config />`元素下使用`<aop:aspect />`配置切面，切面类为包含增强逻辑的POJO。  
+```java
+/**
+* POJO切面类
+*/
+public class MyAspect {
+    /**
+    * 用作增强方法的POJO
+    */
+    public void beforeMethod1() {
+        System.out.println("call>>MyAspect.beforeMethod1()");
+    }
+}
+```
+```xml
+<!-- 配置切面类Bean-->
+<bean id="aspectBean" class="MyAspect" />
+<!--在切面定义中引用切面Bean-->
+<aop:aspect id="aspect1" ref="aspectBean1">
+    <!--使用切面类中的增强方法-->
+    <aop:before method="beforeMethod1" pointcut="execution(* com.foo.*.*(..))"/>
+</aop:aspect>
+```
+#### 1.4.2.3 配置增强
+前置增强：  
+```xml
+<aop:before method="doAccessCheck" pointcut-ref="pointCut" />
+```
+后置增强：  
+```xml
+<aop:after-returning method="doAccessCheck" pointcut-ref="pointCut" returning="retVal" />
+```
+异常抛出增强：  
+```xml
+<aop:after-throwing method="doRecoveryActions" pointcut-ref="pointCut" throwing="exp" />
+```
+Final增强：  
+```xml
+<aop:after method="doReleaseLock" pointcut-ref="pointCut" />
+```
+环绕增强：  
+```xml
+<aop:around method="doBasicProfiling" pointcut-ref="pointCut" />
+引介增强：  
+```xml
+<aop:declare-parents implement-interface="要新增的接口" default-impl="接口的默认实现" types-matching="待实施引介增强的类型"/>
+```
 
+#### 1.4.2.4 配置Advisor
+Advisor是Spring切面概念的对应物，它是切点和增强的复合体，只不过仅包含一个切点和一个增强，在AspectJ中没有对应的等价物。使用`<aop:advisor />`配置：  
+```xml
+<aop:config>
+    <aop:advisor advice-ref="aspectBean" pointcut-ref="pointcut" />
+</aop:config>
+```
