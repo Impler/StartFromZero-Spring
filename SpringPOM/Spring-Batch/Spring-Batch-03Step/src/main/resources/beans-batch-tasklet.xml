@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/batch 
+        http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+
+	<batch:job id="helloJob">
+		<batch:step id="helloStep">
+			<batch:tasklet ref="hello" >
+			 
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+	<bean id="hello" class="com.study.spring.batch.step.HelloStep"></bean>
+
+</beans>

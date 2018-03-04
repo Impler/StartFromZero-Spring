@@ -8,7 +8,7 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>Spring-Batch</artifactId>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<name>Spring-Batch</name>
 	<url>http://maven.apache.org</url>
 
@@ -22,11 +22,33 @@
 			<artifactId>spring-batch-core</artifactId>
 			<version>${version.spring-batch}</version>
 			<exclusions>
-			    <exclusion>
-			        <groupId>org.springframework</groupId>
-			        <artifactId>*</artifactId>
-			    </exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${version.spring}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
 	</dependencies>
+	<modules>
+		<module>Spring-Batch-01Hello-World</module>
+		<module>Spring-Batch-02Job</module>
+		<module>Spring-Batch-03Step</module>
+		<module>Spring-Batch-09Demo-Partition</module>
+	</modules>
 </project>
