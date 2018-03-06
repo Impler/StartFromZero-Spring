@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/task
+                    http://www.springframework.org/schema/task/spring-task.xsd
+                    http://www.springframework.org/schema/batch
+                    http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<!-- 定义作业调度器 -->
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<!-- 定义作业仓库 -->
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+
+	<!-- 批量处理用户数据任务 -->
+	<batch:job id="userJob" restartable="true">
+		<batch:step id="dataPartitioner">
+			<batch:partition partitioner="masterDBIdPartitioner"
+				handler="partitionHandler" />
+		</batch:step>
+	</batch:job>
+
+	<!-- 数据分片 -->
+	<bean id="masterDBIdPartitioner"
+		class="com.study.spring.batch.remote.partition.framework.partition.DBIdPartitioner">
+		<property name="userDao" ref="userDao" />
+	</bean>
+
+	<!-- 发送分片信息 -->
+	<bean id="partitionHandler"
+		class="org.springframework.batch.integration.partition.MessageChannelPartitionHandler">
+		<!-- 指定远程Step名称 -->
+		<property name="stepName" value="remoteStep" />
+		<property name="gridSize" value="3" />
+		<property name="replyChannel" ref="AggregatedChannel" />
+		<property name="messagingOperations">
+			<bean class="org.springframework.integration.core.MessagingTemplate">
+				<property name="defaultChannel" ref="sendDataPartitionsChannel" />
+				<property name="receiveTimeout" value="60000000" />
+			</bean>
+		</property>
+	</bean>
+</beans>

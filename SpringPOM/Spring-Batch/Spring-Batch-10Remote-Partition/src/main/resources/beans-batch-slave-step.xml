@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/task
+                    http://www.springframework.org/schema/task/spring-task.xsd
+                    http://www.springframework.org/schema/batch
+                    http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<bean id="jobExplorer"
+		class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 定义作业仓库 -->
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+
+	<bean id="stepLocator"
+		class="org.springframework.batch.integration.partition.BeanFactoryStepLocator" />
+
+	<bean id="stepExecutionRequestHandler"
+		class="org.springframework.batch.integration.partition.StepExecutionRequestHandler">
+		<property name="jobExplorer" ref="jobExplorer" />
+		<property name="stepLocator" ref="stepLocator" />
+	</bean>
+
+	<task:executor id="slaverTaskExecutor" pool-size="20" />
+	<!-- 远程step -->
+	<batch:step id="remoteStep">
+		<partition step="userChunkStep" partitioner="slaveDBIdPartitioner">
+			<handler grid-size="1" task-executor="slaverTaskExecutor" />
+		</partition>
+	</batch:step>
+
+	<!-- 数据分片 -->
+	<bean id="slaveDBIdPartitioner"
+		class="com.study.spring.batch.remote.partition.framework.partition.DBIdPartitioner">
+		<property name="userDao" ref="userDao" />
+	</bean>
+	
+	<batch:step id="userChunkStep">
+		<batch:tasklet>
+			<batch:chunk reader="pagingReader" processor="processor"
+				writer="writer" commit-interval="10" />
+		</batch:tasklet>
+	</batch:step>
+
+	<bean id="pagingReader"
+		class="org.springframework.batch.item.database.JdbcPagingItemReader"
+		scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="pageSize" value="10" />
+
+		<property name="queryProvider">
+			<bean
+				class="org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean"
+				scope="step">
+				<property name="dataSource" ref="dataSource" />
+				<property name="selectClause" value="select id, name, cert_no " />
+				<property name="fromClause" value="from t_user_validate" />
+				<property name="whereClause"
+					value="where id between #{stepExecutionContext[_minRecord]} and #{stepExecutionContext[_maxRecord]}" />
+				<property name="sortKey" value="id" />
+			</bean>
+		</property>
+
+		<property name="rowMapper">
+			<bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+				<property name="mappedClass" value="com.study.spring.batch.domain.User" />
+			</bean>
+		</property>
+	</bean>
+
+
+	<bean id="processor"
+		class="com.study.spring.batch.remote.partition.framework.processor.UserProcessor" />
+
+	<bean id="writer"
+		class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql"
+			value="update t_user_validate t set t.deal_flag = 1, t.result_code = ?, t.result_content = ? where id = ?" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="itemPreparedStatementSetter">
+			<bean
+				class="com.study.spring.batch.remote.partition.framework.write.UserItemPreparedStatementSetter" />
+		</property>
+	</bean>
+
+</beans>

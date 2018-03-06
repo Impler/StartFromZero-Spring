@@ -50,5 +50,6 @@
 		<module>Spring-Batch-02Job</module>
 		<module>Spring-Batch-03Step</module>
 		<module>Spring-Batch-09Demo-Partition</module>
+		<module>Spring-Batch-10Remote-Partition</module>
 	</modules>
 </project>
