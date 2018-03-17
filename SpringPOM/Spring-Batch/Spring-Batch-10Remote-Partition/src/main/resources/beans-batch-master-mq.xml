@@ -43,8 +43,8 @@
 		mapped-reply-headers="correlationId, sequenceNumber, sequenceSize, STANDARD_REQUEST_HEADERS" />
 
 
-	<int:aggregator ref="partitionHandler"
+	<!-- <int:aggregator ref="partitionHandler"
 		send-partial-result-on-expiry="true" send-timeout="60000000"
-		input-channel="slaveCallbackChannel" />
+		input-channel="slaveCallbackChannel"output-channel="AggregatedChannel" /> -->
 
 </beans>

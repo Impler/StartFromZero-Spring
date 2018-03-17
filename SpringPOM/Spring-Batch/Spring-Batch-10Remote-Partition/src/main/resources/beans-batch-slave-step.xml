@@ -32,9 +32,13 @@
 	<task:executor id="slaverTaskExecutor" pool-size="20" />
 	<!-- 远程step -->
 	<batch:step id="remoteStep">
-		<partition step="userChunkStep" partitioner="slaveDBIdPartitioner">
+		<!-- <partition step="userChunkStep" partitioner="slaveDBIdPartitioner">
 			<handler grid-size="1" task-executor="slaverTaskExecutor" />
-		</partition>
+		</partition> -->
+		<batch:tasklet>
+			<batch:chunk reader="pagingReader" processor="processor"
+				writer="writer" commit-interval="10" />
+		</batch:tasklet>
 	</batch:step>
 
 	<!-- 数据分片 -->
@@ -71,7 +75,7 @@
 
 		<property name="rowMapper">
 			<bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
-				<property name="mappedClass" value="com.study.spring.batch.domain.User" />
+				<property name="mappedClass" value="com.study.spring.batch.remote.partition.domain.User" />
 			</bean>
 		</property>
 	</bean>

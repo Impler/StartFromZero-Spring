@@ -29,9 +29,9 @@ public class UserProcessor implements ItemProcessor<User, User> {
         item.setResultContent(resultContent);
         log.info(item.toString());
         
-        if(r.nextInt(10) % 7 == 0) {
+        /*if(r.nextInt(10) % 7 == 0) {
             throw new Exception("test exp");
-        }
+        }*/
         Thread.sleep(100);
         return item;
     }
