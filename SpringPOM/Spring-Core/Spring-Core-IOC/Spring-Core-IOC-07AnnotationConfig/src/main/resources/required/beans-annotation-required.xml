@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    
+    <bean id="bar" class="com.study.spring.core.ioc.anno_config._required.Bar" />
+    <!--  为了方便测试，这里使用延迟初始化 -->
+    <bean id="foo" class="com.study.spring.core.ioc.anno_config._required.Foo" lazy-init="true">
+        <property name="bar" ref="bar" />
+    </bean>
+    
+    
+    <!-- 将会抛出 BeanCreationException异常-->
+    <bean id="fooNotRequired" class="com.study.spring.core.ioc.anno_config._required.Foo" lazy-init="true" />
+</beans>

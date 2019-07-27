@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.study</groupId>
+	<artifactId>Spring</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- 防止执行maven test 控制台log中文乱码 -->
+		<argLine>-Dfile.encoding=UTF-8</argLine>
+		<version.jdk>1.8</version.jdk>
+		<version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
+		<version.tomcat7-maven-plugin>2.1</version.tomcat7-maven-plugin>
+		<version.spring>4.3.2.RELEASE</version.spring>
+		<version.cglib>3.1</version.cglib>
+		<version.junit>4.12</version.junit>
+		<version.slf4j>1.6.6</version.slf4j>
+		<version.slf4j-log4j>1.6.6</version.slf4j-log4j>
+		<version.log4j>1.2.17</version.log4j>
+		<version.mysql>5.1.38</version.mysql>
+		<version.validation-api>1.1.0.Final</version.validation-api>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${version.junit}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- SERVLET API -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- SERVLET API -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${version.mysql}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${version.validation-api}</version>
+		</dependency>
+		<!-- cglib based s -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${version.cglib}</version>
+		</dependency>
+		<!-- cglib based e -->
+		<!-- log s -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${version.slf4j-log4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${version.log4j}</version>
+		</dependency>
+		<!-- log e -->
+	</dependencies>
+	<build>
+		<finalName>Spring</finalName>
+		<plugins>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <version>${version.maven-compiler-plugin}</version>
+	            <configuration>
+	                <source>${version.jdk}</source>
+	                <target>${version.jdk}</target>
+	                <encoding>UTF-8</encoding>
+	                <showWarnings>true</showWarnings>
+	            </configuration>
+	        </plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>${version.tomcat7-maven-plugin}</version>
+				<configuration>
+					<port>8080</port>
+					<!-- <url>http://localhost:9090/manager/html</url> -->
+					<path>/Spring</path>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<modules>
+		<module>Spring-Core</module>
+		<module>Spring-Integration</module>
+		<module>Spring-Batch</module>
+		<module>Spring-MVC</module>
+	</modules>
+</project>

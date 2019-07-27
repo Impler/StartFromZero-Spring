@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.study</groupId>
+		<artifactId>Spring-Batch</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>Spring-Batch-09Demo-Partition</artifactId>
+	<name>Spring-Batch-09Demo-Partition</name>
+
+	<properties>
+		<version.mybatis>3.4.1</version.mybatis>
+		<version.mybatis-spring>1.3.0</version.mybatis-spring>
+	</properties>
+	
+	<dependencies>
+		<!-- Mybatis dependencies s -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${version.mybatis}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${version.mybatis-spring}</version>
+		</dependency>
+		<!-- <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc5</artifactId>
+            <version>11.1.0.6.0</version>
+        </dependency> -->
+	</dependencies>
+</project>

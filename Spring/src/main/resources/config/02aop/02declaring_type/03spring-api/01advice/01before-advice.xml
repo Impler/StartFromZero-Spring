@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation=
+		"http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- debugInterceptor Logs full invocation details on method entry and method exit -->
+	<bean id="debugInterceptor" class="org.springframework.aop.interceptor.DebugInterceptor"/>
+	
+	<!-- before advice start -->
+	<!-- 
+		前置增强仅在目标方法执行前执行，不会影响拦截链以及方法的返回值。不过假设增强中有异常抛出，如果该异常是目标方法声明的异常，则该异常归并到目标方法中，否则作为运行时异常抛出
+	 -->
+	<bean id="greetingBeforeAdvice" class="com.study.spring._05aop._01declaring_type._03spring_api._01advice._01before.GreetingBeforeAdvice" />
+	<bean id="target" class="com.study.spring._05aop._01declaring_type._03spring_api.WaiterA" />
+	<bean id="beforeWaiter" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="com.study.spring._05aop._01declaring_type._03spring_api.Waiter"/>
+		<property name="interceptorNames" value="greetingBeforeAdvice"/>
+		<property name="target" ref="target"/>
+	</bean>
+	<!-- before advice end -->
+</beans>

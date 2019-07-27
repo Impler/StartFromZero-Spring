@@ -8,9 +8,10 @@
 	<name>Spring Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<version.spring>4.1.7.RELEASE</version.spring>
 		<!-- 防止执行maven test 控制台log中文乱码 -->
 		<argLine>-Dfile.encoding=UTF-8</argLine>
+		<version.spring>4.1.7.RELEASE</version.spring>
+		<version.cglib>3.1</version.cglib>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -77,20 +78,27 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
+		<!-- cglib based s -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${version.cglib}</version>
+		</dependency>
+		<!-- cglib based e -->
 	</dependencies>
 	<build>
 		<finalName>Spring</finalName>
 		<plugins>
 			<plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                	<port>8080</port>
-                    <!-- <url>http://localhost:9090/manager/html</url> -->
-                    <path>/Spring</path>
-                </configuration>
-            </plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<port>8080</port>
+					<!-- <url>http://localhost:9090/manager/html</url> -->
+					<path>/Spring</path>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

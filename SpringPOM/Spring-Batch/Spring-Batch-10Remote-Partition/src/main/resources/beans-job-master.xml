@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:cloud="http://schema.cloudfoundry.org/spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/integration
+                    http://www.springframework.org/schema/integration/spring-integration.xsd
+                    http://www.springframework.org/schema/task
+                    http://www.springframework.org/schema/task/spring-task.xsd
+                    http://www.springframework.org/schema/integration/amqp
+                    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+                    http://www.springframework.org/schema/rabbit
+                    http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+                    http://schema.cloudfoundry.org/spring
+                    http://schema.cloudfoundry.org/spring/cloudfoundry-spring.xsd
+                    http://www.springframework.org/schema/batch
+                    http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+  <!-- 定义作业调度器 -->
+        <bean id="jobLauncher"
+            class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+            <property name="jobRepository" ref="jobRepository" />
+        </bean>
+    
+        <!-- 定义作业仓库 -->
+        <bean id="jobRepository"
+            class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="transactionManager" ref="transactionManager" />
+            <property name="isolationLevelForCreate" value="ISOLATION_READ_COMMITTED" />
+        </bean>
+	    <!-- The Spring Batch Vulnerability Scanner Job definition and referenced beans -->
+
+        <job id="vulnScannerJob" xmlns="http://www.springframework.org/schema/batch">
+            <!-- <step id="loadPorts" next="masterScanPorts">
+                <tasklet>
+                    <bean id="loadPortsTasklet" class="com.study.spring.batch.remotepartition.tasklet.LoadPortsTasklet" scope="step">
+                        <property name="numberOfPorts" value="1024"/>
+                        <property name="ipAddress" value="#{jobParameters[ipAddress]}"/>
+                        <property name="dataSource" ref="dataSource"/>
+                    </bean>
+                </tasklet>
+            </step> -->
+
+            <step id="masterScanPorts">
+                <partition partitioner="partitioner" handler="partitionHandler"/>
+            </step>
+
+            <!-- <step id="generateResults">
+                <tasklet>
+                    <chunk reader="exportItemReader" writer="xmlOutputWriter" commit-interval="10"/>
+                </tasklet>
+            </step> -->
+        </job>
+
+        <bean id="partitioner" class="com.study.spring.batch.remotepartition.partition.ColumnRangePartitioner">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="column" value="ID"/>
+            <property name="table" value="TARGET"/>
+            <property name="whereClause" value="CONNECTED IS NULL"/>
+        </bean>
+
+        <bean id="partitionHandler" class="org.springframework.batch.integration.partition.MessageChannelPartitionHandler">
+            <property name="stepName" value="scanPorts"/>
+            <property name="gridSize" value="3"/>
+<!--             <property name="replyChannel" ref="inboundStaging" />
+ -->            <property name="messagingOperations">
+                <bean class="org.springframework.integration.core.MessagingTemplate">
+                    <property name="defaultChannel" ref="outboundRequests"/>
+                    <property name="receiveTimeout" value="60000000"/>
+                </bean>
+            </property>
+        </bean>
+
+        <!-- <bean id="exportItemReader" class="org.springframework.batch.item.database.JdbcPagingItemReader" scope="step">
+            <property name="dataSource" ref="dataSource" />
+            <property name="queryProvider">
+                <bean
+                    class="org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean">
+                    <property name="dataSource" ref="dataSource" />
+                    <property name="selectClause" value="ID, IP, PORT, CONNECTED, BANNER" />
+                    <property name="fromClause" value="FROM TARGET" />
+                    <property name="whereClause" value="CONNECTED IS TRUE AND IP = :ip"/>
+                    <property name="sortKey" value="PORT" />
+                </bean>
+            </property>
+            <property name="pageSize" value="10" />
+            <property name="parameterValues">
+                <map>
+                    <entry key="ip" value="#{jobParameters[ipAddress]}"/>
+                </map>
+            </property>
+            <property name="rowMapper">
+                <bean class="com.study.spring.batch.remotepartition.domain.TargetRowMapper"/>
+            </property>
+        </bean>
+
+        <bean id="outputFile" class="org.springframework.core.io.FileSystemResource" scope="step">
+            <constructor-arg value="#{jobParameters[outputFile]}"/>
+        </bean>
+
+        <bean id="xmlOutputWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
+            <property name="resource" ref="outputFile" />
+            <property name="marshaller" ref="targetMashaller" />
+            <property name="rootTagName" value="openTargets" />
+        </bean>
+
+        <bean id="targetMashaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+            <property name="aliases">
+                <map>
+                    <entry key="target" value="com.study.spring.batch.remotepartition.domain.Target" />
+                </map>
+            </property>
+        </bean> -->
+
+        <!-- Spring Integration components used for remote partitioning -->
+        <task:executor id="taskExecutor" pool-size="20"/>
+        <int:channel id="outboundRequests">
+            <int:dispatcher task-executor="taskExecutor"/>
+        </int:channel>
+        
+        <int:channel id="inboundStaging"/>
+
+        <int-amqp:outbound-gateway request-channel="outboundRequests"
+                                   reply-channel="inboundStaging"
+                                   amqp-template="amqpTemplate"
+                                   mapped-request-headers="correlationId, sequenceNumber, sequenceSize, STANDARD_REQUEST_HEADERS"
+                                   mapped-reply-headers="correlationId, sequenceNumber, sequenceSize, STANDARD_REQUEST_HEADERS"/>
+
+
+        <int:aggregator ref="partitionHandler" send-partial-result-on-expiry="true" send-timeout="60000000" input-channel="inboundStaging"/>
+
+        <rabbit:template id="amqpTemplate"
+            connection-factory="amqpConnectionFactory"
+            routing-key="vuln.requests"
+            reply-timeout="60000000"
+            reply-queue="vuln.replies">
+            <rabbit:reply-listener/>
+        </rabbit:template>
+
+</beans>

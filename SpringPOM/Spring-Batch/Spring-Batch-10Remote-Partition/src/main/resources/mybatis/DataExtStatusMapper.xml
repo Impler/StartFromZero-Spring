@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dataExtStatusDao">
+<!-- 
+    <resultMap type="com.study.spring.batch.domain.DataExtStatus" id="dataExtStatus">
+        <id column="id" property="id"/>
+        <result column="data_date" property="dataDate"/>
+        <result column="assign_count" property="assignCount"/>
+        <result column="version" property="version"/>
+        <result column="start_id" property="page.startId"/>
+        <result column="end_id" property="page.endId"/>
+        <result column="data_count" property="page.dataCount"/>
+        <result column="last_data_id" property="page.lastId"/>
+        
+    </resultMap>
+    
+    <select id="getTodayStatus" resultMap="dataExtStatus" flushCache="true">
+        select id, data_date , assign_count , version, start_id, end_id, data_count, last_data_id from t_data_ext_status t where t.data_date = to_char(sysdate, 'yyyy-MM-DD')
+    </select>
+    <select id="getTodayStatus" resultMap="dataExtStatus" flushCache="true">
+        select id, data_date , assign_count , version, start_id, end_id, data_count, last_data_id from t_data_ext_status t where t.data_date = DATE_FORMAT(now(),'%Y-%m-%d') and 1 != #{foo}
+    </select>
+    
+    <update id="update" parameterType="com.study.spring.batch.domain.DataExtStatus">
+        update t_data_ext_status set assign_count = #{assignCount}, version=#{version}, last_data_id = #{page.lastId} where id = #{id} and version=#{version}-1
+    </update> -->
+</mapper>

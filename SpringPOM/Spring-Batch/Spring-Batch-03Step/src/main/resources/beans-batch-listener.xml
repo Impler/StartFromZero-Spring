@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/batch 
+        http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+
+	<!-- 配置可重启Job，restartable默认为true -->
+	<batch:job id="helloJob" restartable="true">
+		<batch:step id="helloStep">
+			<batch:tasklet ref="hello"></batch:tasklet>
+			<!-- Listener的执行顺序为ListenerA.beforeStep，ListenerB.beforeStep，... ，ListenerB.afterStep，ListenerA.afterStep。 -->
+			<batch:listeners>
+				<batch:listener>
+					<bean
+						class="com.study.spring.batch.step.listener.MyStepExecutionListenerA" />
+				</batch:listener>
+				<batch:listener>
+					<bean
+						class="com.study.spring.batch.step.listener.MyStepExecutionListenerB" />
+				</batch:listener>
+			</batch:listeners>
+		</batch:step>
+	</batch:job>
+
+	<bean id="hello" class="com.study.spring.batch.step.HelloStep"></bean>
+
+</beans>

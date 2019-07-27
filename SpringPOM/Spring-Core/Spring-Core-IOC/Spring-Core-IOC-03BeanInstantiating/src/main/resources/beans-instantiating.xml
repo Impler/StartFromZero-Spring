@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- use lazy init here for test -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd" default-lazy-init="true">
+
+	<!-- instantiating by call default constructor method -->
+	<bean id="foo1" class="com.study.spring.core.ioc.bean_instantiating.Foo"></bean>
+	
+	<!-- instantiating by call constructor with parameters method -->
+	<bean id="foo2" class="com.study.spring.core.ioc.bean_instantiating.Foo">
+	   <constructor-arg name="name" value="Jack" />
+	</bean>
+
+    <!-- instantiating by common factory method -->
+    <!-- common factory bean -->
+    <bean id="factory" class="com.study.spring.core.ioc.bean_instantiating.FooFactory" />
+    <bean id="foo3" factory-bean="factory" factory-method="createFoo" />
+    
+    
+    <!-- instantiating by static factory method -->
+    <bean id="foo4" class="com.study.spring.core.ioc.bean_instantiating.StaticFooFactory"
+        factory-method="createFoo" />
+        
+     <!-- instantiating static inner class -->
+     <bean id="bar" class="com.study.spring.core.ioc.bean_instantiating.Foo$Bar"></bean>
+</beans>

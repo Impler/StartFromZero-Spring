@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 为了便于测试，使用延迟初始化 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd" default-lazy-init="true">
+
+    <context:annotation-config/>
+    
+    <bean id="fooService" class="com.study.spring.core.ioc.anno_config._autowired.FooService" />
+    
+    <bean id="foo" class="com.study.spring.core.ioc.anno_config._autowired.simple.Foo"></bean>
+    
+    <bean id="bar" class="com.study.spring.core.ioc.anno_config._autowired.simple.Bar"></bean>
+</beans>

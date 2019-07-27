@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:context="http://www.springframework.org/schema/context"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:task="http://www.springframework.org/schema/task" xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+    xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+    xmlns:cloud="http://schema.cloudfoundry.org/spring"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/integration
+                    http://www.springframework.org/schema/integration/spring-integration.xsd
+                    http://www.springframework.org/schema/task
+                    http://www.springframework.org/schema/task/spring-task.xsd
+                    http://www.springframework.org/schema/integration/amqp
+                    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+                    http://www.springframework.org/schema/rabbit
+                    http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+                    http://schema.cloudfoundry.org/spring
+                    http://schema.cloudfoundry.org/spring/cloudfoundry-spring.xsd
+                    http://www.springframework.org/schema/batch
+                    http://www.springframework.org/schema/batch/spring-batch.xsd
+                    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:application.properties" />
+    <context:component-scan base-package="com.study.spring.batch" />
+    <import resource="beans-dao.xml" />
+    <import resource="beans-mq.xml" />
+    
+    
+    <int-amqp:inbound-gateway concurrent-consumers="3" 
+                                  request-channel="inboundRequests" 
+                                  receive-timeout="60000000" 
+                                  reply-channel="outboundStaging" 
+                                  queue-names="vuln.requests" 
+                                  connection-factory="amqpConnectionFactory" 
+                                  mapped-request-headers="correlationId, sequenceNumber, sequenceSize, STANDARD_REQUEST_HEADERS" 
+                                  mapped-reply-headers="correlationId, sequenceNumber, sequenceSize, STANDARD_REQUEST_HEADERS"/>
+        
+        <int:channel id="inboundRequests"/>
+        <int:channel id="outboundStaging"/>
+        <int:service-activator ref="stepExecutionRequestHandler" input-channel="inboundRequests" output-channel="outboundStaging"/>
+       
+        <bean id="jobExplorer"
+        class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+        <property name="dataSource" ref="dataSource" /></bean>
+        <bean id="stepExecutionRequestHandler" class="org.springframework.batch.integration.partition.StepExecutionRequestHandler">
+            <property name="jobExplorer" ref="jobExplorer"/>
+            <property name="stepLocator" ref="stepLocator"/>
+        </bean>
+ <!-- 定义作业仓库 -->
+        <bean id="jobRepository"
+            class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="transactionManager" ref="transactionManager" />
+            <property name="isolationLevelForCreate" value="ISOLATION_READ_COMMITTED" />
+        </bean>
+        <bean id="stepLocator" class="org.springframework.batch.integration.partition.BeanFactoryStepLocator"/>
+
+        
+        
+        <step id="scanPorts" xmlns="http://www.springframework.org/schema/batch">
+            <tasklet>
+                <chunk reader="targetItemReader" processor="targetProcessor" writer="targetWriter" commit-interval="10" skip-limit="20">
+                    <skippable-exception-classes>
+                        <include class="java.lang.Exception"/>
+                    </skippable-exception-classes>
+                </chunk>
+            </tasklet>
+        </step>
+
+        <bean id="targetItemReader" class="org.springframework.batch.item.database.JdbcPagingItemReader" scope="step">
+            <property name="dataSource" ref="dataSource" />
+            <property name="queryProvider">
+                <bean
+                    class="org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean">
+                    <property name="dataSource" ref="dataSource" />
+                    <property name="selectClause" value="ID, IP, PORT, CONNECTED, BANNER" />
+                    <property name="fromClause" value="FROM TARGET" />
+                    <property name="whereClause" value="ID >= :minId AND ID &lt;= :maxId AND CONNECTED IS NULL"/>
+                    <property name="sortKey" value="ID" />
+                </bean>
+            </property>
+            <property name="pageSize" value="10" />
+            <property name="parameterValues">
+                <map>
+                    <entry key="minId" value="#{stepExecutionContext[minValue]}"/>
+                    <entry key="maxId" value="#{stepExecutionContext[maxValue]}"/>
+                </map>
+            </property>
+            <property name="rowMapper">
+                <bean class="com.study.spring.batch.remotepartition.domain.TargetRowMapper"/>
+            </property>
+        </bean>
+
+        <bean id="targetProcessor" class="com.study.spring.batch.remotepartition.processor.TargetScanItemProcessor"/>
+
+        <bean id="targetWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+            <property name="assertUpdates" value="true" />
+            <property name="itemSqlParameterSourceProvider">
+                <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider" />
+            </property>
+            <property name="sql" value="UPDATE TARGET SET CONNECTED = :connected, BANNER = :banner WHERE ID = :id" />
+            <property name="dataSource" ref="dataSource" />
+        </bean>
+    
+</beans>

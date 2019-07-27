@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.study</groupId>
+		<artifactId>Spring-Core</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>Spring-Core-AOP</artifactId>
+	<packaging>pom</packaging>
+	<modules>
+		<module>Spring-Core-AOP-01DynamicProxy</module>
+		<module>Spring-Core-AOP-02SpringAPI</module>
+		<module>Spring-Core-AOP-03AspectJAnno</module>
+		<module>Spring-Core-AOP-04SchemaAOP</module>
+	</modules>
+
+	<properties>
+		<version.cglib>3.1</version.cglib>
+	</properties>
+
+	<dependencies>
+		<!-- cglib based s -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${version.cglib}</version>
+		</dependency>
+		<!-- cglib based e -->
+	</dependencies>
+</project>

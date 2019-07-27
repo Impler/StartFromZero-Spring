@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/integration
+                    http://www.springframework.org/schema/integration/spring-integration.xsd
+                    http://www.springframework.org/schema/task
+                    http://www.springframework.org/schema/task/spring-task.xsd
+                    http://www.springframework.org/schema/integration/amqp
+                    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+                    http://www.springframework.org/schema/rabbit
+                    http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+	<task:executor id="masterTaskExecutor" pool-size="20" />
+
+	<!-- 用于master向batch.partitions队列发送分片消息的通道 -->
+	<int:channel id="sendDataPartitionsChannel">
+		<int:dispatcher task-executor="masterTaskExecutor" />
+	</int:channel>
+
+	<!-- 用于接收slaver返回的step执行结果消息的通道 -->
+	<int:channel id="slaveCallbackChannel" />
+
+
+	<int:channel id="AggregatedChannel">
+    	<int:queue/>
+	</int:channel>
+	<int:aggregator ref="partitionHandler" 
+	    input-channel="slaveCallbackChannel"
+	    output-channel="AggregatedChannel"/>
+    
+	<rabbit:template id="amqpTemplate" connection-factory="amqpConnectionFactory"
+		routing-key="batch.partitions" reply-timeout="60000000" reply-queue="batch.replies">
+		<rabbit:reply-listener />
+	</rabbit:template>
+
+	<int-amqp:outbound-gateway request-channel="sendDataPartitionsChannel"
+		reply-channel="slaveCallbackChannel" amqp-template="amqpTemplate"
+		mapped-request-headers="correlationId, sequenceNumber, sequenceSize, STANDARD_REQUEST_HEADERS"
+		mapped-reply-headers="correlationId, sequenceNumber, sequenceSize, STANDARD_REQUEST_HEADERS" />
+
+
+	<!-- <int:aggregator ref="partitionHandler"
+		send-partial-result-on-expiry="true" send-timeout="60000000"
+		input-channel="slaveCallbackChannel"output-channel="AggregatedChannel" /> -->
+
+</beans>

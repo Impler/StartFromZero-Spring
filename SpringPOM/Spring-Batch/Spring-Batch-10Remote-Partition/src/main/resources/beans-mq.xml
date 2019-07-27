@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:cloud="http://schema.cloudfoundry.org/spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/integration
+                    http://www.springframework.org/schema/integration/spring-integration.xsd
+                    http://www.springframework.org/schema/task
+                    http://www.springframework.org/schema/task/spring-task.xsd
+                    http://www.springframework.org/schema/integration/amqp
+                    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+                    http://www.springframework.org/schema/rabbit
+                    http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+
+	<rabbit:connection-factory id="amqpConnectionFactory" host="localhost" port="5672" username="guest" password="guest" />
+
+	<rabbit:admin connection-factory="amqpConnectionFactory" />
+
+	<!-- 请求、响应队列 -->
+	<rabbit:queue name="batch.replies" />
+	<rabbit:queue name="batch.partitions" />
+
+</beans>
