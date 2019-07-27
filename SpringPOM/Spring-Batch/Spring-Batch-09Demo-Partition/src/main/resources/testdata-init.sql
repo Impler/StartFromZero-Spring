@@ -1,0 +1,13 @@
+SET FOREIGN_KEY_CHECKS=0;
+truncate table batch_job_execution;
+truncate table batch_job_execution_context;
+truncate table batch_job_execution_params;
+truncate table batch_job_instance;
+truncate table batch_step_execution;
+truncate table batch_step_execution_context;
+truncate table batch_job_execution_seq;
+truncate table batch_job_seq;
+truncate table batch_step_execution_seq;
+SET FOREIGN_KEY_CHECKS=0;
+update t_data_ext_status t set t.assign_count=0, t.last_data_id=null, t.version=0;
+update t_user_validate t set t.deal_flag = null, t.result_code=null, t.result_content=null;
