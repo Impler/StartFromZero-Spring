@@ -13,12 +13,13 @@
         <result column="last_data_id" property="page.lastId"/>
         
     </resultMap>
-    
+    <!--for oracle-->
    <!--  <select id="getTodayStatus" resultMap="dataExtStatus" flushCache="true">
         select id, data_date , assign_count , version, start_id, end_id, data_count, last_data_id from t_data_ext_status t where t.data_date = to_char(sysdate, 'yyyy-MM-DD')
     </select> -->
+    <!-- for mysql -->
     <select id="getTodayStatus" resultMap="dataExtStatus" flushCache="true">
-        select id, data_date , assign_count , version, start_id, end_id, data_count, last_data_id from t_data_ext_status t where t.data_date = DATE_FORMAT(now(),'%Y-%m-%d') and 1 != #{foo}
+        select id, data_date , assign_count , version, start_id, end_id, data_count, last_data_id from t_data_ext_status t where t.data_date = DATE_FORMAT(now(),'%Y-%m-%d')
     </select>
     
     <update id="update" parameterType="com.study.spring.batch.domain.DataExtStatus">

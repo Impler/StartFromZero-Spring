@@ -57,7 +57,7 @@
 		</batch:step>
 		<batch:step id="processData">
 			<partition step="userChunkStep" partitioner="dbPartitioner">
-				<handler grid-size="5" task-executor="taskExecutor" />
+				<handler grid-size="1" task-executor="taskExecutor" />
 			</partition>
 			<batch:listeners>
 				<batch:listener>
@@ -93,6 +93,13 @@
 		scope="step">
 		<property name="dataSource" ref="dataSource" />
 		<property name="queryProvider" ref="queryProvider" />
+		<!--设置动态参数-->
+		<property name="parameterValues">
+			<map>
+				<entry key="startId" value="#{stepExecutionContext[_minRecord]}"></entry>
+				<entry key="endId" value="#{stepExecutionContext[_maxRecord]}"></entry>
+			</map>
+		</property>
 		<property name="pageSize" value="10" />
 		<property name="rowMapper">
 			<bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
@@ -107,8 +114,9 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="selectClause" value="select id, name, cert_no " />
 		<property name="fromClause" value="from t_user_validate" />
+		<!--使用动态参数-->
 		<property name="whereClause"
-			value="where id between #{stepExecutionContext[_minRecord]} and #{stepExecutionContext[_maxRecord]}" />
+			value="where id between :startId and :endId" />
 		<property name="sortKey" value="id" />
 	</bean>
 

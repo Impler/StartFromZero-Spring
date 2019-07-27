@@ -21,7 +21,7 @@
   <root>
     <level value="debug" />
     <appender-ref ref="default" />
-    <appender-ref ref="file" />
+    <!--<appender-ref ref="file" />-->
   </root>
 
   
