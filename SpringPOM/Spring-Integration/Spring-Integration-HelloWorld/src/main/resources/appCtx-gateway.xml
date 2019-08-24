@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:int="http://www.springframework.org/schema/integration"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+  <!-- 定义服务-->
+  <bean id="helloService" class="com.study.spring.integration.helloworld.service.HelloServiceImpl" />
+
+  <!-- 定义消息通道-->
+  <int:channel id="names" />
+
+  <!-- 定义消息网关，面向接口-->
+  <int:gateway id="helloGateway" service-interface="com.study.spring.integration.helloworld.service.HelloService"
+    default-request-channel="names" />
+
+  <!-- 定义service activator-->
+  <int:service-activator input-channel="names" ref="helloService" method="getHello"/>
+</beans>

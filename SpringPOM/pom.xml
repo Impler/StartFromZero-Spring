@@ -112,5 +112,6 @@
 		<module>Spring-Cache</module>
 		<module>Spring-Batch</module>
 		<module>Spring-MVC</module>
+		<module>Spring-Integration</module>
 	</modules>
 </project>

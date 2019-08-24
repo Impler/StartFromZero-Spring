@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:int="http://www.springframework.org/schema/integration"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+
+  <bean id="helloService" class="com.study.spring.integration.helloworld.service.HelloServiceImpl"/>
+
+  <!--定义消息通道-->
+  <int:channel id="names" />
+
+  <!-- 定义service activator，负责从输入通道中接收消息，调用特定的服务并返回-->
+  <int:service-activator input-channel="names" ref="helloService" method="sayHello"/>
+
+</beans>
