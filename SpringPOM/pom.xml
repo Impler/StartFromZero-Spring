@@ -109,7 +109,7 @@
 	</build>
 	<modules>
 		<module>Spring-Core</module>
-		<module>Spring-Integration</module>
+		<module>Spring-Cache</module>
 		<module>Spring-Batch</module>
 		<module>Spring-MVC</module>
 	</modules>
