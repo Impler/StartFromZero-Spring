@@ -12,7 +12,7 @@
 	<packaging>war</packaging>
 	<name>Spring-MVC-MultiViewResolver Maven Webapp</name>
 	<properties>
-		<version.hibernate-validator>5.3.4.Final</version.hibernate-validator>
+		<version.hibernate-validator>5.3.5.Final</version.hibernate-validator>
 		<freemarker-version>2.3.23</freemarker-version>
 	</properties>
 
