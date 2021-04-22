@@ -12,7 +12,7 @@
 	<name>Spring-Batch-09Demo-Partition</name>
 
 	<properties>
-		<version.mybatis>3.4.1</version.mybatis>
+		<version.mybatis>3.5.6</version.mybatis>
 		<version.mybatis-spring>1.3.0</version.mybatis-spring>
 	</properties>
 	
