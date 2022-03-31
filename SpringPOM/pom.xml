@@ -12,7 +12,7 @@
 		<version.jdk>1.8</version.jdk>
 		<version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
 		<version.tomcat7-maven-plugin>2.1</version.tomcat7-maven-plugin>
-		<version.spring>4.3.18.RELEASE</version.spring>
+		<version.spring>5.3.18</version.spring>
 		<version.cglib>3.1</version.cglib>
 		<version.junit>4.12</version.junit>
 		<version.slf4j>1.6.6</version.slf4j>
